@@ -1,4 +1,4 @@
-import { addProduct, updateProduct, deleteProduct } from "./productSlice";
+import { addProduct, updateProduct, deleteProduct } from "./slice/productSlice";
 import axios from "axios";
 
 export const addproduct = async (product, dispatch)=>{ 

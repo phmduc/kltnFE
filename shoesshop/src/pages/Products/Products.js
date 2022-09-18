@@ -6,7 +6,7 @@ import axios from 'axios';
 import { addproduct, updateproduct, deleteproduct } from "../../Redux/apiRequests.js";
 import MainLayout from "../../layouts/MainLayout/MainLayout.js";
 import "./Products.scss"
-import { getAllProduct } from "../../Redux/productSlice.js";
+import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form, Button } from "react-bootstrap";
 function Products() {
     const [isLoad, setLoaded] = useState(false);
