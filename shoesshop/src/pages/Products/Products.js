@@ -1,7 +1,6 @@
-import { Fragment } from "react";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import axios from 'axios';
 import { addproduct, updateproduct, deleteproduct } from "../../Redux/apiRequests.js";
 import MainLayout from "../../layouts/MainLayout/MainLayout.js";
@@ -70,11 +69,9 @@ function Products() {
       setLoaded(!isLoad);
     }
     return (  
-        <Fragment>
             <MainLayout>
                 {body.map((item, index) =>(
                   <div className="item"  key={item._id}><Link to={`/products/${item._id}`}>{item.name}</Link> <button onClick={()=>(updatePrepare(index))}>update</button> <button onClick={()=>(handleDelete(index))}>delete</button></div>
-                    
                 )) }
                  <Form >
                     <Form.Group className="mb-3" controlId="nameProduct">
@@ -107,8 +104,8 @@ function Products() {
                         Save
                     </Button>
                 </Form> 
+                <Outlet/>
             </MainLayout>
-        </Fragment>
      );
 }
 

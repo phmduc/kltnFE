@@ -1,5 +1,6 @@
 import "./Header.scss"
 import {Container, Row ,Col, Image} from 'react-bootstrap';
+import { Link } from "react-router-dom";
 // import logo from '../assets/images/Rekeans.wepb';
 // import Row from 'react-bootstrap/Row';
 // import Col from 'react-bootstrap/Col';
@@ -23,9 +24,9 @@ function Header() {
                                 </a>
                             </li>
                             <li className="items">
-                                <a href="#">
+                                <Link to="/products">
                                     Sản phẩm
-                                </a>
+                                </Link>
                             </li>
                             <li className="items">
                                 <a href="#">
