@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 
 export const productSlice = createSlice({
     name:"product",
@@ -15,6 +16,9 @@ export const productSlice = createSlice({
         ]
     },
     reducers:{
+        getAllProduct: (state, action) => {
+            state.products=action.payload;
+        },
         addProduct: (state, action) => {
             state.products=[...state.products, action.payload];
         },
@@ -39,6 +43,6 @@ export const productSlice = createSlice({
     }
 })
 
-export const { addProduct, updateProduct, deleteProduct } = productSlice.actions;
+export const {getAllProduct, addProduct, updateProduct, deleteProduct } = productSlice.actions;
 
 export default productSlice.reducer;

@@ -1,10 +1,12 @@
-import MainLayout from "../../layouts/MainLayout/MainLayout.js";
 import { Fragment } from "react";
-import "./Products.scss"
-import { addproduct, updateproduct, deleteproduct } from "../../Redux/apiRequests.js";
-import { useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import axios from 'axios';
+import { addproduct, updateproduct, deleteproduct } from "../../Redux/apiRequests.js";
+import MainLayout from "../../layouts/MainLayout/MainLayout.js";
+import "./Products.scss"
+import { getAllProduct } from "../../Redux/productSlice.js";
 import { Form, Button } from "react-bootstrap";
 function Products() {
     const [isLoad, setLoaded] = useState(false);
@@ -19,6 +21,7 @@ function Products() {
     async function getProducts() {
         try {
           const response = await axios.get('/products');
+          dispatch(getAllProduct(response.data))
           setBody(response.data)
         } catch (error) {
           console.error(error);
@@ -70,7 +73,7 @@ function Products() {
         <Fragment>
             <MainLayout>
                 {body.map((item, index) =>(
-                  <div className="item"  key={item._id}><p>{item.name}</p> <button onClick={()=>(updatePrepare(index))}>update</button> <button onClick={()=>(handleDelete(index))}>delete</button></div>
+                  <div className="item"  key={item._id}><Link to={`/products/${item._id}`}>{item.name}</Link> <button onClick={()=>(updatePrepare(index))}>update</button> <button onClick={()=>(handleDelete(index))}>delete</button></div>
                     
                 )) }
                  <Form >

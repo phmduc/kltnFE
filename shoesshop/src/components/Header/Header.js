@@ -47,23 +47,23 @@ function Header() {
                     <div className="col-md-3">
                         <ul className="list-control p-0 m-0">
                             <li className="items-control has-input">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <button class="btn btn-outline-secondary" type="button" id="button-addon1">
-                                        <i class="bi bi-search"></i>
+                            <div className="input-group">
+                                <div className="input-group-prepend">
+                                    <button className="btn btn-outline-secondary" type="button" id="button-addon1">
+                                        <i className="bi bi-search"></i>
                                     </button>
                                 </div>
-                                <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" />
+                                <input type="text" className="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1" />
                                 </div>
                             </li>
                             <li className="items-control">
                                 <a href="#">
-                                    <i class="bi bi-bag"></i>
+                                    <i className="bi bi-bag"></i>
                                 </a>
                             </li>
                             <li className="items-control">
                                 <a href="#">
-                                    <i class="bi bi-person"></i>
+                                    <i className="bi bi-person"></i>
                                 </a>
                             </li>
                         </ul>

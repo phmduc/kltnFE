@@ -4,10 +4,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
+import './assets/global/GlobalStyle.scss'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-
   <Provider store={store}>
     <React.StrictMode>
       <App />
