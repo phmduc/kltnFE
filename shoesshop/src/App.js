@@ -13,10 +13,9 @@ function App() {
             <Routes>
                     <Route path='/'> 
                         <Route index element={<Home/>}></Route> 
-                        <Route path='/login' element={<Login/>}> </Route>      
-                        <Route path='/products' element={<Products/>}>
-                            <Route path='/products/:id' element={<ProductDetail/>}></Route>  
-                        </Route>      
+                        <Route path='/users/login' element={<Login/>}> </Route>      
+                        <Route path='/products' element={<Products/>}></Route>      
+                        <Route path='/products/:id' element={<ProductDetail/>}></Route>  
                     </Route>   
                     
             </Routes>

@@ -23,17 +23,20 @@ export const cartSlice = createSlice({
     },
     reducers:{
         addToCart: (state, action) => {
-            const hasItem = cartItem.find((item,index)=>{return item._id === action.payload._id})
+            console.log(state.listCart)
+            const hasItem = state.listCart.find((item,index)=>{return item._id === action.payload._id})
+            console.log(hasItem.A)
             if (hasItem){
-                this.updateCart(action.payload)
+                console.log(state)
+                cartSlice.reducers.updateCart(action.payload)
             }
             else{
-            state.products=[...state.listCart, action.payload];
+            state.listCart=[...state.listCart, action.payload];
+            localStorage.setItem("cartItem",JSON.stringify(state.listCart))
             }
-            localStorage.setItem("cartItem",JSON.stringify(state.products))
         },
         updateCart: (state, action) => {
-            state.products=[...state.listCart, action.payload];
+            console.log(action.payload)
         },
     }
 })

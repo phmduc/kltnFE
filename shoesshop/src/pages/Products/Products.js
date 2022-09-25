@@ -104,7 +104,6 @@ function Products() {
                         Save
                     </Button>
                 </Form> 
-                <Outlet/>
             </MainLayout>
      );
 }

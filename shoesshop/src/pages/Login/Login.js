@@ -1,6 +1,9 @@
 import "./Login.scss"
 import $ from "jquery"
 import { useState } from "react";
+import { loginUser } from "../../Redux/apiRequests";
+import { useDispatch } from "react-redux";
+ 
 
 function Login() {
     $(function() {
@@ -39,7 +42,7 @@ function Login() {
               oX = parseInt($(this).offset().left),
               oY = parseInt($(this).offset().top);
      
-           $(this).append('<span class="click-efect x-' + oX + ' y-' + oY + '" style="margin-left:' + (pX - oX) + 'px;margin-top:' + (pY - oY) + 'px;"></span>')
+           $(this).append('<span className="click-efect x-' + oX + ' y-' + oY + '" style="margin-left:' + (pX - oX) + 'px;margin-top:' + (pY - oY) + 'px;"></span>')
            $('.x-' + oX + '.y-' + oY + '').animate({
               "width": "500px",
               "height": "500px",
@@ -47,11 +50,11 @@ function Login() {
               "left": "-250px",
      
            }, 600);
-           $("button", this).addClass('active');
+           $("button", this).addclassName('active');
         })
      
         $(".alt-2").click(function() {
-           if (!$(this).hasClass('material-button')) {
+           if (!$(this).hasclassName('material-button')) {
               $(".shape").css({
                  "width": "100%",
                  "height": "100%",
@@ -68,30 +71,30 @@ function Login() {
                  "width": "140px",
                  "height": "140px"
               }, 500, function() {
-                 $(".box").removeClass("back");
+                 $(".box").removeclassName("back");
      
-                 $(this).removeClass('active')
+                 $(this).removeclassName('active')
               });
      
               $(".overbox .title").fadeOut(300);
               $(".overbox .input").fadeOut(300);
               $(".overbox .button").fadeOut(300);
      
-              $(".alt-2").addClass('material-buton');
+              $(".alt-2").addclassName('material-buton');
            }
      
         })
      
         $(".material-button").click(function() {
      
-           if ($(this).hasClass('material-button')) {
+           if ($(this).hasclassName('material-button')) {
               setTimeout(function() {
                  $(".overbox").css({
                     "overflow": "hidden"
                  })
-                 $(".box").addClass("back");
+                 $(".box").addclassName("back");
               }, 200)
-              $(this).addClass('active').animate({
+              $(this).addclassName('active').animate({
                  "width": "700px",
                  "height": "700px"
               });
@@ -108,13 +111,13 @@ function Login() {
                  $(".overbox .button").fadeIn(300);
               }, 700)
      
-              $(this).removeClass('material-button');
+              $(this).removeclassName('material-button');
      
            }
      
-           if ($(".alt-2").hasClass('material-buton')) {
-              $(".alt-2").removeClass('material-buton');
-              $(".alt-2").addClass('material-button');
+           if ($(".alt-2").hasclassName('material-buton')) {
+              $(".alt-2").removeclassName('material-buton');
+              $(".alt-2").addclassName('material-button');
            }
      
         });
@@ -125,56 +128,62 @@ function Login() {
      const [password, setPassword]= useState('')
      const [message, setMessage]= useState('')
     
+     const dispatch = useDispatch()
      
-     const submitLogin= (e)=>{
+     const  submitLogin = async (e)=>{
         e.preventDefault()
+        const user = {
+         email: email,
+         password: password
+        }
+        await loginUser(user,dispatch)
      }
-    return (<div class="materialContainer">
-        <div class="box">
-            <div class="title">LOGIN</div>
-            <div class="input">
-                <label for="name">Username</label>
+    return (<div className="materialContainer">
+        <div className="box">
+            <div className="title">LOGIN</div>
+            <div className="input">
+                <label htmlFor="name">Username</label>
                 <input type="text" value={email} onChange={(e)=>{setEmail(e.target.value)}} name="name" id="name"></input>
-                <span class="spin"></span>
+                <span className="spin"></span>
             </div>
         
-            <div class="input">
-                <label for="pass">Password</label>
+            <div className="input">
+                <label htmlFor="pass">Password</label>
                 <input type="password" value={password} onChange={(e)=>{setPassword(e.target.value)}} name="pass" id="pass"></input>
-                <span class="spin"></span>
+                <span className="spin"></span>
             </div>
     
-            <div class="button login">
-                <button onClick={(e)=>{submitLogin(e)}}><span>GO</span> <i class="fa fa-check"></i></button>
+            <div className="button login">
+                <button onClick={(e)=>{submitLogin(e)}}><span>GO</span> <i className="fa fa-check"></i></button>
             </div>
         
-            <a href="" class="pass-forgot">Forgot your password?</a>
+            <a href="" className="pass-forgot">Forgot your password?</a>
         
             </div>
-            <div class="overbox">
-        <div class="material-button alt-2"><span class="shape"></span></div>
+            <div className="overbox">
+        <div className="material-button alt-2"><span className="shape"></span></div>
     
-        <div class="title">REGISTER</div>
+        <div className="title">REGISTER</div>
     
-        <div class="input">
-            <label for="regname">Username</label>
+        <div className="input">
+            <label htmlFor="regname">Username</label>
             <input type="text" name="regname" id="regname"></input>
-            <span class="spin"></span>
+            <span className="spin"></span>
         </div>
     
-        <div class="input">
-            <label for="regpass">Password</label>
+        <div className="input">
+            <label htmlFor="regpass">Password</label>
             <input type="password" name="regpass" id="regpass"></input>
-            <span class="spin"></span>
+            <span className="spin"></span>
         </div>
     
-        <div class="input">
-            <label for="reregpass">Repeat Password</label>
+        <div className="input">
+            <label htmlFor="reregpass">Repeat Password</label>
             <input type="password" name="reregpass" id="reregpass"></input>
-            <span class="spin"></span>
+            <span className="spin"></span>
         </div>
     
-        <div class="button">
+        <div className="button">
             <button><span>NEXT</span></button>
         </div>
     
