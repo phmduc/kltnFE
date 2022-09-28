@@ -5,37 +5,21 @@ const cartItem= localStorage.getItem("cartItem") ? JSON.parse(localStorage.getIt
 export const cartSlice = createSlice({
     name: 'cart',
     initialState: {
-        listCart: cartItem,
-        // listCart:[
-        //     {
-        //         ID:"",
-        //         name:"",
-        //         image:"",
-        //         desc:"",
-        //         price:"",
-        //         size:[{
-        //             sizeId:"",
-        //             count:0,
-        //         }],
-        //     }
-        // ],
-        // total: (this.listCart.reduce((previousItem, currentItem)=>previousItem.price + currentItem.price,0)) || 0
+        listCart: cartItem,   
     },
     reducers:{
         addToCart: (state, action) => {
-            console.log(state.listCart)
-            const hasItem = state.listCart.find((item,index)=>{return item._id === action.payload._id})
-            console.log(hasItem.A)
+            const hasItem = state.listCart.find((item)=>item.ID === action.payload.ID)
             if (hasItem){
-                console.log(state)
-                cartSlice.reducers.updateCart(action.payload)
+               hasItem.count += action.payload.count
+               localStorage.setItem("cartItem",JSON.stringify(state.listCart))
             }
             else{
             state.listCart=[...state.listCart, action.payload];
             localStorage.setItem("cartItem",JSON.stringify(state.listCart))
             }
         },
-        updateCart: (state, action) => {
+        updateQuantity: (state, action) => {
             console.log(action.payload)
         },
     }

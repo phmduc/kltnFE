@@ -5,6 +5,7 @@ import axios from 'axios';
 import { addproduct, updateproduct, deleteproduct } from "../../Redux/apiRequests.js";
 import MainLayout from "../../layouts/MainLayout/MainLayout.js";
 import "./Products.scss"
+import cloudinaryUpload from "../../service/uploads.js";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form, Button } from "react-bootstrap";
 function Products() {
@@ -16,6 +17,11 @@ function Products() {
     const [image, setImage] = useState("");
     const [price, setPrice] = useState(0);
     const [cis, setCis] = useState(0);
+    const [previewSource, setPreviewSource] = useState();
+    const [selectedFile, setSelectedFile] = useState();
+    const [fileInput, setFileInput] = useState();
+
+
     const dispatch= useDispatch();
     async function getProducts() {
         try {
@@ -48,6 +54,36 @@ function Products() {
       setImage(body[index].image)
       setPrice(body[index].price)
       setCis(body[index].countInStock)
+    }
+
+    const handleFileInputChange = (e)=>{
+      setFileInput()
+      const file = e.target.files[0]
+      previewFile(file)
+    }
+
+    const previewFile = (file) =>{
+        const reader = new FileReader();
+      reader.readAsDataURL(file);
+      setSelectedFile(file)
+      reader.onloadend = () =>{
+        setPreviewSource(reader.result)
+      }
+    } 
+    const handleSubmitFile = (e) =>{
+      e.preventDefault(); 
+      if(!previewSource) return;
+      uploadImage(previewSource);
+    }
+    const uploadImage = async (base64EncodedImage)=>{
+      console.log(base64EncodedImage)
+      let file
+      try{
+      file = await axios.post("/uploads",{file: base64EncodedImage});
+      } catch(err){
+        console.error(err)
+      }
+      console.log(file.data.url)
     }
     const handleSaveUpdate = async ()=>{
       const updatedProduct ={
@@ -83,7 +119,9 @@ function Products() {
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="imageProduct">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control onChange={(e)=>{setImage(e.target.value)}} value={image||""} type="text" placeholder="Enter Product Image" />
+                        <Form.Control onChange={(e) => handleFileInputChange(e)} value={fileInput} type="file" placeholder="Enter Product Image" />
+                        {previewSource && ( <img src={previewSource} style={{height:'300px'}} alt="" /> )}
+                        <Button onClick={(e)=>{handleSubmitFile(e)}} variant="primary">Submit</Button>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="descProduct">
                         <Form.Label>Password</Form.Label>
