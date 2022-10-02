@@ -17,10 +17,11 @@ function Products() {
     const [image, setImage] = useState("");
     const [price, setPrice] = useState(0);
     const [cis, setCis] = useState(0);
-    const [previewSource, setPreviewSource] = useState();
+    const [previewSource, setPreviewSource] = useState([]);
     const [selectedFile, setSelectedFile] = useState();
     const [fileInput, setFileInput] = useState();
-
+    const [listInput, setlistInput] = useState([]);
+    const [message, setMessage] = useState("");
 
     const dispatch= useDispatch();
     async function getProducts() {
@@ -57,26 +58,34 @@ function Products() {
     }
 
     const handleFileInputChange = (e)=>{
-      setFileInput()
       const file = e.target.files[0]
+      setMessage("")
+      if(previewSource.length > 4) {
+        setMessage("Upload tối đa 5 bức ảnh của sản phẩm")
+      } else {
       previewFile(file)
+      }
     }
 
     const previewFile = (file) =>{
-        const reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(file);
       setSelectedFile(file)
+      console.log(previewSource)
       reader.onloadend = () =>{
-        setPreviewSource(reader.result)
+      setPreviewSource([...previewSource, reader.result])
       }
     } 
     const handleSubmitFile = (e) =>{
       e.preventDefault(); 
-      if(!previewSource) return;
+      if(!previewSource || previewSource.length < 5) {
+        setMessage("Upload ít nhất 5 bức ảnh của sản phẩm")
+      }
+      else {
       uploadImage(previewSource);
+      }
     }
     const uploadImage = async (base64EncodedImage)=>{
-      console.log(base64EncodedImage)
       let file
       try{
       file = await axios.post("/uploads",{file: base64EncodedImage});
@@ -120,7 +129,10 @@ function Products() {
                     <Form.Group className="mb-3" controlId="imageProduct">
                         <Form.Label>Password</Form.Label>
                         <Form.Control onChange={(e) => handleFileInputChange(e)} value={fileInput} type="file" placeholder="Enter Product Image" />
-                        {previewSource && ( <img src={previewSource} style={{height:'300px'}} alt="" /> )}
+                        {previewSource &&  previewSource.map((image, index) => {
+                          return(<img src={image} style={{height:'50px', width: '50px'}} alt="" /> )
+                        })}
+                        <p>{message}</p> 
                         <Button onClick={(e)=>{handleSubmitFile(e)}} variant="primary">Submit</Button>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="descProduct">
