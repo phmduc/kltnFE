@@ -1,9 +1,11 @@
 import "./Login.scss"
 import $ from "jquery"
+import { useEffect } from "react";
 import { useState } from "react";
 import { loginUser } from "../../Redux/apiRequests";
-import { useDispatch } from "react-redux";
- 
+import { useDispatch, useSelector  } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 
 function Login() {
     $(function() {
@@ -123,12 +125,19 @@ function Login() {
         });
      
      });
-
+     
+     
+     const navigate = useNavigate()
      const [email, setEmail] = useState('')
      const [password, setPassword]= useState('')
-     const [message, setMessage]= useState('')
+     const [loginStatus, setLoginStatus]= useState('')
+
     
      const dispatch = useDispatch()
+
+     useEffect(()=>{
+
+     },[loginStatus])
      
      const  submitLogin = async (e)=>{
         e.preventDefault()
@@ -136,20 +145,28 @@ function Login() {
          email: email,
          password: password
         }
-        await loginUser(user,dispatch)
+        const login = await loginUser(user,dispatch)
+        if (typeof login === 'object'){
+        setLoginStatus(login)
+        navigate("/");
+        }
+        else{
+        setLoginStatus(login)
+        }
      }
+     console.log(loginStatus)
     return (<div className="materialContainer">
         <div className="box">
             <div className="title">LOGIN</div>
             <div className="input">
                 <label htmlFor="name">Username</label>
                 <input type="text" value={email} onChange={(e)=>{setEmail(e.target.value)}} name="name" id="name"></input>
-                <span className="spin"></span>
+                <span className="spin">{(typeof loginStatus === 'string') ? loginStatus : ''}</span>
             </div>
         
             <div className="input">
                 <label htmlFor="pass">Password</label>
-                <input type="password" value={password} onChange={(e)=>{setPassword(e.target.value)}} name="pass" id="pass"></input>
+                <input type="password" value={password}  onChange={(e)=>{setPassword(e.target.value)}} name="pass" id="pass"></input>
                 <span className="spin"></span>
             </div>
     

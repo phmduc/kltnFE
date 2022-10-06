@@ -3,22 +3,25 @@ import { useLocation} from "react-router-dom";
 import { useSelector,useDispatch } from "react-redux";
 import { addToCart } from "../../Redux/slice/cartSlice"; 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./productDetail.scss"
-function ProductDetail() {
+function ProductDetail({ match }) {
     const listCart = useSelector((state)=>state.cart.listCart)
     const dispatch=useDispatch();
-    const [item, setItem] = useState({})
+    const [item, setItem] = useState()
+    const [error, setError] = useState("")
+    const navigate = useNavigate()
     const path= useLocation().pathname.split("/")
     const ID = path[path.length - 1 ]
-    console.log(listCart)
     async function getProductDetail() {
       try {
-        const response = await axios.get(`/products/${ID}`);
+        const response = await axios.get(`/api/products/${ID}`);
         setItem(response.data)
       } catch (error) {
-        console.error(error);
+        setError(error.response.data.message)
       }}
+
     useEffect(() => {
       getProductDetail()
     },[ID]);    
@@ -41,7 +44,7 @@ function ProductDetail() {
   }
     return (       
       <MainLayout>
-          <div className="item"> <p>{item.name}</p> <button onClick={()=>{handleAddCart()}}>Add To Cart</button></div>
+          { (item) ? <div className="item"> <p>{item.name}</p> <button onClick={()=>{handleAddCart()}}>Add To Cart</button></div> : <p>{error}</p>}
       </MainLayout>
      );
 }

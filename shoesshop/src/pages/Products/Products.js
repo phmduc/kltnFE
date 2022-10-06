@@ -15,16 +15,19 @@ function Products() {
     const [desc, setDesc] = useState("");
     const [image, setImage] = useState([]);
     const [price, setPrice] = useState(0);
-    const [cis, setCis] = useState(0);
+    const [size, setSize] = useState([]);
     const [previewSource, setPreviewSource] = useState([]);
     const [fileInput, setFileInput] = useState();
     const [message, setMessage] = useState("");
-    const inputImage = useRef();
+    const inputSize = useRef();
+    const inputCount = useRef();
+
+    
     
     const dispatch= useDispatch();
     async function getProducts() {
         try {
-          const response = await axios.get('/products');
+          const response = await axios.get('/api/products');
           dispatch(getAllProduct(response.data))
           setBody(response.data)
         } catch (error) {
@@ -34,6 +37,8 @@ function Products() {
     useEffect(() => {
       getProducts()
     },[isLoad]);
+
+
     const handleSubmitAdd = async (e) =>{
       e.preventDefault()
       if(!previewSource || previewSource.length < 5) {
@@ -44,14 +49,12 @@ function Products() {
       imageData = imageData.map((elem, index)=>{
         return elem.url
       })
-      console.log(imageData)
-      setImage(imageData.join(","));
       const newProduct ={
         name: name,
         desc: desc,
-        image: image,
+        image: imageData.join(","),
         price: price,
-        countInStock: cis
+        size: size
       }
       await addproduct(newProduct,dispatch);
       setLoaded(!isLoad);
@@ -63,7 +66,6 @@ function Products() {
       setDesc(body[index].desc)
       setImage(body[index].image)
       setPrice(body[index].price)
-      setCis(body[index].countInStock)
     }
     const handleFileInputChange = (e)=>{
       const file = e.target.files[0]
@@ -74,10 +76,14 @@ function Products() {
       previewFile(file)
       }
     }
+    const previewSize = ()=>{
+      const sizeInput= inputSize.current.value
+      const countInput= inputCount.current.value
+      setSize([...size, {sizeId: sizeInput, count: countInput}])
+    }
     const previewFile = (file) =>{
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      console.log(previewSource)
       reader.onloadend = () =>{
       setPreviewSource([...previewSource, reader.result])
       }
@@ -85,12 +91,11 @@ function Products() {
     const uploadImage = async (base64EncodedImage)=>{
       let file
       try{
-      file = await axios.post("/uploads",{file: base64EncodedImage});
+      file = await axios.post("/api/uploads",{file: base64EncodedImage});
+      return file.data
       } catch(err){
         console.error(err)
       }
-      console.log(file.data)
-      return file.data
     }
     const handleSaveUpdate = async ()=>{
       const updatedProduct ={
@@ -99,7 +104,6 @@ function Products() {
         desc: desc,
         image: image,
         price: price,
-        countInStock: cis
       }
       await updateproduct(updatedProduct,dispatch);
       setLoaded(!isLoad);
@@ -123,7 +127,7 @@ function Products() {
                  <Form >
                     <Form.Group className="mb-3" controlId="nameProduct">
                         <Form.Label>Email address</Form.Label>
-                        <Form.Control onChange={(e)=>{setName(e.target.value)}} ref={inputImage} value={name||""} type="text" placeholder="Enter Name Product" />
+                        <Form.Control onChange={(e)=>{setName(e.target.value)}} value={name||""} type="text" placeholder="Enter Name Product" />
                         <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                         </Form.Text>
@@ -140,13 +144,21 @@ function Products() {
                         <Form.Label>Password</Form.Label>
                         <Form.Control onChange={(e)=>{setDesc(e.target.value)}} value={desc||""}  type="text" placeholder="Enter  Description" />
                     </Form.Group>
+                    <Form.Group className="mb-3" controlId="sizeProduct">
+                        <Form.Label>Size</Form.Label>
+                        <Form.Control ref={inputSize} type="text" placeholder="Enter Size" />
+                        <Form.Control ref={inputCount} type="text" placeholder="Enter Count" />
+                        {size.map((elem, index)=>{
+                          return (<div className="sizewrap" key={index} style={{display:"flex"}}>
+                            <p> {elem.sizeId}:</p> 
+                            <p>{elem.count}</p>
+                            </div>)
+                        })}
+                         <Button onClick={()=>{previewSize()}}>Add Size</Button>
+                    </Form.Group>
                     <Form.Group className="mb-3" controlId="priceProduct">
                         <Form.Label>Password</Form.Label>
                         <Form.Control onChange={(e)=>{setPrice(e.target.value)}} value={price||""} type="text" placeholder="Enter Product Price" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="cisProduct">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control onChange={(e)=>{setCis(e.target.value)}} value={cis||""} type="text" placeholder="Enter Product Count" />
                     </Form.Group>
                     <Button onClick={(e)=>{handleSubmitAdd(e)}} variant="primary" type="submit">
                         Submit
