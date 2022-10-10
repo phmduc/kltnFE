@@ -11,7 +11,6 @@ function ProductDetail({ match }) {
     const dispatch=useDispatch();
     const [item, setItem] = useState()
     const [error, setError] = useState("")
-    const navigate = useNavigate()
     const path= useLocation().pathname.split("/")
     const ID = path[path.length - 1 ]
     async function getProductDetail() {

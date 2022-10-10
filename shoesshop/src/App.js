@@ -8,13 +8,12 @@ import { useSelector  } from "react-redux";
 
 function App() {
    const user = useSelector((state)=>state.userInfo)
-   console.log(user)
     return ( 
         <BrowserRouter>
             <Routes>
                 <Route path='/'> 
-                    <Route index element={<Home/>}/>
-                    {(!user) ? <Route path='/users/login' element={<Login/>}/> : <Route path='/users/login' element={<Home/>}/>  }    
+                    <Route index element={<Home {...user} />}/>
+                    {(!user.ID) ? <Route path='/users/login' element={<Login/>}/> : <Route path='/users/login' element={<Home/>}/>   }    
                     <Route path='/products/' >
                         <Route index element={<Products/>}/>
                         <Route path=':id' element={<ProductDetail/>}/> 

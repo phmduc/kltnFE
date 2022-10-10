@@ -12,7 +12,10 @@ const userSlice = createSlice({
     },
     reducers:{ 
         userLogin: (state, action)=>{
-            state.info = action.payload
+            state.info.ID = action.payload._id
+            state.info.name = action.payload.name
+            state.info.email = action.payload.email
+            state.info.isAdmin = action.payload.isAdmin   
         }
     }
 })
