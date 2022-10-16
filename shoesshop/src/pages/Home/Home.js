@@ -2,10 +2,15 @@ import MainLayout from "../../layouts/MainLayout/MainLayout";
 import { Fragment } from "react";
 import { useEffect } from "react";
 import "./Home.css"
+import $ from "jquery"
 import { useSelector  } from "react-redux";
 
 function Home( props ) {
+    $(function() {
 
+        console.log(123)
+      
+      });
    useEffect(()=>
    {},[props])
     return ( 
@@ -70,6 +75,41 @@ function Home( props ) {
                             <path d="M144.008 119.923C144.221 121.199 149.253 123.61 154.22 123.61C158.781 123.61 162.446 121.42 162.446 117.074C162.446 111.728 156.206 110.491 156.206 110.491C156.206 110.491 151.021 110.418 150.887 108.009C150.824 106.875 152.403 106.236 153.795 106.236C156.072 106.236 158.617 108.505 158.617 108.505L162.234 104.605C162.234 104.605 157.657 100.988 153.795 100.988C150.106 100.988 144.859 103.404 144.859 108.434C144.859 112.714 150.932 114.683 150.932 114.683C150.932 114.683 157.34 115.365 157.34 117.37C157.34 118.733 155.017 119.143 153.653 119.143C150.342 119.143 147.554 116.235 147.554 116.235L144.008 119.923Z" fill="#667085"/>
                         </svg>
                     </div>
+                </div>
+            </section>
+            <section className="w-category py-5 text-center">
+                <div className="container">
+                    <div className="title mb-4">
+                        <h2>Danh Mục Sản Phẩm</h2>                     
+                    </div>
+                    <div className="list">
+                            <div className="row justify-content-center">
+                                <div className="col-lg-4 col-6">
+                                    <a href="" className="item mb-3">
+                                        <div className="bg-item img-wrap">
+                                            <img src="https://source.unsplash.com/random/3" alt="" />
+                                            <span>Giày nam</span>
+                                        </div>      
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-6">
+                                    <a href="" className="item mb-3">
+                                        <div className="bg-item img-wrap">
+                                            <img src="https://source.unsplash.com/random/3" alt="" />
+                                            <span>Tất cả sản phẩm</span>
+                                        </div>      
+                                    </a>
+                                </div>
+                                <div className="col-lg-4 col-6">
+                                    <a href="" className="item mb-3">
+                                        <div className="bg-item img-wrap">
+                                            <img src="https://source.unsplash.com/random/3" alt="" />
+                                            <span>Giày nữ</span>
+                                        </div>      
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                 </div>
             </section>
             <section className="w-category py-5 text-center">

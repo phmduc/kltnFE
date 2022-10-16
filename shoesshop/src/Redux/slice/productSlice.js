@@ -10,14 +10,16 @@ export const productSlice = createSlice({
                 name:"",
                 image:"",
                 desc:"",
+                cate:"",
                 price:"",
                 countInStock:""
             }
-        ]
+        ],
+        productsList:[]
     },
     reducers:{
         getAllProduct: (state, action) => {
-            state.products=action.payload;
+            state.productsList=action.payload;
         },
         addProduct: (state, action) => {
             state.products=[...state.products, action.payload];

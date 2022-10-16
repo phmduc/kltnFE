@@ -12,6 +12,8 @@ function Products() {
     const [body, setBody] = useState([]);
     const [ID, setID] = useState("");
     const [name, setName] = useState("");
+    const [cate, setCate] = useState("");
+    const [user, setUser] = useState("");
     const [desc, setDesc] = useState("");
     const [image, setImage] = useState([]);
     const [price, setPrice] = useState(0);
@@ -53,6 +55,8 @@ function Products() {
         name: name,
         desc: desc,
         image: imageData.join(","),
+        idCate: cate,
+        user: user,
         price: price,
         size: size
       }
@@ -126,14 +130,14 @@ function Products() {
                 )) }
                  <Form >
                     <Form.Group className="mb-3" controlId="nameProduct">
-                        <Form.Label>Email address</Form.Label>
+                        <Form.Label>Tên Sản Phẩm</Form.Label>
                         <Form.Control onChange={(e)=>{setName(e.target.value)}} value={name||""} type="text" placeholder="Enter Name Product" />
                         <Form.Text className="text-muted">
                         We'll never share your email with anyone else.
                         </Form.Text>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="imageProduct">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>Ảnh Sản Phẩm (Tối đa 5 bức)</Form.Label>
                         <Form.Control onChange={(e) => handleFileInputChange(e)} value={fileInput} type="file" placeholder="Enter Product Image" />
                         {previewSource &&  previewSource.map((image, index) => {
                           return(<img src={image} key={index} style={{height:'50px', width: '50px'}} alt="" /> )
@@ -141,8 +145,16 @@ function Products() {
                         <p>{message}</p> 
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="descProduct">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>Mô Tả</Form.Label>
                         <Form.Control onChange={(e)=>{setDesc(e.target.value)}} value={desc||""}  type="text" placeholder="Enter  Description" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="descProduct">
+                        <Form.Label>Cate</Form.Label>
+                        <Form.Control onChange={(e)=>{setCate(e.target.value)}} value={cate||""}  type="text" placeholder="Enter  Description" />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="descProduct">
+                        <Form.Label>User</Form.Label>
+                        <Form.Control onChange={(e)=>{setUser(e.target.value)}} value={user||""}  type="text" placeholder="Enter  Description" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="sizeProduct">
                         <Form.Label>Size</Form.Label>
@@ -157,7 +169,7 @@ function Products() {
                          <Button onClick={()=>{previewSize()}}>Add Size</Button>
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="priceProduct">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>Giá Sản Phẩm</Form.Label>
                         <Form.Control onChange={(e)=>{setPrice(e.target.value)}} value={price||""} type="text" placeholder="Enter Product Price" />
                     </Form.Group>
                     <Button onClick={(e)=>{handleSubmitAdd(e)}} variant="primary" type="submit">

@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Italiana&family=Oswald:wght@200;500;700&family=Roboto:wght@100;300&display=swap');
 
 :root{
-    --primary: #F49742
+    --primary: #F49742;
 }
+html, body, #root{height:100%;}
+body{height:100vh;}
 
 body{
     font-family: 'Roboto', sans-serif;

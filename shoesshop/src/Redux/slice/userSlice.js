@@ -8,7 +8,9 @@ const userSlice = createSlice({
             name: "",
             email:"",
             isAdmin:""            
-        }
+        },
+        userlist:[]
+
     },
     reducers:{ 
         userLogin: (state, action)=>{
@@ -16,9 +18,12 @@ const userSlice = createSlice({
             state.info.name = action.payload.name
             state.info.email = action.payload.email
             state.info.isAdmin = action.payload.isAdmin   
+        },
+        getAllUser: (state, action)=>{
+            state.list=action.payload;
         }
     }
 })
-export const {userLogin, loginFailed} = userSlice.actions
+export const {userLogin, getAllUser} = userSlice.actions
 
 export default userSlice.reducer
