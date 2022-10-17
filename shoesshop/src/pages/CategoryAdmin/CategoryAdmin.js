@@ -11,7 +11,7 @@ function CategoryAdmin() {
     const [categories, setCategory] = useState([]);
     const [name, setName] = useState([]);
     const [isLoad, setLoaded] = useState(false);
-
+    const [avatar, setAvatar] = useState([]);
     const [image, setImage] = useState([]);
     const [previewSource, setPreviewSource] = useState([]);
     const [fileInput, setFileInput] = useState();
@@ -60,7 +60,10 @@ function CategoryAdmin() {
         } else {
         previewFile(file)
         }
-      }
+    }
+    const updatePrepare = (index)=>{
+        setName(categories[index].nameCate)
+    }
     const previewFile = (file) =>{
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -107,6 +110,7 @@ function CategoryAdmin() {
                     </div>
                     <ModalForm title="Thêm Danh Mục" icon="+ Thêm Danh Mục" handleSubmit={handleSubmitAdd}>
                         <div className="formCategory">
+                        
                             <Form>
                                 <Form.Group className="mb-3" controlId="nameProduct">
                                     <Form.Label>Tên Danh Mục</Form.Label>
@@ -140,7 +144,7 @@ function CategoryAdmin() {
                                         <td >{(item.avatarCate[0]) ? <img src={item.avatarCate[0].url } alt="" /> : 'noimg'}</td>
                                         <td className="controls">
                                             <button className="btn btn-primary" onClick={()=>{handleDelete(index)}}><i class="bi bi-trash-fill"></i></button>
-                                            <ModalForm title="Chỉnh Sửa Danh Mục" icon={<i class='bi bi-pencil-square'></i>} >      
+                                            <ModalForm title="Chỉnh Sửa Danh Mục" icon={<i class='bi bi-pencil-square'></i>}>      
                                                 <Form>
                                                     <Form.Group className="mb-3" controlId="nameCategory">
                                                         <Form.Label>Tên Danh Mục</Form.Label>
