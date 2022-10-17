@@ -4,12 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import ModalForm from "../../components/Modal/Modal.js";
 import "./CategoryAdmin.css"
-import { addcategory, deletecategory } from "../../Redux/apiRequests.js";
+import { addcategory, deletecategory, updatecategory } from "../../Redux/apiRequests.js";
 import { getAllCategory} from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
 function CategoryAdmin() {
     const [categories, setCategory] = useState([]);
-    const [name, setName] = useState([]);
+    const [name, setName] = useState();
     const [isLoad, setLoaded] = useState(false);
     const [avatar, setAvatar] = useState([]);
     const [image, setImage] = useState([]);
@@ -31,8 +31,7 @@ function CategoryAdmin() {
           console.error(error);
         }
     }
-    const handleSubmitAdd = async (e) =>{
-    e.preventDefault()
+    const handleSubmitAdd = async () =>{
     if(!previewSource) {
         setMessage("Upload ít nhất 1 bức ảnh của danh mục")
     }
@@ -52,6 +51,27 @@ function CategoryAdmin() {
       setLoaded(!isLoad);
       }
     }
+    const handleSubmitUpdate = async ( index) =>{
+        let imageData 
+        if(!previewSource) {
+            imageData = categories[index].avatarCate[0].url
+        }
+        else {
+            imageData = await uploadImage(previewSource)
+        console.log(imageData)
+        imageData = imageData.map((elem, index)=>{
+            return { publicId: elem.public_id,
+              url: elem.url}
+          })
+          console.log(imageData)
+          const newCategory ={
+            nameCate: name,
+            avatarCate: imageData,
+          }
+          await updatecategory(newCategory,dispatch);
+          setLoaded(!isLoad);
+          }
+        }
     const handleFileInputChange = (e)=>{
         const file = e.target.files[0]
         setMessage("")
@@ -61,9 +81,7 @@ function CategoryAdmin() {
         previewFile(file)
         }
     }
-    const updatePrepare = (index)=>{
-        setName(categories[index].nameCate)
-    }
+  
     const previewFile = (file) =>{
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -144,11 +162,11 @@ function CategoryAdmin() {
                                         <td >{(item.avatarCate[0]) ? <img src={item.avatarCate[0].url } alt="" /> : 'noimg'}</td>
                                         <td className="controls">
                                             <button className="btn btn-primary" onClick={()=>{handleDelete(index)}}><i class="bi bi-trash-fill"></i></button>
-                                            <ModalForm title="Chỉnh Sửa Danh Mục" icon={<i class='bi bi-pencil-square'></i>}>      
+                                            <ModalForm title="Chỉnh Sửa Danh Mục" icon={<i class='bi bi-pencil-square'></i>} handleSubmit={handleSubmitUpdate}>      
                                                 <Form>
                                                     <Form.Group className="mb-3" controlId="nameCategory">
                                                         <Form.Label>Tên Danh Mục</Form.Label>
-                                                        <Form.Control onChange={(e)=>{setName(e.target.value)}} value={name} type="text" placeholder={item.nameCate} />
+                                                        <Form.Control onChange={(e)=>{setName(e.target.value)}} value={name||item.nameCate} type="text" placeholder={item.nameCate} />
                                                     </Form.Group>
                                                     <Form.Group className="mb-3" controlId="imageCategory">
                                                         <Form.Label>Ảnh Danh Mục</Form.Label>
