@@ -4,18 +4,24 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import ModalForm from "../../components/Modal/Modal.js";
 import "./CategoryAdmin.css"
-import { getAllCategory } from "../../Redux/slice/categorySlice.js";
+import { addcategory, deletecategory } from "../../Redux/apiRequests.js";
+import { getAllCategory} from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
 function CategoryAdmin() {
     const [categories, setCategory] = useState([]);
     const [name, setName] = useState([]);
+    const [isLoad, setLoaded] = useState(false);
+
     const [image, setImage] = useState([]);
     const [previewSource, setPreviewSource] = useState([]);
     const [fileInput, setFileInput] = useState();
     const [message, setMessage] = useState("");
 
     const dispatch= useDispatch();
-
+    categories.map((elem, index)=>{
+        const hi= elem.avatarCate[0]
+        if(hi) console.log(hi.url)
+    })
     async function getCategory() {
         try {
           const response = await axios.get('/api/category');
@@ -24,22 +30,33 @@ function CategoryAdmin() {
         } catch (error) {
           console.error(error);
         }
-      }
+    }
     const handleSubmitAdd = async (e) =>{
     e.preventDefault()
-    if(!previewSource || previewSource.length < 5) {
-        setMessage("Upload ít nhất 5 bức ảnh của sản phẩm")
+    if(!previewSource) {
+        setMessage("Upload ít nhất 1 bức ảnh của danh mục")
     }
     else {
     let imageData = await uploadImage(previewSource)
+    console.log(imageData)
     imageData = imageData.map((elem, index)=>{
-        return elem.url
-    })}}
+        return { publicId: elem.public_id,
+          url: elem.url}
+      })
+      console.log(imageData)
+      const newCategory ={
+        nameCate: name,
+        avatarCate: imageData,
+      }
+      await addcategory(newCategory,dispatch);
+      setLoaded(!isLoad);
+      }
+    }
     const handleFileInputChange = (e)=>{
         const file = e.target.files[0]
         setMessage("")
-        if(previewSource.length > 4) {
-          setMessage("Upload tối đa 5 bức ảnh của sản phẩm")
+        if(previewSource.length > 0) {
+          setMessage("Upload tối đa 1 bức ảnh đại diện danh mục")
         } else {
         previewFile(file)
         }
@@ -60,16 +77,36 @@ function CategoryAdmin() {
             console.error(err)
         }
     }
+    const deleteImage = async (public_id)=>{
+        try{
+        console.log(public_id)
+        const file = await axios.post("/api/uploads/destroy",{publicId: public_id});
+        } catch(err){
+            console.error(err)
+        }
+    }
+    const handleDelete = async (index)=>{
+
+        const deletedCategory ={
+          _id: categories[index]._id,
+        }
+        await deleteImage(categories[index].avatarCate[0].publicId)
+        await deletecategory(deletedCategory,dispatch);
+        setLoaded(!isLoad);
+      }
       useEffect(() => {
         getCategory()
-      },[]);
+      },[isLoad]);
     
     return ( <Admin>
         <div className="container">
             <div className="row">
                 <div className="col-12">
-                    <ModalForm title="Thêm Danh Mục">
-                        <div className="form">
+                    <div className="title text-center py-3">
+                        <h2>Danh Sách Danh Mục</h2>
+                    </div>
+                    <ModalForm title="Thêm Danh Mục" icon="+ Thêm Danh Mục" handleSubmit={handleSubmitAdd}>
+                        <div className="formCategory">
                             <Form>
                                 <Form.Group className="mb-3" controlId="nameProduct">
                                     <Form.Label>Tên Danh Mục</Form.Label>
@@ -86,12 +123,13 @@ function CategoryAdmin() {
                             </Form>
                         </div>
                     </ModalForm>
-                    <table className="table productList">
+                    <table className="table categoryList">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Image</th>
+                                <th scope="col">Controls</th>
                             </tr>
                         </thead>
                             <tbody>
@@ -99,10 +137,24 @@ function CategoryAdmin() {
                                     <tr className="item" key={item._id}>
                                         <th scope="row">{index + 1}</th>
                                         <td className="name">{item.nameCate}</td>
-                                        <td className="img-wrap">hihi</td>
-                                        <td className="delete">
-                                            <button>delete</button>
-                                            <ModalForm title="Edit">                                         
+                                        <td >{(item.avatarCate[0]) ? <img src={item.avatarCate[0].url } alt="" /> : 'noimg'}</td>
+                                        <td className="controls">
+                                            <button className="btn btn-primary" onClick={()=>{handleDelete(index)}}><i class="bi bi-trash-fill"></i></button>
+                                            <ModalForm title="Chỉnh Sửa Danh Mục" icon={<i class='bi bi-pencil-square'></i>} >      
+                                                <Form>
+                                                    <Form.Group className="mb-3" controlId="nameCategory">
+                                                        <Form.Label>Tên Danh Mục</Form.Label>
+                                                        <Form.Control onChange={(e)=>{setName(e.target.value)}} value={name} type="text" placeholder={item.nameCate} />
+                                                    </Form.Group>
+                                                    <Form.Group className="mb-3" controlId="imageCategory">
+                                                        <Form.Label>Ảnh Danh Mục</Form.Label>
+                                                        <Form.Control onChange={(e) => handleFileInputChange(e)} value={fileInput} type="file"/>
+                                                        {previewSource &&  previewSource.map((image, index) => {
+                                                        return(<img src={image} key={index} style={{height:'50px', width: '50px'}} alt="" /> )
+                                                        })}
+                                                        <p>{message}</p> 
+                                                    </Form.Group>                                 
+                                                </Form>                                   
                                             </ModalForm>
                                         </td>
                                     </tr>

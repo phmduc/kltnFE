@@ -8,7 +8,7 @@ function ModalForm(props) {
     return ( 
         <>
       <Button variant="primary" onClick={handleShow}>
-        {props.title}
+        {props.icon}
       </Button>
 
       <Modal show={show} onHide={handleClose}>
@@ -22,7 +22,7 @@ function ModalForm(props) {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={props.handleSubmit}>
             Save Changes
           </Button>
         </Modal.Footer>

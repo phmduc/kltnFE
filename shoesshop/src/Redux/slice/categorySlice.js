@@ -4,16 +4,31 @@ import { act } from "react-dom/test-utils";
 export const categorySlice = createSlice({
     name:"category",
     initialState:{
-        category:[
+        cate:[
         ],
     },
     reducers:{
         getAllCategory: (state, action) => {
             state.category=action.payload;
         },
-        // addProduct: (state, action) => {
-        //     state.products=[...state.products, action.payload];
-        // },
+        addCategory: (state, action) => {
+            state.category=[...state.category, action.payload];
+        },
+        deleteCategory:(state, action)=>{
+            state.category.forEach((item, index)=>{
+                if(item.ID === action.payload.ID){
+                    state.category.splice(index,1)
+                }
+            })
+        },
+        updateCategory:(state, action)=>{
+            state.category.forEach((item, index)=>{
+                if(item.ID === action.payload.ID){
+                    item.nameCate=action.payload.nameCate
+                    item.avatarCate= action.payload.avatarCate
+                }
+            })
+        },
         // updateProduct:(state, action)=>{
         //     state.products.forEach((item, index)=>{
         //         if(item.ID === action.payload.ID){
@@ -35,6 +50,6 @@ export const categorySlice = createSlice({
     }
 })
 
-export const {getAllCategory} = categorySlice.actions;
+export const {getAllCategory, addCategory, deleteCategory, updateCategory} = categorySlice.actions;
 
 export default categorySlice.reducer;   

@@ -48,14 +48,18 @@ function Products() {
       }
       else {
       let imageData = await uploadImage(previewSource)
-      imageData = imageData.map((elem, index)=>{
-        return elem.url
+      console.log(imageData)
+
+      imageData = imageData.data.map((elem, index)=>{
+        return { publicId: elem.public_id,
+          url: elem.url}
       })
+      console.log(imageData)
       const newProduct ={
         name: name,
         desc: desc,
-        image: imageData.join(","),
-        idCate: cate,
+        image: imageData,
+        cate: {idCate: '6346d74571d0cc8330507e57', nameCate: cate},
         user: user,
         price: price,
         size: size
@@ -96,7 +100,8 @@ function Products() {
       let file
       try{
       file = await axios.post("/api/uploads",{file: base64EncodedImage});
-      return file.data
+      console.log(file)
+      return file
       } catch(err){
         console.error(err)
       }
@@ -124,7 +129,7 @@ function Products() {
                 {body.map((item, index) =>(
                   <div className="item"  key={item._id}>
                     <Link to={`/products/${item._id}`}>{item.name}</Link> 
-                    <img src={item.image.split(',')[0]} alt="" />
+                    <img src={item.image[0].url} alt="" />
                     <button onClick={()=>(updatePrepare(index))}>update</button> 
                     <button onClick={()=>(handleDelete(index))}>delete</button></div>
                 )) }
@@ -151,10 +156,6 @@ function Products() {
                     <Form.Group className="mb-3" controlId="descProduct">
                         <Form.Label>Cate</Form.Label>
                         <Form.Control onChange={(e)=>{setCate(e.target.value)}} value={cate||""}  type="text" placeholder="Enter  Description" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="descProduct">
-                        <Form.Label>User</Form.Label>
-                        <Form.Control onChange={(e)=>{setUser(e.target.value)}} value={user||""}  type="text" placeholder="Enter  Description" />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="sizeProduct">
                         <Form.Label>Size</Form.Label>

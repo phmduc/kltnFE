@@ -10,6 +10,7 @@ import "./ProductAdmin.css"
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form, Button } from "react-bootstrap";
 function ProductAdmin() {
+    const listCate = useSelector((state)=>state.category.category)
     const [isLoad, setLoaded] = useState(false);
     const [body, setBody] = useState([]);
     const [ID, setID] = useState("");
@@ -17,9 +18,9 @@ function ProductAdmin() {
     const [cate, setCate] = useState("");
     const [user, setUser] = useState("");
     const [desc, setDesc] = useState("");
-    const [image, setImage] = useState([]);
     const [price, setPrice] = useState(0);
     const [size, setSize] = useState([]);
+    const [image, setImage] = useState([]);
     const [previewSource, setPreviewSource] = useState([]);
     const [fileInput, setFileInput] = useState();
     const [message, setMessage] = useState("");
@@ -28,7 +29,10 @@ function ProductAdmin() {
 
     const [products, setProducts] = useState([]);
     const dispatch= useDispatch();
-
+    console.log(listCate)
+    listCate.map((cate, index) => {
+      console.log(cate.nameCate)
+    })
     async function getProducts() {
         try {
           const response = await axios.get('/api/products');
@@ -41,16 +45,6 @@ function ProductAdmin() {
       useEffect(() => {
         getProducts()
       },[]);
-        
-    async function getProducts() {
-        try {
-          const response = await axios.get('/api/products');
-          dispatch(getAllProduct(response.data))
-          setProducts(response.data)
-        } catch (error) {
-          console.error(error);
-        }
-      }
 
     const handleSubmitAdd = async (e) =>{
       e.preventDefault()
@@ -154,7 +148,11 @@ function ProductAdmin() {
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="descProduct">
                                     <Form.Label>Cate</Form.Label>
-                                    <Form.Control onChange={(e)=>{setCate(e.target.value)}} value={cate||""}  type="text" placeholder="Enter  Description" />
+                                    <Form.Select aria-label="Default select example">
+                                    <option>Chọn Danh Mục</option>
+                                    {listCate.map((cate, index) => <option key={index} value={cate._id}>{cate.nameCate}</option>
+                                    )}
+                                    </Form.Select>
                                 </Form.Group>
                                 <Form.Group className="mb-3" controlId="sizeProduct">
                                     <Form.Label>Size</Form.Label>
