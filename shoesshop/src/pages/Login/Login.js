@@ -31,7 +31,38 @@ function Login() {
         }
      }
      console.log(loginStatus)
-    return ( <div>Code Here</div> )
+    return ( <div>
+      <section className="login">
+         <div className="container">
+            <form>
+                <h1>Đăng nhập tại đây</h1>
+                <div className="form-group">
+                  <p>Email</p>
+                  <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"></input>
+                </div>
+                <div className="form-group">
+                  <p>Mật khẩu</p>
+                  <input type="password" className="form-control" id="exampleInputPassword1"></input>
+                </div>
+                <div className="form-group form-check">
+                  <input type="checkbox" id="exampleCheck1"></input>
+                  <div className="save-forget">
+                    <label className="form-check-label" htmlFor="exampleCheck1">Nhớ mật khẩu</label>
+                    <a href="#">Quên mật khẩu ?</a>
+                  </div>
+                </div>
+                <div className="btn-group">
+                    <button type="submit" className="btn btn-dark">Đăng nhập</button>
+                    <button type="submit" className="btn btn-warning">Đăng ký</button>
+                    <button type="submit" className="btn btn-light">
+                        <i className="bi bi-facebook"></i>
+                        Sign in with Facebook
+                    </button>
+                </div>
+            </form>
+         </div>    
+      </section>
+    </div> )
  }
 
 
