@@ -56,6 +56,7 @@ export const deletecategory = async (category, dispatch)=>{
 }
 export const updatecategory = async (category, dispatch)=>{ 
     try{
+        console.log(category._id)
         const res = await axios.put("/api/category/"+category._id, category);
         dispatch(updateCategory(res.data));
     } catch(err){   
