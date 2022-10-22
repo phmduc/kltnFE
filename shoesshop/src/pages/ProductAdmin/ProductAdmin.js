@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ModalForm from "../../components/Modal/Modal.js";
+import { validation } from "../../js/validation.js";
 import {
   addproduct,
   updateproduct,
@@ -16,7 +17,6 @@ import { Form, Button } from "react-bootstrap";
 function ProductAdmin() {
   const listCate = useSelector((state) => state.category.category);
   const [isLoad, setLoaded] = useState(false);
-  const [body, setBody] = useState([]);
   const [ID, setID] = useState("");
   const [name, setName] = useState("");
   const [cate, setCate] = useState("");
@@ -33,10 +33,7 @@ function ProductAdmin() {
 
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
-  console.log(listCate);
-  listCate.map((cate, index) => {
-    console.log(cate.nameCate);
-  });
+
   async function getProducts() {
     try {
       const response = await axios.get("/api/products");
@@ -50,47 +47,66 @@ function ProductAdmin() {
     getProducts();
   }, []);
 
-  const handleSubmitAdd = async (e) => {
-    e.preventDefault();
-    if (!previewSource || previewSource.length < 5) {
-      setMessage("Upload ít nhất 5 bức ảnh của sản phẩm");
-    } else {
-      let imageData = await uploadImage(previewSource);
-      imageData = imageData.map((elem, index) => {
-        return elem.url;
-      });
-      const newProduct = {
-        name: name,
-        desc: desc,
-        image: imageData.join(","),
-        Cate: cate,
-        price: price,
-        size: size,
-      };
-      await addproduct(newProduct, dispatch);
-      setLoaded(!isLoad);
+  const handleSubmitAdd = async () => {
+    if (
+      validation.validateName(name) &&
+      validation.validateCate(cate) &&
+      validation.validatePrice(price) &&
+      validation.validateSize(size)
+    ) {
+      if (previewSource.length < 5) {
+        setMessage("Vui Lòng Nhập Đủ 5 Bức Ảnh");
+      } else {
+        let imageData = await uploadImage(previewSource);
+        imageData = imageData.map((elem, index) => {
+          return { publicId: elem.public_id, url: elem.url };
+        });
+        const newProduct = {
+          name: name,
+          desc: desc,
+          image: imageData,
+          cate: {
+            idCate: listCate[cate]._id,
+            nameCate: listCate[cate].nameCate,
+          },
+          price: price,
+          size: size,
+        };
+
+        await addproduct(newProduct, dispatch);
+        setLoaded(!isLoad);
+      }
     }
   };
   const updatePrepare = (index) => {
-    setID(body[index]._id);
-    setName(body[index].name);
-    setDesc(body[index].desc);
-    setImage(body[index].image);
-    setPrice(body[index].price);
+    setID(products[index]._id);
+    setName(products[index].name);
+    setDesc(products[index].desc);
+    setImage(products[index].image);
+    setPrice(products[index].price);
   };
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     setMessage("");
     if (previewSource.length > 4) {
-      setMessage("Upload tối đa 5 bức ảnh của sản phẩm");
+      return;
     } else {
       previewFile(file);
     }
   };
   const previewSize = () => {
     const sizeInput = inputSize.current.value;
-    const countInput = inputCount.current.value;
-    setSize([...size, { sizeId: sizeInput, count: countInput }]);
+    const countInput = Number(inputCount.current.value);
+    console.log(typeof countInput);
+    if (sizeInput && countInput) {
+      if (inputCount.current.value > 0 && Number.isInteger(countInput)) {
+        setSize([...size, { sizeId: sizeInput, count: countInput }]);
+        inputSize.current.value = "";
+        inputCount.current.value = "";
+      } else {
+        inputCount.current.value = "Không Hợp Lệ";
+      }
+    }
   };
   const previewFile = (file) => {
     const reader = new FileReader();
@@ -121,7 +137,7 @@ function ProductAdmin() {
   };
   const handleDelete = async (index) => {
     const deletedProduct = {
-      _id: body[index]._id,
+      _id: products[index]._id,
     };
     await deleteproduct(deletedProduct, dispatch);
     setLoaded(!isLoad);
@@ -131,7 +147,11 @@ function ProductAdmin() {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <ModalForm title="Thêm Sản Phẩm">
+            <ModalForm
+              title="Thêm Sản Phẩm"
+              icon="+ Thêm Sản Phẩm"
+              handleSubmit={handleSubmitAdd}
+            >
               <div className="form">
                 <Form>
                   <Form.Group className="mb-3" controlId="nameProduct">
@@ -142,29 +162,48 @@ function ProductAdmin() {
                       }}
                       value={name || ""}
                       type="text"
-                      placeholder="Enter Name Product"
+                      placeholder="Tên sản phẩm"
                     />
+                    {validation.validateName(name) !== true ? (
+                      <p className="message">{validation.validateName(name)}</p>
+                    ) : null}
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="imageProduct">
                     <Form.Label>Ảnh Sản Phẩm (Tối đa 5 bức)</Form.Label>
                     <Form.Control
+                      className="custom-file-input"
+                      id="imageInputProduct"
                       onChange={(e) => handleFileInputChange(e)}
                       value={fileInput}
                       type="file"
-                      placeholder="Enter Product Image"
                     />
-                    {previewSource &&
-                      previewSource.map((image, index) => {
-                        return (
-                          <img
-                            src={image}
-                            key={index}
-                            style={{ height: "50px", width: "50px" }}
-                            alt=""
-                          />
-                        );
-                      })}
-                    <p>{message}</p>
+                    <label class="inputButton" htmlFor="imageInputProduct">
+                      + Thêm ảnh
+                    </label>
+                    {validation.validateImage(previewSource) !== true ? (
+                      <p className="message">
+                        {validation.validateImage(previewSource)}
+                      </p>
+                    ) : null}
+                    <div className="listPreview d-flex">
+                      {previewSource &&
+                        previewSource.map((image, index) => {
+                          return (
+                            <div key={index} className="item">
+                              <div className="img-wrap">
+                                <img src={image} alt="" />
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    previewSource.splice(index, 1);
+                                    setLoaded(!isLoad);
+                                  }}
+                                ></button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="descProduct">
                     <Form.Label>Mô Tả</Form.Label>
@@ -174,23 +213,32 @@ function ProductAdmin() {
                       }}
                       value={desc || ""}
                       type="text"
-                      placeholder="Enter  Description"
+                      placeholder="Thêm mô tả"
                     />
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="descProduct">
-                    <Form.Label>Cate</Form.Label>
-                    <Form.Select aria-label="Default select example">
-                      <option>Chọn Danh Mục</option>
+                    <Form.Label>Tên Danh Mục</Form.Label>
+                    <Form.Select
+                      aria-label="Default select example"
+                      onChange={(e) => {
+                        setCate(e.target.value);
+                      }}
+                    >
+                      <option value="novalue">Chọn Danh Mục</option>
                       {listCate.map((cate, index) => (
-                        <option key={index} value={cate._id}>
+                        <option key={index} value={index}>
                           {cate.nameCate}
                         </option>
                       ))}
                     </Form.Select>
+                    {validation.validateCate(cate) !== true ? (
+                      <p className="message">{validation.validateCate(cate)}</p>
+                    ) : null}
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="sizeProduct">
                     <Form.Label>Size</Form.Label>
-                    <div className="d-flex ">
+
+                    <div className="d-flex input-size ">
                       <Form.Control
                         ref={inputSize}
                         type="text"
@@ -202,6 +250,9 @@ function ProductAdmin() {
                         placeholder="Enter Count"
                       />
                     </div>
+                    {validation.validateSize(size) !== true ? (
+                      <p className="message">{validation.validateSize(size)}</p>
+                    ) : null}
                     {size.map((elem, index) => {
                       return (
                         <div
@@ -209,12 +260,20 @@ function ProductAdmin() {
                           key={index}
                           style={{ display: "flex" }}
                         >
-                          <p> {elem.sizeId}:</p>
-                          <p>{elem.count}</p>
+                          <p>Size: {elem.sizeId} - </p>
+                          <p> {elem.count} Đôi</p>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              size.splice(index, 1);
+                              setLoaded(!isLoad);
+                            }}
+                          ></button>
                         </div>
                       );
                     })}
                     <Button
+                      className="my-2"
                       onClick={() => {
                         previewSize();
                       }}
@@ -232,6 +291,11 @@ function ProductAdmin() {
                       type="text"
                       placeholder="Enter Product Price"
                     />
+                    {validation.validatePrice(price) !== true ? (
+                      <p className="message">
+                        {validation.validatePrice(price)}
+                      </p>
+                    ) : null}
                   </Form.Group>
                 </Form>
               </div>
@@ -255,11 +319,11 @@ function ProductAdmin() {
                     <th scope="row">{index + 1}</th>
                     <td className="name">{item.name}</td>
                     <td className="img-wrap">
-                      <img src={item.image.split(",")[0]} alt="" />
+                      <img src={item.image[0].url} alt="" />
                     </td>
                     <td className="price">{item.price}</td>
                     <td className="description">{item.desc}</td>
-                    <td className="cate">{item.Cate}</td>
+                    <td className="cate">{item.Cate.nameCate}</td>
                     <td className="size">
                       {item.size.map(
                         (size, index) =>
@@ -267,8 +331,14 @@ function ProductAdmin() {
                       )}
                     </td>
                     <td className="delete">
-                      <button>delete</button>
-                      <ModalForm title="Edit"></ModalForm>
+                      <button
+                        onClick={() => {
+                          handleDelete(index);
+                        }}
+                      >
+                        delete
+                      </button>
+                      <ModalForm title="Edit" icon=""></ModalForm>
                     </td>
                   </tr>
                 ))}

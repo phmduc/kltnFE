@@ -1,34 +1,40 @@
-.productList .item{
-    align-items: center
+.productList .item {
+  align-items: center;
 }
-.productList .item td{
-    vertical-align: middle;
-    width: calc(100% / 6);
+.productList .item td {
+  vertical-align: middle;
+  width: calc(100% / 6);
 }
-.productList .item td.name{
-    width: 15%
+.productList .item td.name {
+  width: 15%;
 }
-.productList .item td.img-wrap{
-    width: 10%
+.productList .item td.img-wrap {
+  width: 10%;
 }
-.productList .item td.price{
-    width: 10%
+.productList .item td.price {
+  width: 10%;
 }
-.productList .item td.cate{
-    width: 10%
+.productList .item td.cate {
+  width: 10%;
 }
-.productList .item td.size{
-    width: 20%
+.productList .item td.size {
+  width: 20%;
 }
-.productList .item td.delete{
-    width: 5%
+.productList .item td.delete {
+  width: 5%;
 }
-.productList .item td.description{
-    width: 25%
+.productList .item td.description {
+  width: 25%;
 }
-.productList .item th{
-    vertical-align: middle;
+.productList .item th {
+  vertical-align: middle;
 }
-.productList .item td.img-wrap{
-    padding-top: 7%;
+.productList .item td.img-wrap {
+  padding-top: 7%;
+}
+.input-size {
+  gap: 1rem;
+}
+.message {
+  color: red;
 }
