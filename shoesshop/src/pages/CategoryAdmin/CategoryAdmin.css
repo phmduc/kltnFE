@@ -30,7 +30,7 @@
   width: 90px;
   height: 90px;
 }
-.categoryList tbody td.controls button {
+.categoryList tbody td.controls button:not(:last-child) {
   margin-right: 1rem;
 }
 .custom-file-input {
@@ -51,9 +51,29 @@
   font-weight: 700;
   font-size: 1rem;
 }
-.listPreview {
+.categoryManage .listPreview {
   gap: 1rem;
 }
-.listPreview .item {
+.categoryManage .listPreview .item {
   width: 100%;
+}
+.categoryManage .listPreview .clearImgButton {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  background: var(--primary);
+  right: 0;
+  border: none;
+  border-radius: 50%;
+  color: white;
+}
+.categoryManage .listPreview .clearImgButton {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  background: var(--primary);
+  right: 0;
+  border: none;
+  border-radius: 50%;
+  color: white;
 }

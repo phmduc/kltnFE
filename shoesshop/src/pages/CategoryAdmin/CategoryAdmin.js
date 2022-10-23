@@ -11,6 +11,7 @@ import {
 } from "../../Redux/apiRequests.js";
 import { getAllCategory } from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
+import { loading, unLoadding } from "../../Redux/slice/loading.js";
 
 function CategoryAdmin() {
   const [categories, setCategory] = useState([]);
@@ -24,7 +25,6 @@ function CategoryAdmin() {
     setName();
     setFileInput();
   }, [isLoad]);
-  console.log(previewSource);
   const dispatch = useDispatch();
   async function getCategory() {
     try {
@@ -39,17 +39,17 @@ function CategoryAdmin() {
     if (previewSource.length === 0) {
       setMessage("Upload ít nhất 1 bức ảnh của danh mục");
     } else {
+      dispatch(loading());
       let imageData = await uploadImage(previewSource);
-      console.log(imageData);
       imageData = imageData.map((elem, index) => {
         return { publicId: elem.public_id, url: elem.url };
       });
-      console.log(imageData);
       const newCategory = {
         nameCate: name,
         avatarCate: imageData,
       };
       await addcategory(newCategory, dispatch);
+      dispatch(unLoadding());
       setPreviewSource([]);
       setLoaded(!isLoad);
     }
@@ -118,9 +118,14 @@ function CategoryAdmin() {
     const deletedCategory = {
       _id: categories[index]._id,
     };
-    await deleteImage(categories[index].avatarCate[0].publicId);
-    await deletecategory(deletedCategory, dispatch);
+    dispatch(loading());
+
+    Promise.all([
+      await deleteImage(categories[index].avatarCate[0].publicId),
+      await deletecategory(deletedCategory, dispatch),
+    ]);
     setLoaded(!isLoad);
+    dispatch(unLoadding());
   };
   return (
     <Admin>
@@ -230,9 +235,11 @@ function CategoryAdmin() {
                               <Form.Label>Tên Danh Mục</Form.Label>
                               <Form.Control
                                 onChange={(e) => {
-                                  setName(e.target.value);
+                                  e.target.value != ""
+                                    ? setName(e.target.value)
+                                    : setName(item.nameCate);
                                 }}
-                                value={name || item.nameCate}
+                                value={name}
                                 type="text"
                                 placeholder={item.nameCate}
                               />

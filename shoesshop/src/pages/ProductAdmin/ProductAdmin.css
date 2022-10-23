@@ -20,7 +20,7 @@
 .productList .item td.size {
   width: 20%;
 }
-.productList .item td.delete {
+.productList .item td.controls {
   width: 5%;
 }
 .productList .item td.description {
@@ -37,4 +37,48 @@
 }
 .message {
   color: red;
+}
+.formProduct .listPreview .item {
+  width: 20%;
+}
+.formProduct .listPreview {
+  color: white;
+}
+.formProduct .sizewrap .clearSize {
+  background-color: var(--primary);
+  border: none;
+  color: white;
+}
+.formProduct .sizewrap {
+  border: 1px solid var(--primary);
+  padding: 0.2rem 0;
+  padding-left: 1rem;
+}
+.formProduct .listPreview {
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.formProduct .listPreview .clearImgButton {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  background: var(--primary);
+  right: 0;
+  border: none;
+  border-radius: 50%;
+  color: white;
+}
+.productList tbody td.controls button:not(:last-child) {
+  margin-bottom: 1rem;
+}
+.formProduct .listPreview .clearImgButton {
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  background: var(--primary);
+  right: 0;
+  border: none;
+  border-radius: 50%;
+  color: white;
 }

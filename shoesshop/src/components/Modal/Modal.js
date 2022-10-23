@@ -30,7 +30,6 @@ function ModalForm(props) {
             variant="primary"
             onClick={() => {
               props.handleSubmit();
-              setShow(false);
             }}
           >
             Save Changes

@@ -1,6 +1,6 @@
 export const validation = {
   validateName: function (name) {
-    if (!name || name === "") {
+    if (name === "") {
       return "Phần này không được bỏ trống";
     } else return true;
   },
@@ -15,7 +15,6 @@ export const validation = {
     }
   },
   validatePrice: function (name) {
-    console.log(Number(name) < 0);
     if (!name || name === "") {
       return "Phần này không được bỏ trống";
     } else if (Number(name) < 0 || Number.isInteger(Number(name)) === false) {
@@ -34,16 +33,6 @@ export const validation = {
   validateSize: function (name) {
     if (!name || name.length === 0) {
       return "Thêm ít nhất 1 Size cho sản phẩm";
-    } else {
-      return true;
-    }
-  },
-  validateImage: function (name, number) {
-    console.log(name);
-    if (!name || name.length === 0) {
-      return "Thêm ít nhất 1 tấm hình cho sản phẩm";
-    } else if (name.length > 5) {
-      return "Thêm tối đa 5 tấm hình cho sản phẩm";
     } else {
       return true;
     }
