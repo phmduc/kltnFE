@@ -19,7 +19,7 @@ function ProductAdmin() {
   const listCate = useSelector((state) => state.category.category);
   const [isLoad, setLoaded] = useState(false);
   const [ID, setID] = useState("");
-  const [name, setName] = useState();
+  const [name, setName] = useState("");
   const [cate, setCate] = useState("");
   const [user, setUser] = useState("");
   const [desc, setDesc] = useState("");
@@ -32,7 +32,6 @@ function ProductAdmin() {
   const [message, setMessage] = useState("");
   const inputSize = useRef();
   const inputCount = useRef();
-
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
 
@@ -47,48 +46,48 @@ function ProductAdmin() {
   }
   useEffect(() => {
     getProducts();
+    dispatch(unLoadding());
   }, [isLoad]);
 
   const handleSubmitAdd = async () => {
     if (
-      validation.validateName(name) != true &&
-      validation.validateCate(cate) != true &&
-      validation.validatePrice(price) != true &&
-      validation.validateSize(size) != true
+      validation.validateName(name) === true &&
+      validation.validateCate(cate) === true &&
+      validation.validatePrice(price) === true &&
+      validation.validateSize(size) === true
     ) {
-      setMessage("Thông tin chưa hợp lệ");
-    } else if (
-      products.find(function (product, index) {
-        return product.name === name;
-      })
-    ) {
-      setMessage("Sản phẩm đã tồn tại");
-    } else {
-      if (previewSource.length < 5) {
-        setImgMessage("Vui Lòng Nhập Đủ 5 Bức Ảnh");
-        return false;
+      if (
+        products.find(function (product, index) {
+          return product.name === name;
+        })
+      ) {
+        setMessage("Sản phẩm đã tồn tại");
       } else {
-        dispatch(loading());
-        let imageData = await uploadImage(previewSource);
-        imageData = imageData.map((elem, index) => {
-          return { publicId: elem.public_id, url: elem.url };
-        });
-        const newProduct = {
-          name: name,
-          desc: desc,
-          image: imageData,
-          cate: {
-            idCate: listCate[cate]._id,
-            nameCate: listCate[cate].nameCate,
-          },
-          price: price,
-          size: size,
-        };
+        if (previewSource.length < 5) {
+          setImgMessage("Vui Lòng Nhập Đủ 5 Bức Ảnh");
+          return false;
+        } else {
+          dispatch(loading());
+          let imageData = await uploadImage(previewSource);
+          imageData = imageData.map((elem, index) => {
+            return { publicId: elem.public_id, url: elem.url };
+          });
+          const newProduct = {
+            name: name,
+            desc: desc,
+            image: imageData,
+            idCate: cate,
+            price: price,
+            size: size,
+          };
 
-        await addproduct(newProduct, dispatch);
-        dispatch(unLoadding());
-        setLoaded(!isLoad);
+          await addproduct(newProduct, dispatch);
+          dispatch(unLoadding());
+          setLoaded(!isLoad);
+        }
       }
+    } else {
+      setMessage("Thông tin chưa hợp lệ");
     }
   };
   const updatePrepare = (index) => {
@@ -170,7 +169,153 @@ function ProductAdmin() {
                 icon="+ Thêm Sản Phẩm"
                 handleSubmit={handleSubmitAdd}
               >
-                <div className="formProduct"></div>
+                <div className="formProduct">
+                  {!message || <span className="message">{message}</span>}
+                  <form>
+                    <div className="form-group">
+                      <label htmlFor="nameProduct">Tên sản phẩm</label>
+                      <input
+                        onChange={(e) => setName(e.target.value)}
+                        value={name}
+                        type="text"
+                        className="form-control"
+                        id="nameProduct"
+                        placeholder="Nhập tên sản phẩm"
+                      />
+                    </div>
+                    <div className="group-flex d-flex">
+                      <div className="form-group">
+                        <label htmlFor="cate">Danh Mục</label>
+                        <Form.Select
+                          onChange={(e) => setCate(e.target.value)}
+                          value={cate}
+                        >
+                          <option>Chọn danh mục...</option>
+                          {listCate.map((elem, index) => {
+                            return (
+                              <option key={index} value={elem._id}>
+                                {elem.nameCate}
+                              </option>
+                            );
+                          })}
+                        </Form.Select>
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="priceProduct">Giá sản phẩm</label>
+                        <input
+                          onChange={(e) => setPrice(e.target.value)}
+                          value={price}
+                          type="text"
+                          className="form-control"
+                          id="priceProduct"
+                          placeholder="Nhập giá sản phẩm"
+                        />
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label>Ảnh sản phẩm</label>
+                      <input
+                        type="file"
+                        onChange={(e) => handleFileInputChange(e)}
+                        value={fileInput}
+                        id="fileProduct"
+                      />
+                      <div className="listPreview d-flex">
+                        {!previewSource ||
+                          previewSource.map((image, index) => {
+                            return (
+                              <div key={index} className="item img-wrap">
+                                <img src={image} alt="" />
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    previewSource.splice(index, 1);
+                                    setFileInput([]);
+                                    setLoaded(!isLoad);
+                                  }}
+                                >
+                                  X
+                                </button>
+                              </div>
+                            );
+                          })}
+                      </div>
+
+                      <label className="fileLabel" htmlFor="fileProduct">
+                        + Thêm Ảnh
+                      </label>
+                    </div>
+                    <div className="group-flex d-flex flex-wrap">
+                      <div className="form-group">
+                        <label htmlFor="sizeProduct">Size</label>
+                        <input
+                          ref={inputSize}
+                          type="text"
+                          className="form-control"
+                          id="sizeProduct"
+                          placeholder="Nhập size"
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="countProduct">Số lượng</label>
+                        <input
+                          ref={inputCount}
+                          type="text"
+                          className="form-control"
+                          id="countProduct"
+                          placeholder="Nhập số lượng"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        className="addsize btn mt-2"
+                        onClick={() => {
+                          previewSize();
+                        }}
+                      >
+                        Thêm size
+                      </button>
+
+                      <div className="sizePreview mt-2 ">
+                        {!size ||
+                          size.map((item, index) => {
+                            return (
+                              <div
+                                key={index}
+                                className="sizewrap d-flex justify-content-between align-items-center"
+                              >
+                                <span>Size: {item.sizeId} </span>
+                                <span>Số lượng: {item.count} </span>
+
+                                <button
+                                  className="btn"
+                                  type="button"
+                                  onClick={(e) => {
+                                    size.splice(index, 1);
+                                    setFileInput([]);
+                                    setLoaded(!isLoad);
+                                  }}
+                                >
+                                  X
+                                </button>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="descProduct">Mô tả</label>
+                      <textarea
+                        onChange={(e) => setDesc(e.target.value)}
+                        value={desc}
+                        type="text"
+                        className="form-control"
+                        id="descProduct"
+                        placeholder="Nhập mô tả"
+                      />
+                    </div>
+                  </form>
+                </div>
               </ModalForm>
               <table className="table productList">
                 <thead>
@@ -193,9 +338,15 @@ function ProductAdmin() {
                       <td className="img-wrap">
                         <img src={item.image[0].url} alt="" />
                       </td>
-                      <td className="price">{item.price}</td>
+                      <td className="price">{item.price}đ</td>
                       <td className="description">{item.desc}</td>
-                      <td className="cate"></td>
+                      <td className="cate">
+                        {listCate.map((elem, index) => {
+                          if (elem._id === item.idCate) {
+                            return elem.nameCate;
+                          }
+                        })}
+                      </td>
                       <td className="size">
                         {item.size.map(
                           (size, index) =>

@@ -1,7 +1,8 @@
 import Admin from "../../layouts/Admin/Admin.js";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import "draft-js/dist/Draft.css";
 import ModalForm from "../../components/Modal/Modal.js";
 import "./CategoryAdmin.css";
 import {
@@ -9,6 +10,7 @@ import {
   deletecategory,
   updatecategory,
 } from "../../Redux/apiRequests.js";
+import { Editor, EditorState } from "draft-js";
 import { getAllCategory } from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
@@ -16,6 +18,8 @@ import { loading, unLoadding } from "../../Redux/slice/loading.js";
 function CategoryAdmin() {
   const [categories, setCategory] = useState([]);
   const [name, setName] = useState();
+  const [desc, setDesc] = useState(() => EditorState.createEmpty());
+
   const [isLoad, setLoaded] = useState(false);
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
@@ -54,6 +58,12 @@ function CategoryAdmin() {
       setLoaded(!isLoad);
     }
   };
+  const resetInput = async () => {
+    setName();
+    setPreviewSource([]);
+    setFileInput();
+  };
+
   const handleSubmitUpdate = async (index) => {
     let imageData;
     let newName;
@@ -86,6 +96,7 @@ function CategoryAdmin() {
       setMessage("Upload tối đa 1 bức ảnh đại diện danh mục");
     } else {
       previewFile(file);
+      setFileInput([]);
     }
   };
   const previewFile = (file) => {
@@ -140,6 +151,7 @@ function CategoryAdmin() {
                 title="Thêm Danh Mục"
                 icon="+ Thêm Danh Mục"
                 handleSubmit={handleSubmitAdd}
+                reset={resetInput}
               >
                 <div className="formCategory">
                   <Form>
@@ -187,6 +199,7 @@ function CategoryAdmin() {
                       </div>
                       <p>{message}</p>
                     </Form.Group>
+                    <Editor editorState={desc} />
                   </Form>
                 </div>
               </ModalForm>
@@ -222,64 +235,74 @@ function CategoryAdmin() {
                         </button>
                         <ModalForm
                           title="Chỉnh Sửa Danh Mục"
+                          reset={resetInput}
                           icon={<i className="bi bi-pencil-square"></i>}
                           handleSubmit={() => {
                             handleSubmitUpdate(index);
                           }}
                         >
-                          <Form>
-                            <Form.Group
-                              className="mb-3"
-                              controlId="nameCategory"
-                            >
-                              <Form.Label>Tên Danh Mục</Form.Label>
-                              <Form.Control
-                                onChange={(e) => {
-                                  e.target.value != ""
-                                    ? setName(e.target.value)
-                                    : setName(item.nameCate);
-                                }}
-                                value={name}
-                                type="text"
-                                placeholder={item.nameCate}
-                              />
-                            </Form.Group>
-                            <Form.Group
-                              className="mb-3"
-                              controlId="imageCategory"
-                            >
-                              <Form.Label>Ảnh Danh Mục</Form.Label>
-                              <Form.Control
-                                onChange={(e) => handleFileInputChange(e)}
-                                value={fileInput}
-                                type="file"
-                              />
-                              {!previewSource ||
-                                previewSource.map((image, index) => {
-                                  return (
-                                    <div key={index} className="listPreview">
-                                      <img
-                                        src={image}
-                                        style={{
-                                          height: "50px",
-                                          width: "50px",
-                                        }}
-                                        alt=""
-                                      />
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          previewSource.splice(index, 1);
-                                          setFileInput([]);
-                                          setLoaded(!isLoad);
-                                        }}
-                                      ></button>
+                          <div className="formCategory">
+                            <Form>
+                              <Form.Group
+                                className="mb-3"
+                                controlId="nameCategory"
+                              >
+                                <Form.Label>Tên Danh Mục</Form.Label>
+                                <Form.Control
+                                  onChange={(e) => {
+                                    e.target.value != ""
+                                      ? setName(e.target.value)
+                                      : setName(item.nameCate);
+                                  }}
+                                  value={name}
+                                  type="text"
+                                  placeholder={item.nameCate}
+                                />
+                              </Form.Group>
+                              <Form.Group
+                                className="mb-3"
+                                controlId="imageCategory"
+                              >
+                                <Form.Label>Ảnh Danh Mục</Form.Label>
+                                <Form.Control
+                                  onChange={(e) => handleFileInputChange(e)}
+                                  value={fileInput}
+                                  type="file"
+                                />
+                                <div className="listPreview d-flex">
+                                  {previewSource.length !== 0 ? (
+                                    previewSource.map((image, index) => {
+                                      return (
+                                        <div key={index} className="item">
+                                          <div className="img-wrap">
+                                            <img src={image} alt="" />
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                previewSource.splice(index, 1);
+                                                setLoaded(!isLoad);
+                                              }}
+                                            ></button>
+                                          </div>
+                                        </div>
+                                      );
+                                    })
+                                  ) : (
+                                    <div className="item">
+                                      <div className="img-wrap">
+                                        <img
+                                          src={item.avatarCate[0].url}
+                                          alt=""
+                                        />
+                                      </div>
                                     </div>
-                                  );
-                                })}
-                              <p>{message}</p>
-                            </Form.Group>
-                          </Form>
+                                  )}
+                                </div>
+                                <p>{message}</p>
+                              </Form.Group>
+                              ;
+                            </Form>
+                          </div>
                         </ModalForm>
                       </td>
                     </tr>

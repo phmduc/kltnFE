@@ -1,6 +1,6 @@
 export const validation = {
   validateName: function (name) {
-    if (name === "") {
+    if (!name || name === "") {
       return "Phần này không được bỏ trống";
     } else return true;
   },
@@ -24,7 +24,7 @@ export const validation = {
     }
   },
   validateCate: function (name) {
-    if (!name || name === "novalue") {
+    if (!name || name === "") {
       return "Phần này không được bỏ trống";
     } else {
       return true;

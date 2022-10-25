@@ -28,7 +28,7 @@ function App() {
             <Route path=":id" element={<ProductDetail />} />
           </Route>
           <Route path="/admin/">
-            <Route index element={<ProductAdmin />} />
+            <Route path="products" element={<ProductAdmin />} />
             <Route path="category" element={<CategoryAdmin />} />
             <Route path="loading" element={<Loading />} />
           </Route>

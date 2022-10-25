@@ -54,7 +54,7 @@
 .categoryManage .listPreview {
   gap: 1rem;
 }
-.categoryManage .listPreview .item {
+.formCategory .listPreview .item {
   width: 100%;
 }
 .categoryManage .listPreview .clearImgButton {

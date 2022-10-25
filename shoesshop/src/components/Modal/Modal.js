@@ -3,7 +3,10 @@ import { useEffect, forwardRef, useRef, useImperativeHandle } from "react";
 import { useState } from "react";
 function ModalForm(props) {
   const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+    props.reset();
+    setShow(false);
+  };
   const handleShow = () => setShow(true);
   useEffect(() => {}, []);
   return (
