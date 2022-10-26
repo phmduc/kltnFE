@@ -10,16 +10,12 @@ import {
   deletecategory,
   updatecategory,
 } from "../../Redux/apiRequests.js";
-import { Editor, EditorState } from "draft-js";
 import { getAllCategory } from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
-
 function CategoryAdmin() {
   const [categories, setCategory] = useState([]);
   const [name, setName] = useState();
-  const [desc, setDesc] = useState(() => EditorState.createEmpty());
-
   const [isLoad, setLoaded] = useState(false);
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
@@ -58,6 +54,7 @@ function CategoryAdmin() {
       setLoaded(!isLoad);
     }
   };
+
   const resetInput = async () => {
     setName();
     setPreviewSource([]);
@@ -199,7 +196,6 @@ function CategoryAdmin() {
                       </div>
                       <p>{message}</p>
                     </Form.Group>
-                    <Editor editorState={desc} />
                   </Form>
                 </div>
               </ModalForm>

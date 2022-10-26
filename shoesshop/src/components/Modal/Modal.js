@@ -7,7 +7,13 @@ function ModalForm(props) {
     props.reset();
     setShow(false);
   };
-  const handleShow = () => setShow(true);
+  const handleShow = () => {
+    if (props.prepare) {
+      props.prepare();
+    }
+    setShow(true);
+  };
+
   useEffect(() => {}, []);
   return (
     <>
@@ -20,7 +26,7 @@ function ModalForm(props) {
         {props.icon}
       </Button>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal size="lg" show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>

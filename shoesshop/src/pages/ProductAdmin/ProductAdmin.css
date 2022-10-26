@@ -44,6 +44,9 @@
 .formProduct .group-flex .form-group {
   width: 50%;
 }
+.formProduct .group-flex-3 .form-group {
+  width: calc(100% / 3);
+}
 .formProduct .form-group {
   margin-top: 1rem;
 }
@@ -88,9 +91,7 @@
   color: white;
 }
 .formProduct .sizewrap {
-  border: 1px solid var(--primary);
-  padding: 0.2rem 0;
-  padding-left: 1rem;
+  gap: 1rem;
 }
 .formProduct .listPreview {
   gap: 1rem;
