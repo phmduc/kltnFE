@@ -23,7 +23,7 @@ function ProductAdmin() {
   const [isLoad, setLoaded] = useState(false);
   const [ID, setID] = useState("");
   const [name, setName] = useState("");
-  const [cate, setCate] = useState("");
+  const [cate, setCate] = useState();
   const [desc, setDesc] = useState("");
   const [size, setSize] = useState([]);
   const [image, setImage] = useState([]);
@@ -81,6 +81,7 @@ function ProductAdmin() {
           imageData = imageData.map((elem, index) => {
             return { publicId: elem.public_id, url: elem.url };
           });
+
           const newProduct = {
             name: name,
             desc: desc,
@@ -88,14 +89,13 @@ function ProductAdmin() {
             idCate: cate,
             size: size,
           };
-
           await addproduct(newProduct, dispatch);
           dispatch(unLoadding());
           setLoaded(!isLoad);
         }
       }
     } else {
-      setMessage("Thông tin chưa hợp lệ");
+      setMessage("Thông tin chưa hợp lệ, vui lòng kiểm tra lại");
     }
   };
 
@@ -171,15 +171,51 @@ function ProductAdmin() {
       console.error(err);
     }
   };
-  const handleSaveUpdate = async () => {
-    const updatedProduct = {
-      _id: ID,
-      name: name,
-      desc: desc,
-      image: image,
-    };
-    await updateproduct(updatedProduct, dispatch);
-    setLoaded(!isLoad);
+
+  const convertToBase64 = (url) => {
+    return fetch(url)
+      .then((res) => res.blob())
+      .then((blob) => {
+        return new Promise(function (resolve) {
+          var reader = new FileReader();
+          reader.onloadend = function () {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(blob);
+        });
+      });
+  };
+  const handleSaveUpdate = async (index) => {
+    if (
+      validation.validateName(name) === true &&
+      validation.validateCate(cate) === true &&
+      validation.validateSize(size) === true
+    ) {
+      if (previewSource.length < 5) {
+        setImgMessage("Vui Lòng Nhập Đủ 5 Bức Ảnh");
+        return false;
+      } else {
+        dispatch(loading());
+        let imageData = await uploadImage(previewSource);
+        imageData = imageData.map((elem, index) => {
+          return { publicId: elem.public_id, url: elem.url };
+        });
+
+        const updatedProduct = {
+          _id: ID,
+          name: name,
+          desc: desc,
+          image: imageData,
+          idCate: cate,
+          size: size,
+        };
+        await updateproduct(updatedProduct, dispatch);
+        dispatch(unLoadding());
+        setLoaded(!isLoad);
+      }
+    } else {
+      setMessage("Thông tin chưa hợp lệ, vui lòng kiểm tra lại");
+    }
   };
   const handleDelete = async (index) => {
     const deletedProduct = {
@@ -189,10 +225,17 @@ function ProductAdmin() {
     setLoaded(!isLoad);
   };
   const updatePrepare = async (index) => {
+    setID(products[index]._id);
+
     setName(products[index].name);
     setCate(products[index].idCate);
     setDesc(products[index].desc);
     setSize(products[index].size);
+    const promise = products[index].image.map(async (elem, index) => {
+      return await convertToBase64(elem.url).then((response) => response);
+    });
+    let images = await Promise.all(promise);
+    setPreviewSource(images);
   };
   return (
     <Admin>
@@ -220,6 +263,11 @@ function ProductAdmin() {
                           id="nameProduct"
                           placeholder="Nhập tên sản phẩm"
                         />
+                        {validation.validateName(name) || (
+                          <span className="message">
+                            {validation.validateName(name)}
+                          </span>
+                        )}
                       </div>
                       <div className="form-group">
                         <label htmlFor="cate">Danh Mục</label>
@@ -227,7 +275,7 @@ function ProductAdmin() {
                           onChange={(e) => setCate(e.target.value)}
                           value={cate}
                         >
-                          <option>Chọn danh mục...</option>
+                          <option value={0}>Chọn danh mục...</option>
                           {listCate.map((elem, index) => {
                             return (
                               <option key={index} value={elem._id}>
@@ -236,6 +284,11 @@ function ProductAdmin() {
                             );
                           })}
                         </Form.Select>
+                        {validation.validateCate(cate) || (
+                          <span className="message">
+                            {validation.validateCate(cate)}
+                          </span>
+                        )}
                       </div>
                     </div>
                     <div className="form-group">
@@ -284,6 +337,11 @@ function ProductAdmin() {
                           id="sizeProduct"
                           placeholder="Nhập size"
                         />
+                        {validation.validateSizeId(sizeId) || (
+                          <span className="message">
+                            {validation.validateSizeId(sizeId)}
+                          </span>
+                        )}
                       </div>
                       <div className="form-group">
                         <label htmlFor="countProduct">Số lượng</label>
@@ -297,6 +355,11 @@ function ProductAdmin() {
                           id="countProduct"
                           placeholder="Nhập số lượng"
                         />
+                        {validation.validateCount(sizeCount) || (
+                          <span className="message">
+                            {validation.validateCount(sizeCount)}
+                          </span>
+                        )}
                       </div>
                       <div className="form-group  ">
                         <label htmlFor="priceProduct">Giá sản phẩm</label>
@@ -310,6 +373,11 @@ function ProductAdmin() {
                           id="priceProduct"
                           placeholder="Nhập giá sản phẩm"
                         />
+                        {validation.validatePrice(sizePrice) || (
+                          <span className="message">
+                            {validation.validatePrice(sizePrice)}
+                          </span>
+                        )}
                       </div>
                       <button
                         type="button"
@@ -343,7 +411,7 @@ function ProductAdmin() {
                                   className="btn"
                                   type="button"
                                   onClick={(e) => {
-                                    console.log(size.splice(index, 1));
+                                    size.splice(index, 1);
                                     setLoaded(!isLoad);
                                   }}
                                 >
@@ -353,6 +421,11 @@ function ProductAdmin() {
                             );
                           })}
                       </div>
+                      {validation.validateSize(size) || (
+                        <span className="message">
+                          {validation.validateSize(size)}
+                        </span>
+                      )}
                     </div>
                     <div className="form-group">
                       <label htmlFor="descProduct">Mô tả</label>
@@ -413,10 +486,12 @@ function ProductAdmin() {
                         <ModalForm
                           title="Chỉnh Sửa Sản Phẩm"
                           icon={<i className="bi bi-pencil-square"></i>}
-                          handleSubmit={() => {}}
                           reset={resetInput}
                           prepare={() => {
                             updatePrepare(index);
+                          }}
+                          handleSubmit={() => {
+                            handleSaveUpdate(index);
                           }}
                         >
                           <div className="formProduct">
@@ -571,9 +646,14 @@ function ProductAdmin() {
                                             className="btn"
                                             type="button"
                                             onClick={(e) => {
-                                              console.log(
-                                                size.splice(index, 1)
+                                              console.log(size.slice());
+                                              let list = size.slice();
+                                              list = list.filter(
+                                                (value, index) => {
+                                                  return value._id !== item._id;
+                                                }
                                               );
+                                              setSize(list);
                                               setLoaded(!isLoad);
                                             }}
                                           >

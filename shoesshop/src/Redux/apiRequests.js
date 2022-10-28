@@ -19,6 +19,7 @@ export const addproduct = async (product, dispatch) => {
 };
 export const updateproduct = async (product, dispatch) => {
   try {
+    console.log(product);
     const res = await axios.put("/api/products/" + product._id, product);
     dispatch(updateProduct(res.data));
   } catch (err) {
