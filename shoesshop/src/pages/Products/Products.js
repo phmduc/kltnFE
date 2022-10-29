@@ -1,187 +1,153 @@
 import { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import axios from 'axios';
-import { addproduct, updateproduct, deleteproduct } from "../../Redux/apiRequests.js";
+import axios from "axios";
 import MainLayout from "../../layouts/MainLayout/MainLayout.js";
-import "./Products.scss"
+import "./Products.css";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import ReactSlider from "react-slider";
+import ProductCard from "../../components/ProductCard/ProductCard.js";
+import { enableMapSet } from "immer";
 function Products() {
-    const [isLoad, setLoaded] = useState(false);
-    const [body, setBody] = useState([]);
-    const [ID, setID] = useState("");
-    const [name, setName] = useState("");
-    const [cate, setCate] = useState("");
-    const [user, setUser] = useState("");
-    const [desc, setDesc] = useState("");
-    const [image, setImage] = useState([]);
-    const [price, setPrice] = useState(0);
-    const [size, setSize] = useState([]);
-    const [previewSource, setPreviewSource] = useState([]);
-    const [fileInput, setFileInput] = useState();
-    const [message, setMessage] = useState("");
-    const inputSize = useRef();
-    const inputCount = useRef();
+  const listCate = useSelector((state) => state.category.category);
+  const [products, setProducts] = useState([]);
+  const [productsFilter, setProductsFilter] = useState([]);
 
-    
-    
-    const dispatch= useDispatch();
-    async function getProducts() {
-        try {
-          const response = await axios.get('/api/products');
-          dispatch(getAllProduct(response.data))
-          setBody(response.data)
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    useEffect(() => {
-      getProducts()
-    },[isLoad]);
+  const [cate, setCate] = useState();
+  const [size, setSize] = useState();
+  const inputCate = useRef();
 
+  const [isLoad, setLoad] = useState([]);
+  var listsize = [];
 
-    const handleSubmitAdd = async (e) =>{
-      e.preventDefault()
-      if(!previewSource || previewSource.length < 5) {
-        setMessage("Upload ít nhất 5 bức ảnh của sản phẩm")
-      }
-      else {
-      let imageData = await uploadImage(previewSource)
-      console.log(imageData)
+  const dispatch = useDispatch();
+  async function getProducts() {
+    try {
+      const response = await axios.get("/api/products");
+      dispatch(getAllProduct(response.data));
+      setProducts(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
-      imageData = imageData.data.map((elem, index)=>{
-        return { publicId: elem.public_id,
-          url: elem.url}
-      })
-      console.log(imageData)
-      const newProduct ={
-        name: name,
-        desc: desc,
-        image: imageData,
-        cate: {idCate: '6346d74571d0cc8330507e57', nameCate: cate},
-        user: user,
-        price: price,
-        size: size
-      }
-      await addproduct(newProduct,dispatch);
-      setLoaded(!isLoad);
-      }
+  const filter = () => {
+    if (size) {
+      console.log(size);
     }
-    const updatePrepare = (index)=>{
-      setID(body[index]._id)
-      setName(body[index].name)
-      setDesc(body[index].desc)
-      setImage(body[index].image)
-      setPrice(body[index].price)
-    }
-    const handleFileInputChange = (e)=>{
-      const file = e.target.files[0]
-      setMessage("")
-      if(previewSource.length > 4) {
-        setMessage("Upload tối đa 5 bức ảnh của sản phẩm")
-      } else {
-      previewFile(file)
-      }
-    }
-    const previewSize = ()=>{
-      const sizeInput= inputSize.current.value
-      const countInput= inputCount.current.value
-      setSize([...size, {sizeId: sizeInput, count: countInput}])
-    }
-    const previewFile = (file) =>{
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () =>{
-      setPreviewSource([...previewSource, reader.result])
-      }
-    } 
-    const uploadImage = async (base64EncodedImage)=>{
-      let file
-      try{
-      file = await axios.post("/api/uploads",{file: base64EncodedImage});
-      console.log(file)
-      return file
-      } catch(err){
-        console.error(err)
-      }
-    }
-    const handleSaveUpdate = async ()=>{
-      const updatedProduct ={
-        _id: ID,
-        name: name,
-        desc: desc,
-        image: image,
-        price: price,
-      }
-      await updateproduct(updatedProduct,dispatch);
-      setLoaded(!isLoad);
-    }
-    const handleDelete = async (index)=>{
-      const deletedProduct ={
-        _id: body[index]._id,
-      }
-      await deleteproduct(deletedProduct,dispatch);
-      setLoaded(!isLoad);
-    }
-    return (  
-            <MainLayout>
-                {body.map((item, index) =>(
-                  <div className="item"  key={item._id}>
-                    <Link to={`/products/${item._id}`}>{item.name}</Link> 
-                    <img src={item.image[0].url} alt="" />
-                    <button onClick={()=>(updatePrepare(index))}>update</button> 
-                    <button onClick={()=>(handleDelete(index))}>delete</button></div>
-                )) }
-                 <Form >
-                    <Form.Group className="mb-3" controlId="nameProduct">
-                        <Form.Label>Tên Sản Phẩm</Form.Label>
-                        <Form.Control onChange={(e)=>{setName(e.target.value)}} value={name||""} type="text" placeholder="Enter Name Product" />
-                        <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                        </Form.Text>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="imageProduct">
-                        <Form.Label>Ảnh Sản Phẩm (Tối đa 5 bức)</Form.Label>
-                        <Form.Control onChange={(e) => handleFileInputChange(e)} value={fileInput} type="file" placeholder="Enter Product Image" />
-                        {previewSource &&  previewSource.map((image, index) => {
-                          return(<img src={image} key={index} style={{height:'50px', width: '50px'}} alt="" /> )
-                        })}
-                        <p>{message}</p> 
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="descProduct">
-                        <Form.Label>Mô Tả</Form.Label>
-                        <Form.Control onChange={(e)=>{setDesc(e.target.value)}} value={desc||""}  type="text" placeholder="Enter  Description" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="descProduct">
-                        <Form.Label>Cate</Form.Label>
-                        <Form.Control onChange={(e)=>{setCate(e.target.value)}} value={cate||""}  type="text" placeholder="Enter  Description" />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="sizeProduct">
-                        <Form.Label>Size</Form.Label>
-                        <Form.Control ref={inputSize} type="text" placeholder="Enter Size" />
-                        <Form.Control ref={inputCount} type="text" placeholder="Enter Count" />
-                        {size.map((elem, index)=>{
-                          return (<div className="sizewrap" key={index} style={{display:"flex"}}>
-                            <p> {elem.sizeId}:</p> 
-                            <p>{elem.count}</p>
-                            </div>)
-                        })}
-                         <Button onClick={()=>{previewSize()}}>Add Size</Button>
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="priceProduct">
-                        <Form.Label>Giá Sản Phẩm</Form.Label>
-                        <Form.Control onChange={(e)=>{setPrice(e.target.value)}} value={price||""} type="text" placeholder="Enter Product Price" />
-                    </Form.Group>
-                    <Button onClick={(e)=>{handleSubmitAdd(e)}} variant="primary" type="submit">
-                        Submit
-                    </Button>
-                    <Button onClick={()=>{handleSaveUpdate()}} variant="primary" >
-                        Save
-                    </Button>
-                </Form> 
-            </MainLayout>
-     );
+  };
+  useEffect(() => {
+    getProducts();
+  }, [isLoad]);
+
+  return (
+    <MainLayout>
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-3">
+            <div className="siteBar">
+              {" "}
+              <Form>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="category">Danh mục</Form.Label>
+                  <Form.Select
+                    onChange={(e) => {
+                      const filterList = products.filter((elem, index) => {
+                        return elem.idCate === e.target.value;
+                      });
+                      setProductsFilter(filterList);
+                    }}
+                    value={cate}
+                    id="category"
+                  >
+                    <option>Chọn danh mục</option>
+                    {listCate.map((elem, index) => {
+                      return (
+                        <option key={index} value={elem._id}>
+                          {elem.nameCate}
+                        </option>
+                      );
+                    })}
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="size">Size</Form.Label>
+                  <Form.Select
+                    onChange={(e) => {
+                      const filterList = products.filter((elem, index) => {
+                        return elem.size.some(function (item, index) {
+                          return item.sizeId === e.target.value;
+                        });
+                      });
+                      setProductsFilter(filterList);
+                    }}
+                    value={size}
+                    id="size"
+                  >
+                    <option>Chọn size</option>
+                    {products.map((elem, index) => {
+                      console.log(elem);
+                      return elem.size.map((value, index) => {
+                        if (
+                          !listsize.find(function (item, index) {
+                            return item === value.sizeId;
+                          })
+                        ) {
+                          listsize = [...listsize, value.sizeId];
+                          return (
+                            <option key={index} value={value.sizeId}>
+                              {value.sizeId}
+                            </option>
+                          );
+                        }
+                      });
+                    })}
+                  </Form.Select>
+                </Form.Group>
+                <div className="priceFilter d-flex">
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="category">Giá thấp nhất</Form.Label>
+                    <Form.Control />
+                  </Form.Group>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="category">Giá cao nhất</Form.Label>
+                    <Form.Control />
+                  </Form.Group>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    filter();
+                  }}
+                  className="filter btn w-100"
+                >
+                  Lọc
+                </button>
+              </Form>
+            </div>
+          </div>
+          <div className="col-lg-9">
+            <div className="list">
+              <div className="row">
+                {productsFilter.length === 0
+                  ? products.map((item, index) => (
+                      <div className="col-lg-4">
+                        <ProductCard item={item} />
+                      </div>
+                    ))
+                  : productsFilter.map((item, index) => (
+                      <div className="col-lg-4">
+                        <ProductCard item={item} />
+                      </div>
+                    ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainLayout>
+  );
 }
 
 export default Products;

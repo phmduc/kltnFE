@@ -11,6 +11,7 @@ import {
   addproduct,
   updateproduct,
   deleteproduct,
+  deleteImage,
 } from "../../Redux/apiRequests.js";
 
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
@@ -209,6 +210,9 @@ function ProductAdmin() {
           idCate: cate,
           size: size,
         };
+        products[index].image.forEach((elem, index) => {
+          deleteImage(elem.publicId);
+        });
         await updateproduct(updatedProduct, dispatch);
         dispatch(unLoadding());
         setLoaded(!isLoad);
@@ -221,6 +225,9 @@ function ProductAdmin() {
     const deletedProduct = {
       _id: products[index]._id,
     };
+    products[index].image.forEach((elem, index) => {
+      deleteImage(elem.publicId);
+    });
     await deleteproduct(deletedProduct, dispatch);
     setLoaded(!isLoad);
   };

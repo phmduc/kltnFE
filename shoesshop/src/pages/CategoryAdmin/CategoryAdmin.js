@@ -9,6 +9,7 @@ import {
   addcategory,
   deletecategory,
   updatecategory,
+  deleteImage,
 } from "../../Redux/apiRequests.js";
 import { getAllCategory } from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
@@ -112,16 +113,7 @@ function CategoryAdmin() {
       console.error(err);
     }
   };
-  const deleteImage = async (public_id) => {
-    try {
-      console.log(public_id);
-      const file = await axios.post("/api/uploads/destroy", {
-        publicId: public_id,
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
   const handleDelete = async (index) => {
     const deletedCategory = {
       _id: categories[index]._id,

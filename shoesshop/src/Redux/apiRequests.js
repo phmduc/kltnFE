@@ -76,3 +76,13 @@ export const updatecategory = async (category, dispatch) => {
     throw new Error("Invalid Product Data");
   }
 };
+export const deleteImage = async (public_id) => {
+  try {
+    console.log(public_id);
+    const file = await axios.post("/api/uploads/destroy", {
+      publicId: public_id,
+    });
+  } catch (err) {
+    console.error(err);
+  }
+};
