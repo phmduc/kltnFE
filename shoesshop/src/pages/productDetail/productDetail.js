@@ -5,6 +5,8 @@ import { addToCart } from "../../Redux/slice/cartSlice";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
+import { Fancybox, Carousel } from "@fancyapps/ui/dist/fancybox.esm.js";
+import "@fancyapps/ui/dist/fancybox.css";
 import Tabs from "react-bootstrap/Tabs";
 import axios from "axios";
 import "./productDetail.css";
@@ -24,7 +26,7 @@ function ProductDetail({ match }) {
       setError(error.response.data.message);
     }
   }
-  console.log(item);
+
   useEffect(() => {
     getProductDetail();
   }, []);
@@ -58,30 +60,46 @@ function ProductDetail({ match }) {
           <div className="container">
             <div className="row">
               <div className="col-lg-7">
-                <div className="previewImg"></div>
+                <div className="previewImg">
+                  <Tabs id="imageTab" className="mb-3">
+                    {item.image.map((item, index) => {
+                      return (
+                        <Tab
+                          eventKey={`#image-${index}`}
+                          title={<img className="img-fluid" src={item.url} />}
+                        >
+                          <a
+                            data-fancybox="gallery"
+                            href={item.url}
+                            className="img-wrap"
+                          >
+                            <img src={item.url} alt="" />
+                          </a>
+                        </Tab>
+                      );
+                    })}
+                  </Tabs>
+                </div>
               </div>
               <div className="col-lg-5">
                 <div className="info">
                   <span className="name">{item.name}</span>
-                  <div className="size">
-                    <Tabs id="controlled-tab-example" className="mb-3">
+                  <div className="size my-3">
+                    <span>Size:</span>
+                    <Tabs id="sizeTab" className="mb-3">
                       {item.size.map((item, index) => {
                         return (
                           <Tab eventKey={`#size-${index}`} title={item.sizeId}>
-                            {item.price}
+                            <span className="price">
+                              {Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(item.price)}
+                            </span>
                           </Tab>
                         );
                       })}
                     </Tabs>
-                  </div>
-
-                  <div className="feature">
-                    <span>Đặc trưng sản phẩm: </span>
-                    <ul>
-                      <li>Dạng bột</li>
-                      <li>Giảm mụn nhờ khả năng làm sạch bã nhờn/kháng viêm</li>
-                      <li>Phù hợp với cả da nhạy cảm</li>
-                    </ul>
                   </div>
                   <div className="controls d-flex">
                     <a href="" className="btn cart">
