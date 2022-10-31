@@ -125,24 +125,40 @@
 .product .info .policy ul li i {
   margin-right: 4px;
 }
-
-.product .description .item {
-  margin-bottom: 30px;
-}
-.product .description .item:nth-child(even) {
-  flex-direction: row-reverse;
-}
-.product .description .item .content .title {
-  font-size: 2rem;
+.product .desc span {
+  display: block;
+  color: var(--primary);
   font-weight: bold;
-  line-height: 1.2;
+  font-size: 1.2rem;
+  border-bottom: 2px solid var(--primary);
 }
-.product .description .item .img-wrap {
-  padding-top: 70%;
+.product .info .count .number {
+  cursor: pointer;
+  width: 20%;
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2rem;
+  border: 1px solid var(--primary);
 }
-.product .description .item .content p {
-  color: var(--text-color);
-  margin-top: 1rem;
+.product .info .count .minus,
+.product .info .count .plus {
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  color: var(--primary);
+  width: 30%;
+  text-align: center;
+}
+.product .info .count input {
+  text-align: center;
+  border: none;
+  width: 70%;
+  color: var(--primary);
+  display: inline-block;
+  vertical-align: middle;
+  outline: none;
+}
+.product .desc span {
 }
 @media screen and (max-width: 991px) {
   .product .info {

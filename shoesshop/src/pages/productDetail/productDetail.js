@@ -9,6 +9,8 @@ import { Fancybox, Carousel } from "@fancyapps/ui/dist/fancybox.esm.js";
 import "@fancyapps/ui/dist/fancybox.css";
 import Tabs from "react-bootstrap/Tabs";
 import axios from "axios";
+import $ from "jquery";
+
 import "./productDetail.css";
 
 function ProductDetail({ match }) {
@@ -26,30 +28,20 @@ function ProductDetail({ match }) {
       setError(error.response.data.message);
     }
   }
-
   useEffect(() => {
     getProductDetail();
   }, []);
 
   const handleAddCart = () => {
+    const size = $(".size .nav-link.active").html();
+    console.log(size);
     const itemAdd = {
       ID: item._id,
-      name: item.name,
-      price: item.price,
-      size: "",
-      count: 1,
+      size: size,
     };
-    // const hasItem = listCart.find((item,index)=>{return item.ID === ID})
-    // if(hasItem){
+
     dispatch(addToCart(itemAdd));
-    // }
-    // else
-    // {
-
-    // }
   };
-
-  // Thumbnails
 
   return (
     <MainLayout>
@@ -89,7 +81,11 @@ function ProductDetail({ match }) {
                     <Tabs id="sizeTab" className="mb-3">
                       {item.size.map((item, index) => {
                         return (
-                          <Tab eventKey={`#size-${index}`} title={item.sizeId}>
+                          <Tab
+                            eventKey={`#size-${index}`}
+                            onSelect={(e) => {}}
+                            title={item.sizeId}
+                          >
                             <span className="price">
                               {Intl.NumberFormat("vi-VN", {
                                 style: "currency",
@@ -101,10 +97,23 @@ function ProductDetail({ match }) {
                       })}
                     </Tabs>
                   </div>
+                  <div class="count d-flex align-items-center mb-3">
+                    Số lượng
+                    <div class="number">
+                      <span class="minus">-</span>
+                      <input type="text" value="1" />
+                      <span class="plus">+</span>
+                    </div>
+                  </div>
                   <div className="controls d-flex">
-                    <a href="" className="btn cart">
+                    <button
+                      onClick={(e) => {
+                        handleAddCart();
+                      }}
+                      className="btn cart"
+                    >
                       Thêm vào giỏ hàng
-                    </a>
+                    </button>
                   </div>
                   <div className="policy">
                     <span>Chính sách và ưu đãi</span>
@@ -121,6 +130,12 @@ function ProductDetail({ match }) {
                       </li>
                     </ul>
                   </div>
+                </div>
+              </div>
+              <div className="col-12">
+                <div className="desc mt-3">
+                  <span>Mô Tả</span>
+                  <p className="mt-3">&emsp; {item.desc}</p>
                 </div>
               </div>
             </div>
