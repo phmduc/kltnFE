@@ -1,0 +1,73 @@
+.cart .info .count .number {
+  cursor: pointer;
+  width: 20%;
+  display: inline-flex;
+  align-items: center;
+}
+.cart .info .count .minus,
+.cart .info .count .plus {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 100%;
+  border: 1px solid var(--primary);
+  background-color: transparent;
+  color: var(--primary);
+  width: 40%;
+  text-align: center;
+}
+.cart .info .count input {
+  text-align: center;
+  border: none;
+  width: 70%;
+  color: var(--primary);
+  display: inline-block;
+  vertical-align: middle;
+  outline: none;
+}
+.cart .item {
+  gap: 1rem;
+}
+.cart .item .img-wrap {
+  width: 20%;
+
+  padding-top: 20%;
+}
+.cart .item .info {
+  flex: 1;
+}
+.cart .item .controls {
+  width: max-content;
+}
+.cart .info .size {
+  display: block;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+.cart .info .name {
+  font-weight: bold;
+}
+.cart .info .size {
+  color: #898989;
+}
+.cart .controls .price {
+  color: var(--primary);
+  font-weight: bold;
+  margin-right: 15px;
+  display: block;
+  font-size: 1.2rem;
+}
+.cart .controls button {
+  background-color: unset;
+  border: none;
+  color: #898989;
+  padding: 0;
+}
+.cart .title {
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+.cart .item:not(:last-child) {
+  margin-bottom: 2rem;
+}

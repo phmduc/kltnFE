@@ -145,6 +145,8 @@
   border-radius: 4px;
   display: inline-block;
   vertical-align: middle;
+  border: none;
+  background-color: transparent;
   color: var(--primary);
   width: 30%;
   text-align: center;

@@ -3,6 +3,7 @@ import Home from "./pages/Home/Home.js";
 import ProductDetail from "./pages/productDetail/productDetail.js";
 import Admin from "./layouts/Admin/Admin.js";
 import Products from "./pages/Products/Products.js";
+import Cart from "./pages/Cart/Cart.js";
 import ProductAdmin from "./pages/ProductAdmin/ProductAdmin.js";
 import CategoryAdmin from "./pages/CategoryAdmin/CategoryAdmin.js";
 import Register from "./pages/Register/Register.js";
@@ -32,6 +33,7 @@ function App() {
             <Route path="category" element={<CategoryAdmin />} />
             <Route path="loading" element={<Loading />} />
           </Route>
+          <Route path="/cart" element={<Cart />} />
         </Route>
       </Routes>
     </BrowserRouter>

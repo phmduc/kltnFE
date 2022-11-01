@@ -18,6 +18,7 @@ function ProductDetail({ match }) {
   const dispatch = useDispatch();
   const [item, setItem] = useState();
   const [error, setError] = useState("");
+  const [count, setCount] = useState(1);
   const path = useLocation().pathname.split("/");
   const ID = path[path.length - 1];
   async function getProductDetail() {
@@ -34,12 +35,11 @@ function ProductDetail({ match }) {
 
   const handleAddCart = () => {
     const size = $(".size .nav-link.active").html();
-    console.log(size);
     const itemAdd = {
       ID: item._id,
       size: size,
+      count: count,
     };
-
     dispatch(addToCart(itemAdd));
   };
 
@@ -100,9 +100,29 @@ function ProductDetail({ match }) {
                   <div class="count d-flex align-items-center mb-3">
                     Số lượng
                     <div class="number">
-                      <span class="minus">-</span>
-                      <input type="text" value="1" />
-                      <span class="plus">+</span>
+                      <button
+                        onClick={() => {
+                          setCount(count - 1);
+                        }}
+                        class="minus"
+                      >
+                        -
+                      </button>
+                      <input
+                        onChange={(e) => {
+                          setCount(e.target.value);
+                        }}
+                        type="text"
+                        value={count}
+                      />
+                      <button
+                        onClick={() => {
+                          setCount(count + 1);
+                        }}
+                        class="plus"
+                      >
+                        +
+                      </button>
                     </div>
                   </div>
                   <div className="controls d-flex">
