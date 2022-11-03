@@ -1,7 +1,18 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { userLogout } from "../../Redux/slice/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const user = useSelector((state) => state.userInfo.info);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const logout = () => {
+    dispatch(userLogout());
+    navigate("/login");
+  };
+
   return (
     <header>
       <div className="container">
@@ -12,7 +23,7 @@ function Header() {
                 <a href="/">Rekeans</a>
               </div>
             </div>
-            <div className="col-6 d-lg-block d-none ">
+            <div className="col-5 d-lg-block d-none ">
               <ul className="list p-0 m-0">
                 <li className="items">
                   <a href="/">Trang chủ</a>
@@ -31,7 +42,7 @@ function Header() {
                 </li>
               </ul>
             </div>
-            <div className="col-lg-3 col-6">
+            <div className="col-lg-4 col-6">
               <ul className="list-control p-0 m-0">
                 <li className="items-control has-input">
                   <div className="input-group">
@@ -51,8 +62,8 @@ function Header() {
                     />
                   </div>
                 </li>
-                <li className="items-control d-lg-flex d-none">
-                  <a href="#">
+                <li className="items-control d-lg-flex d-none align-items-center">
+                  <a href="/cart">
                     <svg
                       width="33"
                       height="37"
@@ -88,32 +99,51 @@ function Header() {
                       </defs>
                     </svg>
                   </a>
-                </li>
-                <li className="items-control d-lg-flex d-none">
-                  <a href="#">
-                    <svg
-                      width="27"
-                      height="37"
-                      viewBox="0 0 30 37"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M18.375 23H11.625C6.03262 23 1.5 27.5326 1.5 33.125C1.5 33.125 6.5625 35.375 15 35.375C23.4375 35.375 28.5 33.125 28.5 33.125C28.5 27.5326 23.9674 23 18.375 23Z"
-                        stroke="#0F1419"
-                        strokeWidth="2"
-                        strokeMiterlimit="10"
-                        strokeLinecap="square"
-                      />
-                      <path
-                        d="M7.125 9.5C7.125 5.15075 10.6508 1.625 15 1.625C19.3492 1.625 22.875 5.15075 22.875 9.5C22.875 13.8492 19.3492 18.5 15 18.5C10.6508 18.5 7.125 13.8492 7.125 9.5Z"
-                        stroke="#0F1419"
-                        strokeWidth="2"
-                        strokeMiterlimit="10"
-                        strokeLinecap="square"
-                      />
-                    </svg>
-                  </a>
+                  {!user.ID ? (
+                    <a href="/login">
+                      <svg
+                        width="27"
+                        height="37"
+                        viewBox="0 0 30 37"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M18.375 23H11.625C6.03262 23 1.5 27.5326 1.5 33.125C1.5 33.125 6.5625 35.375 15 35.375C23.4375 35.375 28.5 33.125 28.5 33.125C28.5 27.5326 23.9674 23 18.375 23Z"
+                          stroke="#0F1419"
+                          strokeWidth="2"
+                          strokeMiterlimit="10"
+                          strokeLinecap="square"
+                        />
+                        <path
+                          d="M7.125 9.5C7.125 5.15075 10.6508 1.625 15 1.625C19.3492 1.625 22.875 5.15075 22.875 9.5C22.875 13.8492 19.3492 18.5 15 18.5C10.6508 18.5 7.125 13.8492 7.125 9.5Z"
+                          stroke="#0F1419"
+                          strokeWidth="2"
+                          strokeMiterlimit="10"
+                          strokeLinecap="square"
+                        />
+                      </svg>
+                    </a>
+                  ) : (
+                    <a className="account" href="">
+                      Xin chào, {user.name}
+                      <ul className="dropdown-acount">
+                        <li>
+                          <a href="">Thông tin cá nhân</a>
+                        </li>
+                        <li>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              logout();
+                            }}
+                          >
+                            Đăng xuất
+                          </button>
+                        </li>
+                      </ul>
+                    </a>
+                  )}
                 </li>
               </ul>
             </div>

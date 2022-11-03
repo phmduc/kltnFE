@@ -1,24 +1,23 @@
 @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css");
-header li{
-    list-style-type: none;
+header li {
+  list-style-type: none;
 }
-header a{
-    text-decoration: none;
-    color: black !important;
-}
-
-header{
- padding: 1rem 0;
-}
-#menuToggle{
-    display: flex;
-}
-#menuToggle #checkbox{
-    display: none;
+header a {
+  text-decoration: none;
+  color: black !important;
 }
 
-#menuToggle span
-{
+header {
+  padding: 1rem 0;
+}
+#menuToggle {
+  display: flex;
+}
+#menuToggle #checkbox {
+  display: none;
+}
+
+#menuToggle span {
   display: block;
   width: 33px;
   margin: 0;
@@ -29,102 +28,145 @@ header{
   border-radius: 3px;
   z-index: 1;
   transform-origin: 4px 0px;
-  transition: transform 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              background 0.5s cubic-bezier(0.77,0.2,0.05,1.0),
-              opacity 0.55s ease;
+  transition: transform 0.5s cubic-bezier(0.77, 0.2, 0.05, 1),
+    background 0.5s cubic-bezier(0.77, 0.2, 0.05, 1), opacity 0.55s ease;
 }
 
-#menuToggle span:first-child
-{
+#menuToggle span:first-child {
   transform-origin: 0% 0%;
 }
 
-#menuToggle span:nth-last-child(2)
-{
+#menuToggle span:nth-last-child(2) {
   transform-origin: 0% 100%;
 }
 
-#menuToggle input:checked ~ label span
-{
+#menuToggle input:checked ~ label span {
   opacity: 1;
   transform: rotate(45deg) translate(1px, -19px);
   background: #232323;
 }
-#menuToggle input:checked ~ label span:nth-last-child(3)
-{
+#menuToggle input:checked ~ label span:nth-last-child(3) {
   opacity: 0;
   transform: rotate(0deg) scale(0.2, 0.2);
 }
 
-#menuToggle input:checked ~ label span:nth-last-child(2)
-{
-    transform: rotate(-45deg) translate(0, 21px);
+#menuToggle input:checked ~ label span:nth-last-child(2) {
+  transform: rotate(-45deg) translate(0, 21px);
 }
 
-
-header .logo a{
-    color: var(--primary) !important;
-    font-family: 'Italiana', sans-serif;
-    font-size: 2.5rem;
+header .logo a {
+  color: var(--primary) !important;
+  font-family: "Italiana", sans-serif;
+  font-size: 2.5rem;
 }
 
-header .list{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+header .list {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
-header .list a{
-}
-
-
-header .list-control{
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+header .list a {
 }
 
-header .list-control .bi{
-    margin-right: 1rem;
-    font-size: 1.3rem;
+header .list-control {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-header .menu .list-control .input-group{
-    border: 1px solid black;
-    border-radius: 2rem;
+header .list-control .bi {
+  margin-right: 1rem;
+  font-size: 1.3rem;
+}
 
+header .menu .list-control .input-group {
+  border: 1px solid black;
+  border-radius: 2rem;
 }
-header .menu .list-control .input-group button{
-    border: none;
-    background-color: transparent;
-    color: black;
-    padding: 0;
-    padding-left: 0.5rem;
+header .menu .list-control .input-group button {
+  border: none;
+  background-color: transparent;
+  color: black;
+  padding: 0;
+  padding-left: 0.5rem;
 }
-header .menu .list-control .input-group input{
-    width: 50%;
-    border: none;
-    padding: 0rem;
-    padding-right: 1rem;
-    border-radius: 2rem;
-    box-shadow: none;
+header .menu .list-control .input-group input {
+  width: 50%;
+  border: none;
+  padding: 0rem;
+  padding-right: 1rem;
+  border-radius: 2rem;
+  box-shadow: none;
 }
 header .menu .list-control .items-control {
-    width: 25%;
-    display: flex;
-    justify-content: flex-end;
+  width: max-content;
+  display: flex;
+  justify-content: flex-end;
 }
 header .menu .list-control .items-control:not(.has-input) i {
-    font-size: 1.8rem;
+  font-size: 1.8rem;
 }
+header .menu .list-control .items-control:not(.has-input) {
+  gap: 1rem;
+}
+header .menu .list-control .items-control a {
+  position: relative;
+}
+
 header .menu .list-control .items-control.has-input {
-    width: 50%;
- 
+  width: 50%;
+}
+header
+  .menu
+  .list-control
+  .items-control:not(.has-input)
+  a.account:hover
+  .dropdown-acount {
+  display: block;
+}
+.dropdown-acount {
+  position: absolute;
+  width: max-content;
+  display: none;
+  top: calc(100% + 2rem);
+  background-color: white;
+  right: -1rem;
+  z-index: 999;
+  text-align: right;
+}
+.dropdown-acount::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 2rem;
+  transform: translateY(-100%);
+  background-color: transparent;
+  right: 0;
+}
+.dropdown-acount a {
+  display: block;
+  padding: 1rem;
+}
+.dropdown-acount a:hover,
+.dropdown-acount button:hover {
+  opacity: 0.8;
+  background-color: #cdcdcd;
+}
+.dropdown-acount button {
+  width: 100%;
+  border: none;
+  text-align: right;
+  background: transparent;
+  padding: 1rem;
 }
 @media screen and (max-width: 991px) {
-    header .logo a{
-        font-size: 1.9rem;
-    }
-    header .menu .list-control .items-control.has-input {
-        width: 100%;
-    }
+  header .logo a {
+    font-size: 1.9rem;
+  }
+  header .menu .list-control .items-control.has-input {
+    width: 100%;
+  }
 }

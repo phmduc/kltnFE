@@ -12,7 +12,8 @@ export const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const hasItem = state.listCart.find(
-        (item) => item.ID === action.payload.ID
+        (item) =>
+          item.ID === action.payload.ID && item.size === action.payload.size
       );
       if (hasItem) {
         hasItem.count += action.payload.count;

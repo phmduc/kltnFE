@@ -16,7 +16,7 @@ function Cart() {
       <section className="cart">
         <div className="container">
           <div className="row justify-content-between">
-            <div className="col-8">
+            <div className="col-9">
               <div className="list">
                 <span className="title">Giỏ hàng của bạn</span>
                 <ul>
@@ -87,7 +87,61 @@ function Cart() {
                 </ul>
               </div>
             </div>
-            <div className="col-3"></div>
+            <div className="col-3">
+              <div className="receipt">
+                <span className="title">Đơn hàng của bạn</span>
+                <div className="priceTotal">
+                  <ul>
+                    <li className="d-flex justify-content-between mb-3">
+                      Số lượng:{" "}
+                      <span>
+                        {listCart.reduce((previousValue, currentValue) => {
+                          return previousValue + currentValue.count;
+                        }, 0)}
+                      </span>
+                    </li>
+                    <li className="d-flex justify-content-between">
+                      Tổng tiền:
+                      <span>
+                        {Intl.NumberFormat("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        }).format(
+                          listCart.reduce((previousValue, currentValue) => {
+                            let price = 0;
+                            listProduct.forEach((elem, index) => {
+                              if (elem._id === currentValue.ID) {
+                                price = elem.size.find((size, index) => {
+                                  return size.sizeId === currentValue.size;
+                                }).price;
+                              }
+                            });
+                            return previousValue + currentValue.count * price;
+                          }, 0)
+                        )}
+                      </span>
+                    </li>
+                  </ul>
+                  <a href="" className="btn w-100">
+                    Check out
+                  </a>
+                </div>
+                <div className="policy">
+                  <ul>
+                    <li>Bảo mật thanh toán</li>
+                    <li>Miễn phí giao hàng trong nội thành</li>
+                    <li>Giao hàng nhanh chóng</li>
+                    <li>Hoàn trả trong vòng 30 ngày</li>
+                  </ul>
+                </div>
+                <div className="contact">
+                  <ul>
+                    <li></li>
+                    <li></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
