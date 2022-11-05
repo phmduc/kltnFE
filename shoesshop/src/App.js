@@ -17,7 +17,8 @@ import { getAllCategory } from "./Redux/slice/categorySlice.js";
 import { useEffect } from "react";
 
 function App() {
-  const user = useSelector((state) => state.userInfo);
+  const user = useSelector((state) => state.userInfo.info);
+  console.log(user);
   const dispatch = useDispatch();
   const [catagory, setCategory] = useState();
   async function getCategory() {
@@ -47,7 +48,7 @@ function App() {
             <Route index element={<Products />} />
             <Route path=":id" element={<ProductDetail />} />
           </Route>
-          {user.isAdmin ? (
+          {user.isAdmin === true ? (
             <Route path="/admin/">
               <Route path="products" element={<ProductAdmin />} />
               <Route path="category" element={<CategoryAdmin />} />
