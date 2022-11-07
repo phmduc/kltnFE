@@ -1,47 +1,47 @@
-import Admin from "../../layouts/Admin/Admin.js";
-import { useState, useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import axios from "axios";
-import ModalForm from "../../components/Modal/Modal.js";
-import { validation } from "../../js/validation.js";
+import Admin from '../../layouts/Admin/Admin.js';
+import { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import axios from 'axios';
+import ModalForm from '../../components/Modal/Modal.js';
+import { validation } from '../../js/validation.js';
 import {
   addproduct,
   updateproduct,
   deleteproduct,
   deleteImage,
-} from "../../Redux/apiRequests.js";
+} from '../../Redux/apiRequests.js';
 
-import { loading, unLoadding } from "../../Redux/slice/loading.js";
-import MainLayout from "../../layouts/MainLayout/MainLayout.js";
-import "./ProductAdmin.css";
-import { getAllProduct } from "../../Redux/slice/productSlice.js";
-import { Form, Button } from "react-bootstrap";
+import { loading, unLoadding } from '../../Redux/slice/loading.js';
+import MainLayout from '../../layouts/MainLayout/MainLayout.js';
+import './ProductAdmin.css';
+import { getAllProduct } from '../../Redux/slice/productSlice.js';
+import { Form, Button } from 'react-bootstrap';
 function ProductAdmin() {
   const listCate = useSelector((state) => state.category.category);
   const [isLoad, setLoaded] = useState(false);
-  const [ID, setID] = useState("");
-  const [name, setName] = useState("");
+  const [ID, setID] = useState('');
+  const [name, setName] = useState('');
   const [cate, setCate] = useState();
-  const [desc, setDesc] = useState("");
+  const [desc, setDesc] = useState('');
   const [size, setSize] = useState([]);
   const [image, setImage] = useState([]);
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
-  const [imgMessage, setImgMessage] = useState("");
-  const [message, setMessage] = useState("");
-  const [sizeId, setSizeId] = useState("");
-  const [sizeCount, setSizeCount] = useState("");
-  const [sizePrice, setSizePrice] = useState("");
+  const [imgMessage, setImgMessage] = useState('');
+  const [message, setMessage] = useState('');
+  const [sizeId, setSizeId] = useState('');
+  const [sizeCount, setSizeCount] = useState('');
+  const [sizePrice, setSizePrice] = useState('');
 
   const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
 
   async function getProducts() {
     try {
-      const response = await axios.get("/api/products");
+      const response = await axios.get('/api/products');
       dispatch(getAllProduct(response.data));
       setProducts(response.data);
     } catch (error) {
@@ -53,9 +53,9 @@ function ProductAdmin() {
     dispatch(unLoadding());
   }, [isLoad]);
   const resetInput = async () => {
-    setName("");
-    setCate("");
-    setDesc("");
+    setName('');
+    setCate('');
+    setDesc('');
     setSize([]);
     setPreviewSource([]);
     setFileInput();
@@ -71,10 +71,10 @@ function ProductAdmin() {
           return product.name === name;
         })
       ) {
-        setMessage("Sản phẩm đã tồn tại");
+        setMessage('Sản phẩm đã tồn tại');
       } else {
         if (previewSource.length < 5) {
-          setImgMessage("Vui Lòng Nhập Đủ 5 Bức Ảnh");
+          setImgMessage('Vui Lòng Nhập Đủ 5 Bức Ảnh');
           return false;
         } else {
           dispatch(loading());
@@ -96,15 +96,15 @@ function ProductAdmin() {
         }
       }
     } else {
-      setMessage("Thông tin chưa hợp lệ, vui lòng kiểm tra lại");
+      setMessage('Thông tin chưa hợp lệ, vui lòng kiểm tra lại');
     }
   };
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
-    setMessage("");
+    setMessage('');
     if (previewSource.length > 4) {
-      setImgMessage("Nhập tối đa 5 bức ảnh");
+      setImgMessage('Nhập tối đa 5 bức ảnh');
       return;
     } else {
       previewFile(file);
@@ -145,14 +145,14 @@ function ProductAdmin() {
             },
           ]);
         }
-        setSizeId("");
-        setSizeCount("");
-        setSizePrice("");
+        setSizeId('');
+        setSizeCount('');
+        setSizePrice('');
       } else {
         if (Number(sizeCount) > 0 && Number.isInteger(Number(sizeCount)))
-          setSizeCount("Không Hợp Lệ");
+          setSizeCount('Không Hợp Lệ');
         if (Number(sizePrice) > 0 && Number.isInteger(Number(sizePrice)))
-          setSizePrice("Không Hợp Lệ");
+          setSizePrice('Không Hợp Lệ');
       }
     }
   };
@@ -166,7 +166,7 @@ function ProductAdmin() {
   const uploadImage = async (base64EncodedImage) => {
     let file;
     try {
-      file = await axios.post("/api/uploads", { file: base64EncodedImage });
+      file = await axios.post('/api/uploads', { file: base64EncodedImage });
       return file.data;
     } catch (err) {
       console.error(err);
@@ -193,7 +193,7 @@ function ProductAdmin() {
       validation.validateSize(size) === true
     ) {
       if (previewSource.length < 5) {
-        setImgMessage("Vui Lòng Nhập Đủ 5 Bức Ảnh");
+        setImgMessage('Vui Lòng Nhập Đủ 5 Bức Ảnh');
         return false;
       } else {
         dispatch(loading());
@@ -218,7 +218,7 @@ function ProductAdmin() {
         setLoaded(!isLoad);
       }
     } else {
-      setMessage("Thông tin chưa hợp lệ, vui lòng kiểm tra lại");
+      setMessage('Thông tin chưa hợp lệ, vui lòng kiểm tra lại');
     }
   };
   const handleDelete = async (index) => {
@@ -246,42 +246,40 @@ function ProductAdmin() {
   };
   return (
     <Admin>
-      <div className="productManage">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
+      <div className='productManage'>
+        <div className='container'>
+          <div className='row'>
+            <div className='col-12'>
               <ModalForm
-                title="Thêm Sản Phẩm"
-                icon="+ Thêm Sản Phẩm"
+                title='Thêm Sản Phẩm'
+                icon='+ Thêm Sản Phẩm'
                 handleSubmit={handleSubmitAdd}
-                reset={resetInput}
-              >
-                <div className="formProduct">
-                  {!message || <span className="message">{message}</span>}
+                reset={resetInput}>
+                <div className='formProduct'>
+                  {!message || <span className='message'>{message}</span>}
                   <form>
-                    <div className="group-flex d-flex flex-wrap">
-                      <div className="form-group">
-                        <label htmlFor="nameProduct">Tên sản phẩm</label>
+                    <div className='group-flex d-flex flex-wrap'>
+                      <div className='form-group'>
+                        <label htmlFor='nameProduct'>Tên sản phẩm</label>
                         <input
                           onChange={(e) => setName(e.target.value)}
                           value={name}
-                          type="text"
-                          className="form-control"
-                          id="nameProduct"
-                          placeholder="Nhập tên sản phẩm"
+                          type='text'
+                          className='form-control'
+                          id='nameProduct'
+                          placeholder='Nhập tên sản phẩm'
                         />
                         {validation.validateName(name) || (
-                          <span className="message">
+                          <span className='message'>
                             {validation.validateName(name)}
                           </span>
                         )}
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="cate">Danh Mục</label>
+                      <div className='form-group'>
+                        <label htmlFor='cate'>Danh Mục</label>
                         <Form.Select
                           onChange={(e) => setCate(e.target.value)}
-                          value={cate}
-                        >
+                          value={cate}>
                           <option value={0}>Chọn danh mục...</option>
                           {listCate.map((elem, index) => {
                             return (
@@ -292,34 +290,33 @@ function ProductAdmin() {
                           })}
                         </Form.Select>
                         {validation.validateCate(cate) || (
-                          <span className="message">
+                          <span className='message'>
                             {validation.validateCate(cate)}
                           </span>
                         )}
                       </div>
                     </div>
-                    <div className="form-group">
+                    <div className='form-group'>
                       <label>Ảnh sản phẩm</label>
                       <input
-                        type="file"
+                        type='file'
                         onChange={(e) => handleFileInputChange(e)}
                         value={fileInput}
-                        id="fileProduct"
+                        id='fileProduct'
                       />
-                      <div className="listPreview d-flex">
+                      <div className='listPreview d-flex'>
                         {!previewSource ||
                           previewSource.map((image, index) => {
                             return (
-                              <div key={index} className="item img-wrap">
-                                <img src={image} alt="" />
+                              <div key={index} className='item img-wrap'>
+                                <img src={image} alt='' />
                                 <button
-                                  type="button"
+                                  type='button'
                                   onClick={(e) => {
                                     previewSource.splice(index, 1);
                                     setFileInput([]);
                                     setLoaded(!isLoad);
-                                  }}
-                                >
+                                  }}>
                                   X
                                 </button>
                               </div>
@@ -327,101 +324,98 @@ function ProductAdmin() {
                           })}
                       </div>
 
-                      <label className="fileLabel" htmlFor="fileProduct">
+                      <label className='fileLabel' htmlFor='fileProduct'>
                         + Thêm Ảnh
                       </label>
                     </div>
-                    <div className="group-flex-3 d-flex flex-wrap">
-                      <div className="form-group">
-                        <label htmlFor="sizeProduct">Size</label>
+                    <div className='group-flex-3 d-flex flex-wrap'>
+                      <div className='form-group'>
+                        <label htmlFor='sizeProduct'>Size</label>
                         <input
                           value={sizeId}
                           onChange={(e) => {
                             setSizeId(e.target.value);
                           }}
-                          type="text"
-                          className="form-control"
-                          id="sizeProduct"
-                          placeholder="Nhập size"
+                          type='text'
+                          className='form-control'
+                          id='sizeProduct'
+                          placeholder='Nhập size'
                         />
                         {validation.validateSizeId(sizeId) || (
-                          <span className="message">
+                          <span className='message'>
                             {validation.validateSizeId(sizeId)}
                           </span>
                         )}
                       </div>
-                      <div className="form-group">
-                        <label htmlFor="countProduct">Số lượng</label>
+                      <div className='form-group'>
+                        <label htmlFor='countProduct'>Số lượng</label>
                         <input
                           value={sizeCount}
                           onChange={(e) => {
                             setSizeCount(e.target.value);
                           }}
-                          type="text"
-                          className="form-control"
-                          id="countProduct"
-                          placeholder="Nhập số lượng"
+                          type='text'
+                          className='form-control'
+                          id='countProduct'
+                          placeholder='Nhập số lượng'
                         />
                         {validation.validateCount(sizeCount) || (
-                          <span className="message">
+                          <span className='message'>
                             {validation.validateCount(sizeCount)}
                           </span>
                         )}
                       </div>
-                      <div className="form-group  ">
-                        <label htmlFor="priceProduct">Giá sản phẩm</label>
+                      <div className='form-group  '>
+                        <label htmlFor='priceProduct'>Giá sản phẩm</label>
                         <input
                           value={sizePrice}
                           onChange={(e) => {
                             setSizePrice(e.target.value);
                           }}
-                          type="text"
-                          className="form-control"
-                          id="priceProduct"
-                          placeholder="Nhập giá sản phẩm"
+                          type='text'
+                          className='form-control'
+                          id='priceProduct'
+                          placeholder='Nhập giá sản phẩm'
                         />
                         {validation.validatePrice(sizePrice) || (
-                          <span className="message">
+                          <span className='message'>
                             {validation.validatePrice(sizePrice)}
                           </span>
                         )}
                       </div>
                       <button
-                        type="button"
-                        className="addsize btn mt-2"
+                        type='button'
+                        className='addsize btn mt-2'
                         onClick={() => {
                           previewSize();
-                        }}
-                      >
+                        }}>
                         Thêm size
                       </button>
 
-                      <div className="sizePreview mt-2 ">
+                      <div className='sizePreview mt-2 '>
                         {!size ||
                           size.map((item, index) => {
                             return (
-                              <div key={index} className="sizewrap d-flex">
+                              <div key={index} className='sizewrap d-flex'>
                                 <button
-                                  type="button"
-                                  className="btn  d-flex justify-content-between w-100 align-items-center"
+                                  type='button'
+                                  className='btn  d-flex justify-content-between w-100 align-items-center'
                                   onClick={() => {
                                     setSizeId(item.sizeId);
                                     setSizeCount(item.count);
                                     setSizePrice(item.price);
-                                  }}
-                                >
+                                  }}>
                                   <span>Size: {item.sizeId} </span>
                                   <span>Số lượng: {item.count} </span>
                                   <span>Giá: {item.price} </span>
                                 </button>
                                 <button
-                                  className="btn"
-                                  type="button"
+                                  className='btn'
+                                  type='button'
                                   onClick={(e) => {
                                     size.splice(index, 1);
                                     setLoaded(!isLoad);
-                                  }}
-                                >
+                                  }}>
                                   X
                                 </button>
                               </div>
@@ -429,15 +423,15 @@ function ProductAdmin() {
                           })}
                       </div>
                       {validation.validateSize(size) || (
-                        <span className="message">
+                        <span className='message'>
                           {validation.validateSize(size)}
                         </span>
                       )}
                     </div>
-                    <div className="form-group">
-                      <label htmlFor="descProduct">Mô tả</label>
+                    <div className='form-group'>
+                      <label htmlFor='descProduct'>Mô tả</label>
                       <textarea
-                        class="form-control"
+                        class='form-control'
                         value={desc}
                         onChange={(e) => {
                           setDesc(e.target.value);
@@ -447,85 +441,86 @@ function ProductAdmin() {
                   </form>
                 </div>
               </ModalForm>
-              <table className="table productList">
+              <table className='table table-bordered table-hover border-dark productList'>
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Size-Number</th>
-                    <th scope="col">Delete</th>
+                    <th scope='col'>#</th>
+                    <th scope='col'>Tên sản phẩm</th>
+                    <th scope='col'>Hình ảnh</th>
+                    <th scope='col'>Mô tả</th>
+                    <th scope='col'>Hãng</th>
+                    <th scope='col'>Size - Số lượng</th>
+                    <th scope='col'>Tùy chọn</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className='table-group-divider'>
                   {products.map((item, index) => (
-                    <tr className="item" key={item._id}>
-                      <th scope="row">{index + 1}</th>
-                      <td className="name">{item.name}</td>
-                      <td className="img-wrap">
-                        <img src={item.image[0].url} alt="" />
+                    <tr className='item' key={item._id}>
+                      <th scope='row'>{index + 1}</th>
+                      <td className='name'>{item.name}</td>
+                      <td className='imgs-wrap'>
+                        <img className='imgs' src={item.image[0].url} alt='' />
                       </td>
-                      <td className="description">{item.desc}</td>
-                      <td className="cate">
+                      <td className='descriptions'>
+                        <div className='descriptions-sub'>{item.desc}</div>
+                      </td>
+                      <td className='cate'>
                         {listCate.map((elem, index) => {
                           if (elem._id === item.idCate) {
                             return elem.nameCate;
                           }
                         })}
                       </td>
-                      <td className="size">
-                        {item.size.map(
-                          (size, index) =>
-                            `Size ${size.sizeId} - ${size.count} Đôi - Giá: ${size.price}`
-                        )}
+                      <td className='size'>
+                        {item.size.map((size) => (
+                          <div key={size.sizeId} className='sizeNumber'>
+                            Size {size.sizeId} - {size.count} Đôi - Giá:{' '}
+                            {size.price} VND
+                          </div>
+                        ))}
                       </td>
-                      <td className="controls">
+                      <td className='controls'>
                         <button
-                          className="btn"
+                          className='btn'
                           onClick={() => {
                             handleDelete(index);
-                          }}
-                        >
-                          <i className="bi bi-trash-fill"></i>
+                          }}>
+                          <i className='bi bi-trash-fill'></i>
                         </button>
                         <ModalForm
-                          title="Chỉnh Sửa Sản Phẩm"
-                          icon={<i className="bi bi-pencil-square"></i>}
+                          title='Chỉnh Sửa Sản Phẩm'
+                          icon={<i className='bi bi-pencil-square'></i>}
                           reset={resetInput}
                           prepare={() => {
                             updatePrepare(index);
                           }}
                           handleSubmit={() => {
                             handleSaveUpdate(index);
-                          }}
-                        >
-                          <div className="formProduct">
+                          }}>
+                          <div className='formProduct'>
                             {!message || (
-                              <span className="message">{message}</span>
+                              <span className='message'>{message}</span>
                             )}
                             <form>
-                              <div className="group-flex d-flex flex-wrap">
-                                <div className="form-group">
-                                  <label htmlFor="nameProduct">
+                              <div className='group-flex d-flex flex-wrap'>
+                                <div className='form-group'>
+                                  <label htmlFor='nameProduct'>
                                     Tên sản phẩm
                                   </label>
                                   <input
                                     onChange={(e) => setName(e.target.value)}
                                     value={name}
-                                    type="text"
-                                    className="form-control"
-                                    id="nameProduct"
-                                    placeholder="Nhập tên sản phẩm"
+                                    type='text'
+                                    className='form-control'
+                                    id='nameProduct'
+                                    placeholder='Nhập tên sản phẩm'
                                   />
                                 </div>
-                                <div className="form-group">
-                                  <label htmlFor="cate">Danh Mục</label>
+                                <div className='form-group'>
+                                  <label htmlFor='cate'>Danh Mục</label>
                                   <Form.Select
                                     onChange={(e) => setCate(e.target.value)}
-                                    value={cate}
-                                  >
+                                    value={cate}>
                                     <option>Chọn danh mục...</option>
                                     {listCate.map((elem, index) => {
                                       return (
@@ -537,31 +532,29 @@ function ProductAdmin() {
                                   </Form.Select>
                                 </div>
                               </div>
-                              <div className="form-group">
+                              <div className='form-group'>
                                 <label>Ảnh sản phẩm</label>
                                 <input
-                                  type="file"
+                                  type='file'
                                   onChange={(e) => handleFileInputChange(e)}
                                   value={fileInput}
-                                  id="fileProduct"
+                                  id='fileProduct'
                                 />
-                                <div className="listPreview d-flex">
+                                <div className='listPreview d-flex'>
                                   {!previewSource ||
                                     previewSource.map((image, index) => {
                                       return (
                                         <div
                                           key={index}
-                                          className="item img-wrap"
-                                        >
-                                          <img src={image} alt="" />
+                                          className='item img-wrap'>
+                                          <img src={image} alt='' />
                                           <button
-                                            type="button"
+                                            type='button'
                                             onClick={(e) => {
                                               previewSource.splice(index, 1);
                                               setFileInput([]);
                                               setLoaded(!isLoad);
-                                            }}
-                                          >
+                                            }}>
                                             X
                                           </button>
                                         </div>
@@ -570,41 +563,40 @@ function ProductAdmin() {
                                 </div>
 
                                 <label
-                                  className="fileLabel"
-                                  htmlFor="fileProduct"
-                                >
+                                  className='fileLabel'
+                                  htmlFor='fileProduct'>
                                   + Thêm Ảnh
                                 </label>
                               </div>
-                              <div className="group-flex-3 d-flex flex-wrap">
-                                <div className="form-group">
-                                  <label htmlFor="sizeProduct">Size</label>
+                              <div className='group-flex-3 d-flex flex-wrap'>
+                                <div className='form-group'>
+                                  <label htmlFor='sizeProduct'>Size</label>
                                   <input
                                     value={sizeId}
                                     onChange={(e) => {
                                       setSizeId(e.target.value);
                                     }}
-                                    type="text"
-                                    className="form-control"
-                                    id="sizeProduct"
-                                    placeholder="Nhập size"
+                                    type='text'
+                                    className='form-control'
+                                    id='sizeProduct'
+                                    placeholder='Nhập size'
                                   />
                                 </div>
-                                <div className="form-group">
-                                  <label htmlFor="countProduct">Số lượng</label>
+                                <div className='form-group'>
+                                  <label htmlFor='countProduct'>Số lượng</label>
                                   <input
                                     value={sizeCount}
                                     onChange={(e) => {
                                       setSizeCount(e.target.value);
                                     }}
-                                    type="text"
-                                    className="form-control"
-                                    id="countProduct"
-                                    placeholder="Nhập số lượng"
+                                    type='text'
+                                    className='form-control'
+                                    id='countProduct'
+                                    placeholder='Nhập số lượng'
                                   />
                                 </div>
-                                <div className="form-group  ">
-                                  <label htmlFor="priceProduct">
+                                <div className='form-group  '>
+                                  <label htmlFor='priceProduct'>
                                     Giá sản phẩm
                                   </label>
                                   <input
@@ -612,46 +604,43 @@ function ProductAdmin() {
                                     onChange={(e) => {
                                       setSizePrice(e.target.value);
                                     }}
-                                    type="text"
-                                    className="form-control"
-                                    id="priceProduct"
-                                    placeholder="Nhập giá sản phẩm"
+                                    type='text'
+                                    className='form-control'
+                                    id='priceProduct'
+                                    placeholder='Nhập giá sản phẩm'
                                   />
                                 </div>
                                 <button
-                                  type="button"
-                                  className="addsize btn mt-2"
+                                  type='button'
+                                  className='addsize btn mt-2'
                                   onClick={() => {
                                     previewSize();
-                                  }}
-                                >
+                                  }}>
                                   Thêm size
                                 </button>
 
-                                <div className="sizePreview mt-2 ">
+                                <div className='sizePreview mt-2 '>
                                   {!size ||
                                     size.map((item, index) => {
                                       return (
                                         <div
                                           key={index}
-                                          className="sizewrap d-flex"
-                                        >
+                                          className='sizewrap d-flex'>
                                           <button
-                                            type="button"
-                                            className="btn  d-flex justify-content-between w-100 align-items-center"
+                                            type='button'
+                                            className='btn  d-flex justify-content-between w-100 align-items-center'
                                             onClick={() => {
                                               setSizeId(item.sizeId);
                                               setSizeCount(item.count);
                                               setSizePrice(item.price);
-                                            }}
-                                          >
+                                            }}>
                                             <span>Size: {item.sizeId} </span>
                                             <span>Số lượng: {item.count} </span>
                                             <span>Giá: {item.price} </span>
                                           </button>
                                           <button
-                                            className="btn"
-                                            type="button"
+                                            className='btn'
+                                            type='button'
                                             onClick={(e) => {
                                               console.log(size.slice());
                                               let list = size.slice();
@@ -662,8 +651,7 @@ function ProductAdmin() {
                                               );
                                               setSize(list);
                                               setLoaded(!isLoad);
-                                            }}
-                                          >
+                                            }}>
                                             X
                                           </button>
                                         </div>
@@ -671,10 +659,10 @@ function ProductAdmin() {
                                     })}
                                 </div>
                               </div>
-                              <div className="form-group">
-                                <label htmlFor="descProduct">Mô tả</label>
+                              <div className='form-group'>
+                                <label htmlFor='descProduct'>Mô tả</label>
                                 <textarea
-                                  class="form-control"
+                                  class='form-control'
                                   value={desc}
                                   onChange={(e) => {
                                     setDesc(e.target.value);
