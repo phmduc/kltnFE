@@ -7,6 +7,7 @@ import Cart from "./pages/Cart/Cart.js";
 import ProductAdmin from "./pages/ProductAdmin/ProductAdmin.js";
 import CategoryAdmin from "./pages/CategoryAdmin/CategoryAdmin.js";
 import Register from "./pages/Register/Register.js";
+import Checkout from "./pages/Checkout/Checkout.js";
 import Login from "./pages/Login/Login.js";
 import axios from "axios";
 import { useDispatch } from "react-redux";
@@ -59,6 +60,7 @@ function App() {
           )}
 
           <Route path="/cart" element={<Cart />} />
+          <Route path="/cart/checkout" element={<Checkout />} />
         </Route>
         <Route path="*" element={<Home />} />
       </Routes>

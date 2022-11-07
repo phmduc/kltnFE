@@ -1,16 +1,18 @@
 import MainLayout from "../../layouts/MainLayout/MainLayout";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addToCart } from "../../Redux/slice/cartSlice";
+import { addToCart, removeFromCart } from "../../Redux/slice/cartSlice";
 
 import "./Cart.css";
 function Cart() {
   const listCart = useSelector((state) => state.cart.listCart);
   const listProduct = useSelector((state) => state.product.productsList);
-  console.log(listProduct);
-  console.log(listCart);
   const dispatch = useDispatch();
 
+  const handleDelete = (ID, sizeId) => {
+    const removeItem = { ID: ID, size: sizeId };
+    dispatch(removeFromCart(removeItem));
+  };
   return (
     <MainLayout>
       <section className="cart">
@@ -77,7 +79,14 @@ function Cart() {
                                   })[0].price * elem.count
                                 )}
                               </span>
-                              <button>Remove</button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleDelete(elem.ID, elem.size);
+                                }}
+                              >
+                                Remove
+                              </button>
                             </div>
                           </li>
                         );
@@ -93,7 +102,7 @@ function Cart() {
                 <div className="priceTotal">
                   <ul>
                     <li className="d-flex justify-content-between mb-3">
-                      Số lượng:{" "}
+                      Số lượng:
                       <span>
                         {listCart.reduce((previousValue, currentValue) => {
                           return previousValue + currentValue.count;
@@ -122,7 +131,7 @@ function Cart() {
                       </span>
                     </li>
                   </ul>
-                  <a href="" className="btn w-100">
+                  <a href="/cart/checkout" className="btn w-100">
                     Check out
                   </a>
                 </div>

@@ -49,6 +49,15 @@ export const loginUser = async (users, dispatch) => {
     return err.response.data.message;
   }
 };
+export const registerUser = async (users, dispatch) => {
+  try {
+    const res = await axios.post("/api/users/register", users);
+    return res.data;
+  } catch (err) {
+    console.log(err.response.data.message);
+    return err.response.data.message;
+  }
+};
 export const addcategory = async (category, dispatch) => {
   try {
     const res = await axios.post("/api/category", category);
