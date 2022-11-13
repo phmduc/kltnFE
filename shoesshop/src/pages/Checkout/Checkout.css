@@ -53,3 +53,7 @@
 .checkout .receipt .totalPrice {
   font-weight: bold;
 }
+.checkout .information .address-select {
+  margin-bottom: 2rem;
+  gap: 1rem;
+}

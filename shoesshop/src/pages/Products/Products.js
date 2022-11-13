@@ -6,9 +6,7 @@ import MainLayout from "../../layouts/MainLayout/MainLayout.js";
 import "./Products.css";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form } from "react-bootstrap";
-import ReactSlider from "react-slider";
 import ProductCard from "../../components/ProductCard/ProductCard.js";
-import { enableMapSet } from "immer";
 function Products() {
   const listCate = useSelector((state) => state.category.category);
   const [products, setProducts] = useState([]);

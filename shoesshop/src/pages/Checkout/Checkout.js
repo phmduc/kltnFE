@@ -1,9 +1,33 @@
 import MainLayout from "../../layouts/MainLayout/MainLayout";
 import { useDispatch, useSelector } from "react-redux";
+import { useRef, useState, useEffect } from "react";
 import "./Checkout.css";
+import axios from "axios";
+import { isFulfilled } from "@reduxjs/toolkit";
+
 function Checkout() {
   const listCart = useSelector((state) => state.cart.listCart);
   const listProduct = useSelector((state) => state.product.productsList);
+  const [province, setProvince] = useState([]);
+  const [cityId, setCityId] = useState();
+  const [districtId, setDistrictId] = useState();
+
+  const [name, setName] = useState();
+  const [address, setAddress] = useState();
+  async function getProvince() {
+    try {
+      const response = await axios.get(
+        "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
+      );
+      setProvince(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    getProvince();
+  }, []);
+
   return (
     <MainLayout>
       <section className="checkout">
@@ -16,10 +40,66 @@ function Checkout() {
                   <input type="text" placeholder="Họ" />
                   <input type="text" placeholder="Tên" />
                 </div>
+                <div className="address-select d-flex">
+                  <select
+                    class="form-select form-select-sm"
+                    id="city"
+                    onChange={(e) => {
+                      setCityId(e.target.value);
+                    }}
+                  >
+                    <option value="" selected>
+                      Chọn tỉnh thành
+                    </option>
+                    {province.map((elem, index) => {
+                      return <option value={elem.Id}>{elem.Name}</option>;
+                    })}
+                  </select>
+                  <select
+                    class="form-select form-select-sm"
+                    id="district"
+                    onChange={(e) => {
+                      setDistrictId(e.target.value);
+                    }}
+                  >
+                    <option value="" selected>
+                      Chọn quận huyện
+                    </option>
+                    {province.map((elem, index) => {
+                      if (parseInt(elem.Id) == cityId) {
+                        return elem.Districts.map((district, index) => {
+                          return (
+                            <option value={district.Id}>{district.Name}</option>
+                          );
+                        });
+                      }
+                    })}
+                  </select>
+                  <select
+                    class="form-select form-select-sm"
+                    id="ward"
+                    aria-label=".form-select-sm"
+                  >
+                    <option value="" selected>
+                      Chọn phường xã
+                    </option>
+                    {province.map((elem, index) => {
+                      if (parseInt(elem.Id) == cityId) {
+                        return elem.Districts.map((district, index) => {
+                          if (parseInt(district.Id) == districtId) {
+                            return district.Wards.map((ward, index) => {
+                              return <option value={index}>{ward.Name}</option>;
+                            });
+                          }
+                        });
+                      }
+                    })}
+                  </select>
+                </div>
                 <input
-                  className="d-block w-100"
                   type="text"
-                  placeholder="Địa chỉ"
+                  className="d-block w-100"
+                  placeholder="Địa chỉ cụ thể..."
                 />
                 <input
                   className="d-block w-100"
@@ -84,6 +164,7 @@ function Checkout() {
                     )}
                   </span>
                 </div>
+                <button className="btn w-100">Check out</button>
               </div>
             </div>
           </div>
