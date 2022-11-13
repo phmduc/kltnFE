@@ -79,17 +79,7 @@ function Products() {
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="category">Danh mục</Form.Label>
-                  <Form.Select
-                    ref={inputCate}
-                    // onChange={(e) => {
-                    //   const filterList = products.filter((elem, index) => {
-                    //     return elem.idCate === e.target.value;
-                    //   });
-                    //   setProductsFilter(filterList);
-                    // }}
-                    value={cate}
-                    id="category"
-                  >
+                  <Form.Select ref={inputCate} value={cate} id="category">
                     <option value="0">Chọn danh mục</option>
                     {listCate.map((elem, index) => {
                       return (
@@ -102,19 +92,7 @@ function Products() {
                 </Form.Group>
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="size">Size</Form.Label>
-                  <Form.Select
-                    ref={inputSize}
-                    // onChange={(e) => {
-                    //   const filterList = products.filter((elem, index) => {
-                    //     return elem.size.some(function (item, index) {
-                    //       return item.sizeId === e.target.value;
-                    //     });
-                    //   });
-                    //   setProductsFilter(filterList);
-                    // }}
-                    value={size}
-                    id="size"
-                  >
+                  <Form.Select ref={inputSize} value={size} id="size">
                     <option value="0">Chọn size</option>
                     {products.map((elem, index) => {
                       return elem.size.map((value, index) => {

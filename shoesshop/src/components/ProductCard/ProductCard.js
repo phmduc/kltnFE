@@ -8,13 +8,13 @@ function ProductCard(props) {
         <img src={props.item.image[1].url} className="forHover" alt="" />
       </Link>
       <div className="content d-flex flex-column mt-2">
-        <a href="" className="name">
+        <Link to={`./${props.item._id}`} className="name">
           {props.item.name}
-        </a>
+        </Link>
         <span>{props.item.size.length} size</span>
-        <a className="price" href="">
+        <Link className="price" to={`./${props.item._id}`}>
           Xem chi tiết
-        </a>
+        </Link>
       </div>
     </div>
   );
