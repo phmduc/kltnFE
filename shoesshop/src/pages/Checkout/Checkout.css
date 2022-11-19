@@ -11,11 +11,15 @@
   font-size: 1.3rem;
   display: block;
 }
-.form-group {
+.checkout .form-group {
   gap: 1rem;
 }
-.form-group input {
+.checkout .form-group input {
   width: 50%;
+}
+.checkout select {
+  padding-top: 0.8rem;
+  padding-bottom: 0.8rem;
 }
 .checkout .receipt .item .img-wrap {
   min-width: 20%;
@@ -24,11 +28,11 @@
 .checkout .receipt .item {
   gap: 1rem;
 }
-.receipt .item:not(:last-child) {
+.checkout .receipt .item:not(:last-child) {
   margin-bottom: 1rem;
 }
 
-.receipt .item .name {
+.checkout .receipt .item .name {
   line-height: 1.8rem;
   max-height: 3.6rem;
   overflow: hidden;
@@ -39,10 +43,10 @@
   -webkit-line-clamp: 2;
   font-weight: bold;
 }
-.receipt .item .price {
+.checkout .receipt .item .price {
   font-weight: bold;
 }
-.receipt .item .count {
+.checkout .receipt .item .count {
   text-align: right;
 }
 .checkout .receipt ul {

@@ -32,7 +32,6 @@ function ProductDetail({ match }) {
   useEffect(() => {
     getProductDetail();
   }, []);
-
   const handleAddCart = () => {
     const size = $(".size .nav-link.active").html();
     const itemAdd = {
@@ -42,7 +41,6 @@ function ProductDetail({ match }) {
     };
     dispatch(addToCart(itemAdd));
   };
-
   return (
     <MainLayout>
       {item === undefined ? (

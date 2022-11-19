@@ -5,6 +5,7 @@ import { addToCart, removeFromCart } from "../../Redux/slice/cartSlice";
 
 import "./Cart.css";
 function Cart() {
+  const user = useSelector((state) => state.userInfo.info);
   const listCart = useSelector((state) => state.cart.listCart);
   const listProduct = useSelector((state) => state.product.productsList);
   const dispatch = useDispatch();
@@ -131,9 +132,15 @@ function Cart() {
                       </span>
                     </li>
                   </ul>
-                  <a href="/cart/checkout" className="btn w-100">
-                    Check out
-                  </a>
+                  {user.ID ? (
+                    <a href="/user/checkout" className="btn my-3 w-100">
+                      Check out
+                    </a>
+                  ) : (
+                    <a href="/login" className="btn my-3 w-100">
+                      Vui lòng đăng nhập để tiếp tục
+                    </a>
+                  )}
                 </div>
                 <div className="policy">
                   <ul>

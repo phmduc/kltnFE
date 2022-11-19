@@ -14,6 +14,20 @@ export const validation = {
       return true;
     }
   },
+  validatePass: function (name) {
+    if (!name || name === "") {
+      return "Mật khẩu không được bỏ trống (*)";
+    } else if (name.length < 6) {
+      return "Mật khẩu tối thiểu 6 ký tự";
+    } else return true;
+  },
+  validateRePass: function (name, rePass) {
+    if (!name || name === "") {
+      return "Vui lòng nhập lại mật khẩu (*)";
+    } else if (name !== rePass) {
+      return "Mật khẩu không trùng khớp";
+    } else return true;
+  },
   validatePrice: function (name) {
     if (!name || name === 0) {
       return "Giá không được bỏ trống";

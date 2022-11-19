@@ -1,6 +1,9 @@
 import "./Register.css";
 import { useState } from "react";
 import { registerUser } from "../../Redux/apiRequests";
+import { validation } from "../../js/validation";
+import { toast } from "react-toastify";
+
 function Register() {
   const [name, setName] = useState();
 
@@ -8,16 +11,42 @@ function Register() {
   const [password, setPassword] = useState();
   const [passwordSame, setPasswordSame] = useState();
   const [emailMessage, setEmailMessage] = useState();
+  const [nameMessage, setNameMessage] = useState();
+  const [passwordMessage, setPasswordMessage] = useState();
+  const [rePasswordMessage, setRePasswordMessage] = useState();
 
   const submitRegister = async () => {
-    const newUser = {
-      name: name,
-      email: email,
-      password: password,
-    };
-    const result = await registerUser(newUser);
-    if (typeof result === "string") {
-      setEmailMessage(result);
+    if (validation.validateName(name) !== true) {
+      setNameMessage(validation.validateName(name));
+    }
+    if (validation.validateEmail(email) !== true) {
+      setEmailMessage(validation.validateEmail(email));
+    }
+    if (validation.validatePass(password) !== true) {
+      setPasswordMessage(validation.validatePass(password));
+    }
+    if (validation.validateRePass(passwordSame) !== true) {
+      setRePasswordMessage(validation.validateRePass(passwordSame));
+    }
+    if (
+      validation.validateName(name) === true &&
+      validation.validateEmail(email) === true &&
+      validation.validatePass(password) === true &&
+      validation.validateRePass(password, passwordSame) === true
+    ) {
+      const newUser = {
+        name: name,
+        email: email.toLowerCase(),
+        password: password,
+      };
+      const result = await registerUser(newUser);
+      if (typeof result === "string") {
+        setEmailMessage(result);
+      } else {
+        toast.success("Đăng ký thành công!!", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
     }
   };
   return (
@@ -32,10 +61,14 @@ function Register() {
                 type="text"
                 value={name}
                 onChange={(e) => {
+                  setNameMessage();
                   setName(e.target.value);
                 }}
                 className="form-control"
               />
+              {nameMessage ? (
+                <span className="message mt-3">{nameMessage}</span>
+              ) : null}
             </div>
             <div className="form-group">
               <p>Email</p>
@@ -43,13 +76,15 @@ function Register() {
                 type="email"
                 value={email}
                 onChange={(e) => {
+                  setEmailMessage();
+
                   setEmail(e.target.value);
                 }}
                 className="form-control"
                 aria-describedby="emailHelp"
               />
               {emailMessage ? (
-                <p className="message mt-3">{emailMessage}</p>
+                <span className="message mt-3">{emailMessage}</span>
               ) : (
                 ""
               )}
@@ -59,11 +94,15 @@ function Register() {
               <input
                 value={password}
                 onChange={(e) => {
+                  setPasswordMessage();
                   setPassword(e.target.value);
                 }}
                 type="password"
                 className="form-control"
               />
+              {passwordMessage ? (
+                <span className="message mt-3">{passwordMessage}</span>
+              ) : null}
             </div>
             <div className="form-group">
               <p>Xác nhận mật khẩu</p>
@@ -71,10 +110,14 @@ function Register() {
                 type="password"
                 value={passwordSame}
                 onChange={(e) => {
+                  setRePasswordMessage();
                   setPasswordSame(e.target.value);
                 }}
                 className="form-control"
               />
+              {rePasswordMessage ? (
+                <span className="message mt-3">{rePasswordMessage}</span>
+              ) : null}
             </div>
             <button
               onClick={() => {
@@ -85,6 +128,9 @@ function Register() {
             >
               Đăng ký
             </button>
+            <a href="/login" className="btn  mt-3">
+              Đăng Nhập
+            </a>
           </form>
         </div>
       </section>

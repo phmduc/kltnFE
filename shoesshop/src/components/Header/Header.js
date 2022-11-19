@@ -128,6 +128,11 @@ function Header() {
                     <a className="account" href="">
                       Xin chào, {user.name}
                       <ul className="dropdown-acount">
+                        {user.isAdmin === true ? (
+                          <li>
+                            <a href="/admin/products">Quản lý</a>
+                          </li>
+                        ) : null}
                         <li>
                           <a href="">Thông tin cá nhân</a>
                         </li>

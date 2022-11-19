@@ -1,4 +1,5 @@
 import "./Admin.css";
+
 import { getAllUser } from "../../Redux/slice/userSlice.js";
 import $ from "jquery";
 import $$ from "jquery";
@@ -10,8 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 function Admin({ children, props }) {
   useEffect(() => {
     $("#main-nav li a").each((index, elem) => {
-      if ($(elem).hasClass("active")) {
-        $(elem).parent().addClass("active");
+      if ($(elem).hasclassName("active")) {
+        $(elem).parent().addclassName("active");
       }
     });
   }, []);
@@ -19,87 +20,67 @@ function Admin({ children, props }) {
   const loadingStatus = useSelector((state) => state.loading.value);
   return (
     <div className="wrapperAdmin">
-      <div className="sideBar">
-        <div className="logo text-center">
-          <a href="/">Rekeans</a>
-        </div>
-        {/* <ul className="menu">
-          <li>
-            <a href="" className="active">
-              Dashboard
-            </a>
-          </li>
-          <li>
-            <a href="">User</a>
-          </li>
-          <li>
-            <a href="/admin/category">Category</a>
-          </li>
-          <li>
-            <a href="/admin">Products</a>
-          </li>
-          <li>
-            <a href="">Order</a>
-          </li>
-        </ul> */}
-        <nav id="sidenav">
-          <div id="sidenav-header">
-            <div id="profile-picture">
-              <img src="http://www.gravatar.com/avatar/fa4df8540bab3cb38f7dfa60c6e0522c.png" />
-            </div>
-            <a href="#" id="profile-link">
-              Jesse Couch
+      <div className="sidebar">
+        <div className="sidebar-wrapper">
+          <div className="logo text-center">
+            <a href="javascript:;" className="simple-text">
+              Rekeans
             </a>
           </div>
-
-          <ul id="main-nav">
-            <li>
+          <ul className="nav">
+            <li className="nav-item w-100 mb-3 ">
               <NavLink
-                activeClassName="active"
+                activeclassName="active"
                 to="/admin/dashboard"
-                className="d-flex"
+                className="d-flex align-items-center nav-link"
               >
-                <i class="bi bi-speedometer"></i>
+                <i className="bi bi-speedometer"></i>
                 Dashboard
               </NavLink>
             </li>
-            <li>
+            <li className="nav-item w-100 mb-3">
               <NavLink
-                activeClassName="active"
+                activeclassName="active"
                 to="/admin/products"
-                className="d-flex"
+                className="d-flex align-items-center nav-link"
               >
-                <i class="bi bi-archive"></i>
+                <i className="bi bi-archive"></i>
                 Product
               </NavLink>
             </li>
-            <li>
+            <li className="nav-item w-100 mb-3">
               <NavLink
-                activeClassName="active"
+                activeclassName="active"
                 to="/admin/category"
-                className="d-flex"
+                className="d-flex align-items-center nav-link"
               >
-                <i class="bi bi-tag"></i>
+                <i className="bi bi-tag"></i>
                 Category
               </NavLink>
             </li>
-            <li>
+            <li className="nav-item w-100 ">
               <NavLink
                 to="/admin/user"
-                activeClassName="active"
-                className="d-flex"
+                activeclassName="active"
+                className="d-flex align-items-center nav-link"
               >
-                <i class="bi bi-person-circle"></i>
+                <i className="bi bi-person-circle"></i>
                 User
               </NavLink>
             </li>
           </ul>
-        </nav>
-      </div>
-      <div className="view">
-        <div className="logo">
-          <a href="/">Rekeans</a>
         </div>
+        <div className="sidebar-background"></div>
+      </div>
+
+      <div className="view">
+        <nav class="navbar navbar-expand-lg " color-on-scroll="500">
+          <div class="container-fluid">
+            <a class="navbar-brand" href="#pablo">
+              Template
+            </a>
+          </div>
+        </nav>
         {loadingStatus === 0 ? <Loading></Loading> : children}
       </div>
     </div>

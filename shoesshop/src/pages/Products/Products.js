@@ -11,17 +11,14 @@ function Products() {
   const listCate = useSelector((state) => state.category.category);
   const [products, setProducts] = useState([]);
   const [productsFilter, setProductsFilter] = useState([]);
-
   const [cate, setCate] = useState();
   const [size, setSize] = useState();
   const inputCate = useRef(false);
   const inputSize = useRef(false);
   const inputPriceMin = useRef(0);
   const inputPriceMax = useRef(0);
-
   const [isLoad, setLoad] = useState([]);
   var listsize = [];
-
   const dispatch = useDispatch();
   async function getProducts() {
     try {
@@ -32,7 +29,6 @@ function Products() {
       console.error(error);
     }
   }
-
   const filter = () => {
     let filterList = products;
     if (inputSize.current.value !== "0") {
@@ -66,7 +62,6 @@ function Products() {
   useEffect(() => {
     getProducts();
   }, [isLoad]);
-
   return (
     <MainLayout>
       <div className="container">
