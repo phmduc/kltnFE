@@ -3,10 +3,14 @@ import { useState } from "react";
 import { registerUser } from "../../Redux/apiRequests";
 import { validation } from "../../js/validation";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
   const [name, setName] = useState();
-
+  console.log(window.location.host);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [passwordSame, setPasswordSame] = useState();
@@ -43,9 +47,14 @@ function Register() {
       if (typeof result === "string") {
         setEmailMessage(result);
       } else {
-        toast.success("Đăng ký thành công!!", {
+        await axios.post("/api/email/send", {
+          email: result.email,
+          web: `${window.location.host}/verify/${result._id}`,
+        });
+        toast.success("Đăng ký thành công!!, Vui lòng check mail xác thực", {
           position: toast.POSITION.TOP_CENTER,
         });
+        navigate("/login");
       }
     }
   };

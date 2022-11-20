@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 function Header() {
   const user = useSelector((state) => state.userInfo.info);
   const dispatch = useDispatch();
+  console.log(user);
   const navigate = useNavigate();
   const logout = () => {
     dispatch(userLogout());
@@ -15,6 +16,16 @@ function Header() {
 
   return (
     <header>
+      {user.isVerify ? null : (
+        <div className="topbar">
+          <div className="container">
+            <div className="text text-center">
+              Tài khoản của bạn chưa được kích hoạt, vui lòng kiểm tra mail
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="container">
         <div className="menu">
           <div className="row align-items-center">

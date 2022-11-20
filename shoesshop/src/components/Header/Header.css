@@ -7,8 +7,12 @@ header a {
   color: black !important;
 }
 
+header .topbar {
+  background-color: black;
+  color: var(--primary);
+}
+
 header {
-  padding: 1rem 0;
 }
 #menuToggle {
   display: flex;

@@ -41,8 +41,10 @@ export const deleteproduct = async (product, dispatch) => {
 export const loginUser = async (users, dispatch) => {
   try {
     const res = await axios.post("/api/users/login", users);
-    dispatch(userLogin(res.data));
-    return res.data;
+    if (res.data.isVerify === true) {
+      dispatch(userLogin(res.data));
+      return res.data;
+    } else return "Tài khoản chưa được xác minh, vui lòng check mail";
   } catch (err) {
     dispatch(unLoadding());
 

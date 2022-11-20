@@ -3,6 +3,8 @@ import $ from "jquery";
 import { useEffect } from "react";
 import { useState } from "react";
 import { loginUser } from "../../Redux/apiRequests";
+import { toast } from "react-toastify";
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 function Login() {
@@ -22,9 +24,16 @@ function Login() {
     const login = await loginUser(user, dispatch);
     if (typeof login === "object") {
       setLoginStatus(login);
+      toast.success("Đăng nhập thành công", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+
       navigate("/");
     } else {
       setLoginStatus(login);
+      toast.error(login, {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
   return (
@@ -57,9 +66,7 @@ function Login() {
                 }}
               ></input>
             </div>
-            {loginStatus ? (
-              <div className="message mb-3">{loginStatus}</div>
-            ) : null}
+
             <div className="form-group form-check">
               <div className="save-forget">
                 <a href="#">Quên mật khẩu ?</a>

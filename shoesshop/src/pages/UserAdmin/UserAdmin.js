@@ -2,13 +2,15 @@ import "./UserAdmin.css";
 import Admin from "../../layouts/Admin/Admin";
 import axios from "axios";
 import { useEffect, useState } from "react";
+
 import { useDispatch } from "react-redux";
 function UserAdmin() {
+  const [isLoad, setLoaded] = useState(false);
+
   const [users, setUsers] = useState([]);
   useEffect(() => {
     getUser();
-  }, []);
-  const dispatch = useDispatch();
+  }, [isLoad]);
   async function getUser() {
     try {
       const response = await axios.get("/api/users");
@@ -17,7 +19,14 @@ function UserAdmin() {
       console.error(error);
     }
   }
-  console.log(users);
+  const handleDelete = async (index) => {
+    try {
+      const res = await axios.delete("/api/users/" + users[index]._id);
+    } catch (err) {
+      throw new Error("Invalid Product Data");
+    }
+    setLoaded(!isLoad);
+  };
   return (
     <Admin>
       <div className="categoryManage">
@@ -67,7 +76,9 @@ function UserAdmin() {
                           <td className="controls">
                             <button
                               className="btn btn-primary"
-                              onClick={() => {}}
+                              onClick={(e) => {
+                                handleDelete(index);
+                              }}
                             >
                               <i className="bi bi-trash-fill"></i>
                             </button>

@@ -8,6 +8,7 @@ const userSlice = createSlice({
       name: "",
       email: "",
       isAdmin: "",
+      isVerify: "",
     },
     userlist: [],
   },
@@ -17,12 +18,14 @@ const userSlice = createSlice({
       state.info.name = action.payload.name;
       state.info.email = action.payload.email;
       state.info.isAdmin = action.payload.isAdmin;
+      state.info.isVerify = action.payload.isVerify;
     },
     userLogout: (state, action) => {
       state.info.ID = "";
       state.info.name = "";
       state.info.email = "";
       state.info.isAdmin = "";
+      state.info.isVerify = "";
     },
     getAllUser: (state, action) => {
       state.list = action.payload;
