@@ -133,7 +133,7 @@ function Cart() {
                     </li>
                   </ul>
                   {user.ID ? (
-                    <a href="/user/checkout" className="btn my-3 w-100">
+                    <a href="/cart/checkout" className="btn my-3 w-100">
                       Check out
                     </a>
                   ) : (

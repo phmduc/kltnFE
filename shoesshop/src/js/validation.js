@@ -66,13 +66,4 @@ export const validation = {
       return true;
     }
   },
-  validateSize: function (password) {
-    if (!password || password.length === 0) {
-      return "Vui lòng nhập mật khẩu";
-    } else if (password.length < 6) {
-      return "Mật khẩu phải ít nhất 6 ký tự";
-    } else {
-      return true;
-    }
-  },
 };

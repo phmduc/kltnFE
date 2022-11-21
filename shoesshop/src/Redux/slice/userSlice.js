@@ -20,6 +20,13 @@ const userSlice = createSlice({
       state.info.isAdmin = action.payload.isAdmin;
       state.info.isVerify = action.payload.isVerify;
     },
+    updateUser: (state, action) => {
+      state.info.ID = action.payload._id;
+      state.info.name = action.payload.name;
+      state.info.email = action.payload.email;
+      state.info.isAdmin = action.payload.isAdmin;
+      state.info.isVerify = action.payload.isVerify;
+    },
     userLogout: (state, action) => {
       state.info.ID = "";
       state.info.name = "";
@@ -32,6 +39,7 @@ const userSlice = createSlice({
     },
   },
 });
-export const { userLogin, getAllUser, userLogout } = userSlice.actions;
+export const { userLogin, getAllUser, userLogout, updateUser } =
+  userSlice.actions;
 
 export default userSlice.reducer;

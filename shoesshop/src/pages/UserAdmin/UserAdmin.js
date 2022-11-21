@@ -29,14 +29,10 @@ function UserAdmin() {
   };
   return (
     <Admin>
-      <div className="categoryManage">
+      <div className="userManage">
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="title text-center py-3">
-                <h2>Danh Sách Tài Khoản</h2>
-              </div>
-
               <div class="content table-responsive table-full-width">
                 <table class="table table-hover table-striped">
                   <thead>

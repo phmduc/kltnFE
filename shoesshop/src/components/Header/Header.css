@@ -125,9 +125,50 @@ header
   .menu
   .list-control
   .items-control:not(.has-input)
-  a.account:hover
+  .account:hover
   .dropdown-acount {
   display: block;
+}
+header .account {
+  position: relative;
+  font-weight: bold;
+  font-family: "Oswald", sans-serif;
+
+  cursor: pointer;
+}
+header .account .info {
+  font-weight: bold;
+  font-family: "Oswald", sans-serif !important;
+  color: black !important;
+  border-radius: unset;
+}
+.infoModal .infoDetail .name button {
+  background-color: unset;
+  border: none;
+  margin-left: 1rem;
+}
+.infoModal .infoDetail .name input {
+  margin-left: 1rem;
+  display: none;
+}
+.infoModal .infoDetail .name input.show {
+  display: block;
+}
+.infoModal .infoDetail .name .edit.show {
+  display: none;
+}
+.infoModal .infoDetail .name .save {
+  border: 1px solid var(--primary);
+  border-radius: 5px;
+  padding: 0 0.5rem;
+  display: none;
+}
+.infoModal .infoDetail .name .save.show {
+  display: block;
+}
+header .account .info:hover {
+  opacity: 0.8 !important;
+  background-color: #cdcdcd !important;
 }
 .dropdown-acount {
   position: absolute;

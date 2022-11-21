@@ -58,7 +58,7 @@ function Admin({ children, props }) {
                 Category
               </NavLink>
             </li>
-            <li className="nav-item w-100 ">
+            <li className="nav-item w-100 mb-3">
               <NavLink
                 to="/admin/user"
                 activeclassName="active"
@@ -66,6 +66,16 @@ function Admin({ children, props }) {
               >
                 <i className="bi bi-person-circle"></i>
                 User
+              </NavLink>
+            </li>
+            <li className="nav-item w-100 ">
+              <NavLink
+                to="/admin/order"
+                activeclassName="active"
+                className="d-flex align-items-center nav-link"
+              >
+                <i class="bi bi-bag-check"></i>
+                Order
               </NavLink>
             </li>
           </ul>

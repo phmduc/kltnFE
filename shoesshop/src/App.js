@@ -6,6 +6,7 @@ import Products from "./pages/Products/Products.js";
 import Cart from "./pages/Cart/Cart.js";
 import ProductAdmin from "./pages/ProductAdmin/ProductAdmin.js";
 import CategoryAdmin from "./pages/CategoryAdmin/CategoryAdmin.js";
+import OrderAdmin from "./pages/OrderAdmin/OrderAdmin.js";
 import Register from "./pages/Register/Register.js";
 import UserAdmin from "./pages/UserAdmin/UserAdmin.js";
 import Checkout from "./pages/Checkout/Checkout.js";
@@ -13,6 +14,7 @@ import Verify from "./pages/Verify/Verify.js";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login/Login.js";
 import axios from "axios";
+import React from "react";
 import { ToastContainer } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useState } from "react";
@@ -45,11 +47,16 @@ function App() {
         <Route path="/">
           <Route index element={<Home {...user} />} />
           {!user.ID ? (
-            <Route path="/login" element={<Login />} />
+            <React.Fragment>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </React.Fragment>
           ) : (
-            <Route path="/login" element={<Home />} />
+            <React.Fragment>
+              <Route path="/login" element={<Home />} />
+              <Route path="/register" element={<Home />} />
+            </React.Fragment>
           )}
-          <Route path="/register" element={<Register />} />
           <Route path="/products/">
             <Route index element={<Products />} />
             <Route path=":id" element={<ProductDetail />} />
@@ -59,6 +66,7 @@ function App() {
               <Route path="products" element={<ProductAdmin />} />
               <Route path="category" element={<CategoryAdmin />} />
               <Route path="user" element={<UserAdmin />} />
+              <Route path="order" element={<OrderAdmin />} />
             </Route>
           ) : (
             <Route path="/admin" element={<Home />} />

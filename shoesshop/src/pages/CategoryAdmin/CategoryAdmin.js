@@ -133,68 +133,61 @@ function CategoryAdmin() {
         <div className="container">
           <div className="row">
             <div className="col-12">
-              <div className="header d-flex align-items-center justify-content-between">
-                <div className="wrap">
-                  <h4 className="title">Quản lý danh mục</h4>
-                  <p className="category">Thêm, sửa, xóa danh mục tại đây!!</p>
-                </div>
-                <ModalForm
-                  title="Thêm Danh Mục"
-                  icon="+ Thêm Danh Mục"
-                  handleSubmit={handleSubmitAdd}
-                  reset={resetInput}
-                >
-                  <div className="formCategory">
-                    <Form>
-                      <Form.Group className="mb-3" controlId="nameProduct">
-                        <Form.Label>Tên Danh Mục</Form.Label>
-                        <Form.Control
-                          onChange={(e) => {
-                            setName(e.target.value);
-                          }}
-                          value={name || ""}
-                          type="text"
-                          placeholder="Tên danh mục"
-                        />
-                      </Form.Group>
-                      <Form.Group className="mb-3" controlId="imageProduct">
-                        <Form.Label>Ảnh Danh Mục</Form.Label>
-                        <Form.Control
-                          id="imageInput"
-                          className="custom-file-input"
-                          onChange={(e) => handleFileInputChange(e)}
-                          value={fileInput}
-                          type="file"
-                        />
-                        <label class="inputButton" htmlFor="imageInput">
-                          + Thêm ảnh
-                        </label>
-                        <div className="listPreview d-flex">
-                          {previewSource &&
-                            previewSource.map((image, index) => {
-                              return (
-                                <div key={index} className="item">
-                                  <div className="img-wrap">
-                                    <img src={image} alt="" />
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        previewSource.splice(index, 1);
-                                        setLoaded(!isLoad);
-                                      }}
-                                    ></button>
-                                  </div>
+              <ModalForm
+                title="Thêm Danh Mục"
+                icon="+ Thêm Danh Mục"
+                handleSubmit={handleSubmitAdd}
+                reset={resetInput}
+              >
+                <div className="formCategory">
+                  <Form>
+                    <Form.Group className="mb-3" controlId="nameProduct">
+                      <Form.Label>Tên Danh Mục</Form.Label>
+                      <Form.Control
+                        onChange={(e) => {
+                          setName(e.target.value);
+                        }}
+                        value={name || ""}
+                        type="text"
+                        placeholder="Tên danh mục"
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-3" controlId="imageProduct">
+                      <Form.Label>Ảnh Danh Mục</Form.Label>
+                      <Form.Control
+                        id="imageInput"
+                        className="custom-file-input"
+                        onChange={(e) => handleFileInputChange(e)}
+                        value={fileInput}
+                        type="file"
+                      />
+                      <label class="inputButton" htmlFor="imageInput">
+                        + Thêm ảnh
+                      </label>
+                      <div className="listPreview d-flex">
+                        {previewSource &&
+                          previewSource.map((image, index) => {
+                            return (
+                              <div key={index} className="item">
+                                <div className="img-wrap">
+                                  <img src={image} alt="" />
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      previewSource.splice(index, 1);
+                                      setLoaded(!isLoad);
+                                    }}
+                                  ></button>
                                 </div>
-                              );
-                            })}
-                        </div>
-                        <p>{message}</p>
-                      </Form.Group>
-                    </Form>
-                  </div>
-                </ModalForm>
-              </div>
-
+                              </div>
+                            );
+                          })}
+                      </div>
+                      <p>{message}</p>
+                    </Form.Group>
+                  </Form>
+                </div>
+              </ModalForm>
               <div class="content table-responsive table-full-width">
                 <table className="table categoryList table-hover table-striped">
                   <thead>

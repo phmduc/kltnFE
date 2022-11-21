@@ -1,13 +1,26 @@
 import "./Header.css";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { userLogout } from "../../Redux/slice/userSlice";
+import { userLogout, updateUser } from "../../Redux/slice/userSlice";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Modal, Button } from "react-bootstrap";
+import { useState } from "react";
 
 function Header() {
   const user = useSelector((state) => state.userInfo.info);
+  const [isActive, setIsActive] = useState(false);
+  const [newName, setNewName] = useState("");
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => {
+    setShow(false);
+  };
+  const handleShow = () => {
+    setShow(true);
+  };
+
   const dispatch = useDispatch();
-  console.log(user);
   const navigate = useNavigate();
   const logout = () => {
     dispatch(userLogout());
@@ -15,17 +28,7 @@ function Header() {
   };
 
   return (
-    <header>
-      {user.isVerify ? null : (
-        <div className="topbar">
-          <div className="container">
-            <div className="text text-center">
-              Tài khoản của bạn chưa được kích hoạt, vui lòng kiểm tra mail
-            </div>
-          </div>
-        </div>
-      )}
-
+    <header className="py-3">
       <div className="container">
         <div className="menu">
           <div className="row align-items-center">
@@ -136,7 +139,7 @@ function Header() {
                       </svg>
                     </a>
                   ) : (
-                    <a className="account" href="">
+                    <div className="account">
                       Xin chào, {user.name}
                       <ul className="dropdown-acount">
                         {user.isAdmin === true ? (
@@ -145,7 +148,15 @@ function Header() {
                           </li>
                         ) : null}
                         <li>
-                          <a href="">Thông tin cá nhân</a>
+                          <Button
+                            variant="primary"
+                            className="info"
+                            onClick={() => {
+                              handleShow();
+                            }}
+                          >
+                            Thông tin cá nhân
+                          </Button>
                         </li>
                         <li>
                           <button
@@ -158,7 +169,7 @@ function Header() {
                           </button>
                         </li>
                       </ul>
-                    </a>
+                    </div>
                   )}
                 </li>
               </ul>
@@ -176,6 +187,62 @@ function Header() {
           </div>
         </div>
       </div>
+      <Modal className="infoModal" size="md" show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Thông tin cá nhân</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="infoDetail">
+            <div className="name mb-3 d-flex align-items-center">
+              <span className="d-block">Tên: {user.name} </span>
+              <input
+                type="text"
+                className={isActive ? "show" : ""}
+                placeholder="Nhập tên mới..."
+                onChange={(e) => {
+                  setNewName(e.target.value);
+                }}
+              />
+              <button
+                className={isActive ? "show save" : "save"}
+                onClick={async (e) => {
+                  const res = await axios.put("/api/users/" + user.ID, {
+                    name: newName,
+                    isAdmin: user.isAdmin,
+                    isVerify: user.isVerify,
+                  });
+                  dispatch(updateUser(res.data));
+                  setIsActive(false);
+                }}
+              >
+                Lưu
+              </button>
+              <button
+                className={isActive ? "show edit" : "edit"}
+                onClick={(e) => {
+                  setIsActive(true);
+                }}
+              >
+                <i class="bi bi-pencil-square"></i>
+              </button>
+            </div>
+            <span className="d-block mb-3">Email: {user.email}</span>
+            <span className="d-block mb-3">
+              {user.isAdmin ? "Quyền hạn: Admin" : "Quyền hạn: User"}
+            </span>
+            <span className="d-block mb-3">
+              {user.isVerify
+                ? "Trạng thái: Đã xác minh"
+                : "Trạng thái: Chưa xác minh"}
+            </span>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </header>
   );
 }

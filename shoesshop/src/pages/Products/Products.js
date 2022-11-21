@@ -57,6 +57,7 @@ function Products() {
         });
       });
     }
+
     setProductsFilter(filterList);
   };
   useEffect(() => {
@@ -68,7 +69,6 @@ function Products() {
         <div className="row">
           <div className="col-lg-3">
             <div className="siteBar">
-              {" "}
               <Form>
                 <Form.Group className="mb-3">
                   <Form.Label htmlFor="category">Danh mục</Form.Label>

@@ -2,17 +2,18 @@ import MainLayout from "../../layouts/MainLayout/MainLayout";
 import { useDispatch, useSelector } from "react-redux";
 import { useRef, useState, useEffect } from "react";
 import "./Checkout.css";
+import { toast } from "react-toastify";
 import axios from "axios";
-import { isFulfilled } from "@reduxjs/toolkit";
 
 function Checkout() {
+  const user = useSelector((state) => state.userInfo.info);
   const listCart = useSelector((state) => state.cart.listCart);
   const listProduct = useSelector((state) => state.product.productsList);
   const [province, setProvince] = useState([]);
   const [cityId, setCityId] = useState();
   const [districtId, setDistrictId] = useState();
   const [wardId, setWardId] = useState();
-
+  const [payment, setPayment] = useState("");
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [number, setNumber] = useState();
@@ -31,47 +32,79 @@ function Checkout() {
   }
 
   const submitOrder = async () => {
-    const order = {
-      user: "123",
-      name: firstName + " " + lastName,
-      orderItems: listCart.map((elem, index) => {
-        return {
-          ID: elem.ID,
-          size: elem.size,
-          count: elem.count,
-          image: listProduct.filter((item, index) => {
-            return item._id === elem.ID;
-          })[0].image[0].url,
-          price:
-            listProduct
-              .filter((item, index) => {
-                return item._id === elem.ID;
-              })[0]
-              .size.filter((item, index) => {
-                return item.sizeId === elem.size;
-              })[0].price * elem.count,
-        };
-      }),
-      address: {
-        addressDetail: address,
-        city: cityId,
-        district: districtId,
-        ward: wardId,
-      },
-      totalPrice: listCart.reduce((previousValue, currentValue) => {
-        let price = 0;
-        listProduct.forEach((elem, index) => {
-          if (elem._id === currentValue.ID) {
-            price = elem.size.find((size, index) => {
-              return size.sizeId === currentValue.size;
-            }).price;
-          }
-        });
-        return previousValue + currentValue.count * price;
-      }, 0),
-    };
-
-    console.log(order);
+    if (
+      firstName &&
+      lastName &&
+      number &&
+      address &&
+      cityId &&
+      districtId &&
+      wardId &&
+      payment
+    ) {
+      const order = {
+        user: user.ID,
+        name: firstName + "" + lastName,
+        orderItems: listCart.map((elem, index) => {
+          return {
+            id: elem.ID,
+            name: listProduct.filter((item, index) => {
+              return item._id === elem.ID;
+            })[0].name,
+            count: elem.count,
+            sizeId: elem.size,
+            price:
+              listProduct
+                .filter((item, index) => {
+                  return item._id === elem.ID;
+                })[0]
+                .size.filter((item, index) => {
+                  return item.sizeId === elem.size;
+                })[0].price * elem.count,
+          };
+        }),
+        paymentMethod: payment,
+        address: {
+          addressDetail: address,
+          city: cityId,
+          district: districtId,
+          ward: wardId,
+        },
+        totalPrice: listCart.reduce((previousValue, currentValue) => {
+          let price = 0;
+          listProduct.forEach((elem, index) => {
+            if (elem._id === currentValue.ID) {
+              price = elem.size.find((size, index) => {
+                return size.sizeId === currentValue.size;
+              }).price;
+            }
+          });
+          return previousValue + currentValue.count * price;
+        }, 0),
+      };
+      try {
+        const response = await axios.post("/api/order", order);
+      } catch (error) {
+        console.error(error);
+      }
+      console.log(order);
+    } else if (
+      !firstName ||
+      !lastName ||
+      !number ||
+      !address ||
+      !cityId ||
+      !districtId ||
+      !wardId
+    ) {
+      toast.error("Vui lòng điển đầy đủ thông tin nhận hàng", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else if (!payment) {
+      toast.error("Vui lòng chọn phương thức thanh toán", {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
   };
 
   useEffect(() => {
@@ -106,7 +139,7 @@ function Checkout() {
                 </div>
                 <div className="address-select d-flex">
                   <select
-                    class="form-select form-select-sm"
+                    className="form-select form-select-sm"
                     id="city"
                     onChange={(e) => {
                       setCityId(e.target.value);
@@ -120,7 +153,7 @@ function Checkout() {
                     })}
                   </select>
                   <select
-                    class="form-select form-select-sm"
+                    className="form-select form-select-sm"
                     id="district"
                     onChange={(e) => {
                       setDistrictId(e.target.value);
@@ -142,7 +175,7 @@ function Checkout() {
                     })}
                   </select>
                   <select
-                    class="form-select form-select-sm"
+                    className="form-select form-select-sm"
                     id="ward"
                     aria-label=".form-select-sm"
                     onChange={(e) => {
@@ -185,6 +218,39 @@ function Checkout() {
                     setNumber(e.target.value);
                   }}
                 />
+              </div>
+              <div className="payment mt-3">
+                <span>Phương thức thanh toán</span>
+                <div className="form-check disabled mb-3">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="paymentRadios"
+                    id="paymentRadios1"
+                    value="PayPal"
+                    disabled
+                  />
+                  <label className="form-check-label" htmlFor="paymentRadios1">
+                    Thanh toán qua PayPal
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="radio"
+                    name="paymentRadios"
+                    id="paymentRadios2"
+                    value="COD"
+                    onChange={(e) => {
+                      if (e.target.checked === true) {
+                        setPayment(e.target.value);
+                      }
+                    }}
+                  />
+                  <label className="form-check-label" htmlFor="paymentRadios2">
+                    Thanh toán khi nhận hàng
+                  </label>
+                </div>
               </div>
             </div>
             <div className="col-lg-5">
