@@ -6,11 +6,18 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import { useState } from "react";
+import { validation } from "../../js/validation";
 
 function Header() {
   const user = useSelector((state) => state.userInfo.info);
   const [isActive, setIsActive] = useState(false);
   const [newName, setNewName] = useState("");
+  const [oldPass, setOldPass] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [reNewPass, setReNewPass] = useState("");
+  const [oldPassMessage, setOldPassMessage] = useState("");
+  const [newPassMessage, setNewPassMessage] = useState("");
+  const [reNewPassMessage, setReNewPassMessage] = useState("");
 
   const [show, setShow] = useState(false);
   const handleClose = () => {
@@ -25,6 +32,16 @@ function Header() {
   const logout = () => {
     dispatch(userLogout());
     navigate("/login");
+  };
+  const changePass = async () => {
+    if (validation.validatePass(newPassword)) {
+      const newPass = {
+        email: user.email,
+        password: oldPass,
+        newPass: newPassword,
+      };
+      await axios.put(`/api/users/changepass/${user.ID}`, newPass);
+    }
   };
 
   return (
@@ -235,6 +252,54 @@ function Header() {
                 ? "Trạng thái: Đã xác minh"
                 : "Trạng thái: Chưa xác minh"}
             </span>
+            <form>
+              <div className="form-group  mb-3">
+                <label>Mật khẩu cũ</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="oldPass"
+                  value={oldPass}
+                  onChange={(e) => {
+                    setOldPass(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="form-group  mb-3">
+                <label>Mật khẩu mới</label>
+                <input
+                  type="password"
+                  className="form-control "
+                  id="newPass"
+                  value={newPassword}
+                  onChange={(e) => {
+                    setNewPassword(e.target.value);
+                  }}
+                />
+              </div>
+              <div className="form-group mb-3">
+                <label>Nhập mật khẩu mới</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="reNewPass"
+                  value={reNewPass}
+                  onChange={(e) => {
+                    setReNewPass(e.target.value);
+                  }}
+                />
+              </div>
+              <button
+                type="submit"
+                onClick={(e) => {
+                  e.preventDefault();
+                  changePass();
+                }}
+                className="btn btn-primary"
+              >
+                Đổi mật khẩu
+              </button>
+            </form>
           </div>
         </Modal.Body>
         <Modal.Footer>
