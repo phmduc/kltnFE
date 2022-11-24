@@ -5,6 +5,7 @@ import axios from "axios";
 import "draft-js/dist/Draft.css";
 import ModalForm from "../../components/Modal/Modal.js";
 import "./CategoryAdmin.css";
+import { toast } from "react-toastify";
 import {
   addcategory,
   deletecategory,
@@ -21,6 +22,8 @@ function CategoryAdmin() {
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
   const [message, setMessage] = useState("");
+  const [nameMessage, setNameMessage] = useState("");
+
   useEffect(() => {
     getCategory();
     setName();
@@ -37,6 +40,9 @@ function CategoryAdmin() {
     }
   }
   const handleSubmitAdd = async () => {
+    if (!name) {
+      setNameMessage("Tên danh mục không được bỏ trống");
+    }
     if (previewSource.length === 0) {
       setMessage("Upload ít nhất 1 bức ảnh của danh mục");
     } else {
@@ -53,6 +59,9 @@ function CategoryAdmin() {
       dispatch(unLoadding());
       setPreviewSource([]);
       setLoaded(!isLoad);
+      toast.success(`Thêm thành công`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
     }
   };
 
@@ -86,6 +95,9 @@ function CategoryAdmin() {
     await updatecategory(newCategory, dispatch);
     setPreviewSource([]);
     setLoaded(!isLoad);
+    toast.success(`Update thành công`, {
+      position: toast.POSITION.TOP_CENTER,
+    });
   };
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -126,6 +138,9 @@ function CategoryAdmin() {
     ]);
     setLoaded(!isLoad);
     dispatch(unLoadding());
+    toast.success(`Xóa thành công`, {
+      position: toast.POSITION.TOP_CENTER,
+    });
   };
   return (
     <Admin>
@@ -136,28 +151,34 @@ function CategoryAdmin() {
               <ModalForm
                 title="Thêm Danh Mục"
                 icon="+ Thêm Danh Mục"
+                size="md"
                 handleSubmit={handleSubmitAdd}
                 reset={resetInput}
               >
                 <div className="formCategory">
                   <Form>
-                    <Form.Group className="mb-3" controlId="nameProduct">
+                    <Form.Group className="mb-3">
                       <Form.Label>Tên Danh Mục</Form.Label>
                       <Form.Control
                         onChange={(e) => {
+                          setNameMessage();
                           setName(e.target.value);
                         }}
                         value={name || ""}
                         type="text"
                         placeholder="Tên danh mục"
                       />
+                      <span className="message">{nameMessage}</span>
                     </Form.Group>
-                    <Form.Group className="mb-3" controlId="imageProduct">
+                    <Form.Group className="mb-3">
                       <Form.Label>Ảnh Danh Mục</Form.Label>
                       <Form.Control
                         id="imageInput"
                         className="custom-file-input"
-                        onChange={(e) => handleFileInputChange(e)}
+                        onChange={(e) => {
+                          handleFileInputChange(e);
+                          setMessage();
+                        }}
                         value={fileInput}
                         type="file"
                       />
@@ -168,22 +189,15 @@ function CategoryAdmin() {
                         {previewSource &&
                           previewSource.map((image, index) => {
                             return (
-                              <div key={index} className="item">
+                              <div key={index} className="image">
                                 <div className="img-wrap">
                                   <img src={image} alt="" />
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      previewSource.splice(index, 1);
-                                      setLoaded(!isLoad);
-                                    }}
-                                  ></button>
                                 </div>
                               </div>
                             );
                           })}
                       </div>
-                      <p>{message}</p>
+                      <span className="message">{message}</span>
                     </Form.Group>
                   </Form>
                 </div>
@@ -221,6 +235,7 @@ function CategoryAdmin() {
                           </button>
                           <ModalForm
                             title="Chỉnh Sửa Danh Mục"
+                            size="md"
                             reset={resetInput}
                             icon={<i className="bi bi-pencil-square"></i>}
                             handleSubmit={() => {
@@ -229,10 +244,7 @@ function CategoryAdmin() {
                           >
                             <div className="formCategory">
                               <Form>
-                                <Form.Group
-                                  className="mb-3"
-                                  controlId="nameCategory"
-                                >
+                                <Form.Group className="mb-3">
                                   <Form.Label>Tên Danh Mục</Form.Label>
                                   <Form.Control
                                     onChange={(e) => {
@@ -245,10 +257,7 @@ function CategoryAdmin() {
                                     placeholder={item.nameCate}
                                   />
                                 </Form.Group>
-                                <Form.Group
-                                  className="mb-3"
-                                  controlId="imageCategory"
-                                >
+                                <Form.Group className="mb-3">
                                   <Form.Label>Ảnh Danh Mục</Form.Label>
                                   <Form.Control
                                     onChange={(e) => handleFileInputChange(e)}
@@ -259,25 +268,15 @@ function CategoryAdmin() {
                                     {previewSource.length !== 0 ? (
                                       previewSource.map((image, index) => {
                                         return (
-                                          <div key={index} className="item">
+                                          <div key={index} className="image">
                                             <div className="img-wrap">
                                               <img src={image} alt="" />
-                                              <button
-                                                type="button"
-                                                onClick={(e) => {
-                                                  previewSource.splice(
-                                                    index,
-                                                    1
-                                                  );
-                                                  setLoaded(!isLoad);
-                                                }}
-                                              ></button>
                                             </div>
                                           </div>
                                         );
                                       })
                                     ) : (
-                                      <div className="item">
+                                      <div className="image">
                                         <div className="img-wrap">
                                           <img
                                             src={item.avatarCate[0].url}
@@ -289,7 +288,6 @@ function CategoryAdmin() {
                                   </div>
                                   <p>{message}</p>
                                 </Form.Group>
-                                ;
                               </Form>
                             </div>
                           </ModalForm>

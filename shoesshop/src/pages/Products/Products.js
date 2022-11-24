@@ -7,8 +7,11 @@ import "./Products.css";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form } from "react-bootstrap";
 import ProductCard from "../../components/ProductCard/ProductCard.js";
+import ReactPaginate from "react-paginate";
 function Products() {
   const listCate = useSelector((state) => state.category.category);
+  const listProducts = useSelector((state) => state.product.productsList);
+
   const [products, setProducts] = useState([]);
   const [productsFilter, setProductsFilter] = useState([]);
   const [cate, setCate] = useState();
@@ -17,6 +20,10 @@ function Products() {
   const inputSize = useRef(false);
   const inputPriceMin = useRef(0);
   const inputPriceMax = useRef(0);
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + 9;
+  const currentItems = products.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(products.length / 9);
   const [isLoad, setLoad] = useState([]);
   var listsize = [];
   const dispatch = useDispatch();
@@ -29,8 +36,9 @@ function Products() {
       console.error(error);
     }
   }
+
   const filter = () => {
-    let filterList = products;
+    let filterList = listProducts;
     if (inputSize.current.value !== "0") {
       filterList = filterList.filter((elem, index) => {
         return elem.size.some(function (item, index) {
@@ -58,11 +66,17 @@ function Products() {
       });
     }
 
-    setProductsFilter(filterList);
+    setProducts(filterList);
   };
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 9) % products.length;
+    setItemOffset(newOffset);
+  };
+
   useEffect(() => {
     getProducts();
   }, [isLoad]);
+
   return (
     <MainLayout>
       <div className="container">
@@ -124,25 +138,42 @@ function Products() {
                 >
                   Lọc
                 </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProducts(listProducts);
+                  }}
+                  className="filter mt-3 btn w-100"
+                >
+                  Hủy lọc
+                </button>
               </Form>
             </div>
           </div>
           <div className="col-lg-9">
             <div className="list">
               <div className="row">
-                {productsFilter.length === 0
-                  ? products.map((item, index) => (
-                      <div className="col-lg-4">
-                        <ProductCard item={item} />
-                      </div>
-                    ))
-                  : productsFilter.map((item, index) => (
-                      <div className="col-lg-4">
-                        <ProductCard item={item} />
-                      </div>
-                    ))}
+                {currentItems.length !== 0 ? (
+                  currentItems.map((item, index) => (
+                    <div className="col-lg-4">
+                      <ProductCard item={item} />
+                    </div>
+                  ))
+                ) : (
+                  <span>Xin lỗi không tìm thấy sản phẩm yêu cầu</span>
+                )}
               </div>
             </div>
+            <ReactPaginate
+              className="pagination"
+              breakLabel="..."
+              nextLabel=">"
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={5}
+              pageCount={pageCount}
+              previousLabel="<"
+              renderOnZeroPageCount={null}
+            />
           </div>
         </div>
       </div>

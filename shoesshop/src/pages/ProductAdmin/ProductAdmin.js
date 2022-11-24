@@ -2,6 +2,7 @@ import Admin from "../../layouts/Admin/Admin.js";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
@@ -98,6 +99,9 @@ function ProductAdmin() {
           await addproduct(newProduct, dispatch);
           dispatch(unLoadding());
           setLoaded(!isLoad);
+          toast.success(`Thêm thành công`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
         }
       }
     } else {
@@ -220,6 +224,9 @@ function ProductAdmin() {
         });
         await updateproduct(updatedProduct, dispatch);
         dispatch(unLoadding());
+        toast.success(`Update thành công`, {
+          position: toast.POSITION.TOP_CENTER,
+        });
         setLoaded(!isLoad);
       }
     } else {
@@ -235,10 +242,12 @@ function ProductAdmin() {
     });
     await deleteproduct(deletedProduct, dispatch);
     setLoaded(!isLoad);
+    toast.success(`Xóa thành công`, {
+      position: toast.POSITION.TOP_CENTER,
+    });
   };
   const updatePrepare = async (index) => {
     setID(products[index]._id);
-
     setName(products[index].name);
     setCate(products[index].idCate);
     setDesc(products[index].desc);
@@ -258,6 +267,7 @@ function ProductAdmin() {
               <ModalForm
                 title="Thêm Sản Phẩm"
                 icon="+ Thêm Sản Phẩm"
+                size="lg"
                 handleSubmit={handleSubmitAdd}
                 reset={resetInput}
               >
@@ -503,6 +513,7 @@ function ProductAdmin() {
                           title="Chỉnh Sửa Sản Phẩm"
                           icon={<i className="bi bi-pencil-square"></i>}
                           reset={resetInput}
+                          size="lg"
                           prepare={() => {
                             updatePrepare(index);
                           }}

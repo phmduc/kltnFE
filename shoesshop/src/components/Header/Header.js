@@ -5,6 +5,7 @@ import { userLogout, updateUser } from "../../Redux/slice/userSlice";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { validation } from "../../js/validation";
 
@@ -41,6 +42,10 @@ function Header() {
         newPass: newPassword,
       };
       await axios.put(`/api/users/changepass/${user.ID}`, newPass);
+      toast.success(`Đổi mật khẩu thành công`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+      logout();
     }
   };
 
@@ -223,13 +228,22 @@ function Header() {
               <button
                 className={isActive ? "show save" : "save"}
                 onClick={async (e) => {
-                  const res = await axios.put("/api/users/" + user.ID, {
-                    name: newName,
-                    isAdmin: user.isAdmin,
-                    isVerify: user.isVerify,
-                  });
-                  dispatch(updateUser(res.data));
-                  setIsActive(false);
+                  if (newName) {
+                    const res = await axios.put("/api/users/" + user.ID, {
+                      name: newName,
+                      isAdmin: user.isAdmin,
+                      isVerify: user.isVerify,
+                    });
+                    dispatch(updateUser(res.data));
+                    setNewName();
+
+                    setIsActive(false);
+                    toast.success(`Đổi tên thành công`, {
+                      position: toast.POSITION.TOP_CENTER,
+                    });
+                  } else {
+                    setIsActive(false);
+                  }
                 }}
               >
                 Lưu

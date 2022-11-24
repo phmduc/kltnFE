@@ -38,12 +38,12 @@ function OrderAdmin() {
                       return (
                         <tr>
                           <td>{elem._id}</td>
-                          <td>
+                          <td className="address">
                             <div className="info">
                               <span className="d-block">
                                 Tên người nhận: {elem.name}
                               </span>
-                              <span className="d-block">
+                              <span className="d-block ">
                                 Địa chỉ: {elem.address.addressDetail},
                                 {elem.address.ward}, {elem.address.district},
                                 {elem.address.city}
@@ -73,12 +73,22 @@ function OrderAdmin() {
                             )}
                           </td>
                           <td className="controls">
-                            <button
-                              className="btn btn-primary w-100 mb-3"
-                              onClick={(e) => {}}
-                            >
-                              Xác nhận
-                            </button>
+                            {elem.isVerify ? (
+                              <div className="btn btn-primary w-100 mb-3">
+                                Đã xác nhận
+                              </div>
+                            ) : (
+                              <button
+                                className="btn btn-primary w-100 mb-3"
+                                onClick={async (e) => {
+                                  axios.put(`/api/order/${elem._id}`);
+                                  setLoaded(!isLoad);
+                                }}
+                              >
+                                Xác nhận
+                              </button>
+                            )}
+
                             <button
                               className="btn btn-primary w-100"
                               onClick={(e) => {}}

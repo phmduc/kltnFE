@@ -2,7 +2,7 @@ import "./UserAdmin.css";
 import Admin from "../../layouts/Admin/Admin";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
+import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 function UserAdmin() {
   const [isLoad, setLoaded] = useState(false);
@@ -26,6 +26,9 @@ function UserAdmin() {
       throw new Error("Invalid Product Data");
     }
     setLoaded(!isLoad);
+    toast.success(`Xóa thành công`, {
+      position: toast.POSITION.TOP_CENTER,
+    });
   };
   return (
     <Admin>
@@ -59,6 +62,9 @@ function UserAdmin() {
                                   "/api/users/" + elem._id,
                                   { isAdmin: e.target.checked }
                                 );
+                                toast.success(`Thay đổi thành công`, {
+                                  position: toast.POSITION.TOP_CENTER,
+                                });
                               }}
                             />
                           </td>

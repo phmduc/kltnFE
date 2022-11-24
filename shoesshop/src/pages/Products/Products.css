@@ -4,3 +4,20 @@
 
 .priceFilter .filter {
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+.pagination li:not(.selected) a {
+  font-weight: unset;
+}
+.pagination .previous a {
+  color: var(--primary) !important;
+  font-weight: bold !important;
+}
+.pagination .next a {
+  color: var(--primary) !important;
+  font-weight: bold !important;
+}

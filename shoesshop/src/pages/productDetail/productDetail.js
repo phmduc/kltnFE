@@ -5,6 +5,7 @@ import { addToCart } from "../../Redux/slice/cartSlice";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Tab from "react-bootstrap/Tab";
+import { toast } from "react-toastify";
 import { Fancybox, Carousel } from "@fancyapps/ui/dist/fancybox.esm.js";
 import "@fancyapps/ui/dist/fancybox.css";
 import Tabs from "react-bootstrap/Tabs";
@@ -34,12 +35,35 @@ function ProductDetail({ match }) {
   }, []);
   const handleAddCart = () => {
     const size = $(".size .nav-link.active").html();
-    const itemAdd = {
-      ID: item._id,
-      size: size,
-      count: count,
-    };
-    dispatch(addToCart(itemAdd));
+    let countInStock;
+    item.size.map((item, index) => {
+      if (size === item.sizeId) {
+        countInStock = item.count;
+      }
+    });
+    if (count <= countInStock) {
+      const itemAdd = {
+        ID: item._id,
+        size: size,
+        count: count,
+      };
+      dispatch(addToCart(itemAdd));
+      toast.success(`Thêm thành công`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else {
+      toast.error(
+        `Vượt quá số lượng trong kho, Hiện tại còn ${countInStock} Sản phẩm`,
+        {
+          position: toast.POSITION.TOP_CENTER,
+        }
+      );
+    }
+    if (count === 0) {
+      toast.error(`Vui lòng nhập số lượng`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
   };
   return (
     <MainLayout>
@@ -100,7 +124,9 @@ function ProductDetail({ match }) {
                     <div class="number">
                       <button
                         onClick={() => {
-                          setCount(count - 1);
+                          if (count <= 0) {
+                            setCount(0);
+                          } else setCount(count - 1);
                         }}
                         class="minus"
                       >

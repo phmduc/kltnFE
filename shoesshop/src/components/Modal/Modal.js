@@ -11,10 +11,9 @@ function ModalForm(props) {
     if (props.prepare) {
       props.prepare();
     }
+    console.log(props.size);
     setShow(true);
   };
-
-  useEffect(() => {}, []);
   return (
     <>
       <Button
@@ -26,7 +25,7 @@ function ModalForm(props) {
         {props.icon}
       </Button>
 
-      <Modal size="lg" show={show} onHide={handleClose}>
+      <Modal size={props.size} show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{props.title}</Modal.Title>
         </Modal.Header>

@@ -1,6 +1,9 @@
 .item .img-wrap {
   display: block;
 }
+.item {
+  margin-bottom: 1rem;
+}
 .item .img-wrap .main {
   z-index: 2;
   transition: all 0.3s linear;
