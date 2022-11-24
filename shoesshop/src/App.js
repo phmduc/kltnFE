@@ -10,6 +10,7 @@ import OrderAdmin from "./pages/OrderAdmin/OrderAdmin.js";
 import Register from "./pages/Register/Register.js";
 import UserAdmin from "./pages/UserAdmin/UserAdmin.js";
 import Checkout from "./pages/Checkout/Checkout.js";
+import ForgetPass from "./pages/ForgetPass/ForgetPass.js";
 import Verify from "./pages/Verify/Verify.js";
 import "react-toastify/dist/ReactToastify.css";
 import Login from "./pages/Login/Login.js";
@@ -73,6 +74,7 @@ function App() {
           )}
 
           <Route path="/cart" element={<Cart />} />
+          <Route path="/forget" element={<ForgetPass />} />
           <Route path="/cart/checkout" element={<Checkout />} />
           <Route path="/verify/:id" element={<Verify />}></Route>
         </Route>
