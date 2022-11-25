@@ -69,7 +69,7 @@ function Login() {
 
             <div className="form-group form-check">
               <div className="save-forget">
-                <a href="#">Quên mật khẩu ?</a>
+                <a href="/forget">Quên mật khẩu ?</a>
               </div>
             </div>
             <div className="btn-group">
