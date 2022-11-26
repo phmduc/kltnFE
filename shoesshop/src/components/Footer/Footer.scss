@@ -9,6 +9,7 @@
 }
 
 .footer-des {
+  max-width: 300px;
   h1 {
     width: 141px;
     height: 47px;
@@ -47,7 +48,7 @@
   }
 }
 
-.col {
+.col-xl-2 {
   text-align: left;
   h5 {
     margin-bottom: 35px;
@@ -85,4 +86,23 @@
 .copyright {
   border-top: 1px solid #e2e8f0;
   padding: 40px 0;
+}
+
+@media screen and (max-width: 991px) {
+  .footer-item {
+    padding: 0 20px;
+  }
+  .col-md-6 {
+    padding: 0 20px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .wrapper-footer {
+    max-width: 350px;
+    margin: 0 auto !important;
+  };
+  .footer-item {
+    padding: 0;
+  }
 }
