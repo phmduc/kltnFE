@@ -1,5 +1,6 @@
 import Header from "../../components/Header/Header.js";
 import Footer from "../../components/Footer/Footer.js";
+import Chat from "../../components/Chat/Chat.js";
 import { Fragment } from "react";
 function MainLayout({ children }) {
   return (
@@ -43,6 +44,7 @@ function MainLayout({ children }) {
           </div>
         </div>
         {children}
+        <Chat></Chat>
       </div>
       <Footer />
     </Fragment>

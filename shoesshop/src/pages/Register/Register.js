@@ -125,9 +125,6 @@ function Register() {
                 }}
                 className="form-control"
               />
-              {rePasswordMessage ? (
-                <span className="message mt-3">{rePasswordMessage}</span>
-              ) : null}
             </div>
             <button
               onClick={() => {
