@@ -10,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 function Register() {
   const navigate = useNavigate();
   const [name, setName] = useState();
-  console.log(window.location.host);
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [passwordSame, setPasswordSame] = useState();
@@ -47,9 +46,11 @@ function Register() {
       if (typeof result === "string") {
         setEmailMessage(result);
       } else {
+        const web = `http://${window.location.host}/verify/${result._id}`;
         await axios.post("/api/email/send", {
           email: result.email,
-          web: `${window.location.host}/verify/${result._id}`,
+          subject: "Xác thực tài khoản",
+          content: `<span>Nhấn vào đường link sau để xác thực tài khoản của bạn </span> <a href="${web}">Click Here</a>`,
         });
         toast.success("Đăng ký thành công!!, Vui lòng check mail xác thực", {
           position: toast.POSITION.TOP_CENTER,

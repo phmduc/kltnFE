@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home.js";
 import ProductDetail from "./pages/productDetail/productDetail.js";
 import Admin from "./layouts/Admin/Admin.js";
+import RePass from "./pages/RePass/RePass.js";
 import Products from "./pages/Products/Products.js";
 import Cart from "./pages/Cart/Cart.js";
 import ProductAdmin from "./pages/ProductAdmin/ProductAdmin.js";
@@ -75,6 +76,8 @@ function App() {
 
           <Route path="/cart" element={<Cart />} />
           <Route path="/forget" element={<ForgetPass />} />
+          <Route path="/repass" element={<RePass />} />
+
           <Route path="/cart/checkout" element={<Checkout />} />
           <Route path="/verify/:id" element={<Verify />}></Route>
         </Route>

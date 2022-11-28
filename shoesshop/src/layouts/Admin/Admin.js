@@ -23,7 +23,7 @@ function Admin({ children, props }) {
       <div className="sidebar">
         <div className="sidebar-wrapper">
           <div className="logo text-center">
-            <a href="javascript:;" className="simple-text">
+            <a href="/" className="simple-text">
               Rekeans
             </a>
           </div>
