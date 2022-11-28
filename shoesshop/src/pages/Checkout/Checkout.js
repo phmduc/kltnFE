@@ -4,8 +4,12 @@ import { useRef, useState, useEffect } from "react";
 import "./Checkout.css";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { removeAll } from "../../Redux/slice/cartSlice";
+import PayPal from "../../components/PayPal/PayPal";
 
 function Checkout() {
+  const navigate = useNavigate();
   const user = useSelector((state) => state.userInfo.info);
   const listCart = useSelector((state) => state.cart.listCart);
   const listProduct = useSelector((state) => state.product.productsList);
@@ -14,11 +18,16 @@ function Checkout() {
   const [districtId, setDistrictId] = useState();
   const [wardId, setWardId] = useState();
   const [payment, setPayment] = useState("");
+  const [pay, setPay] = useState(false);
+
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
+  const [checkout, setCheckOut] = useState(false);
   const [number, setNumber] = useState();
   const [address, setAddress] = useState();
   const total = useRef();
+
+  const dispatch = useDispatch();
 
   async function getProvince() {
     try {
@@ -31,6 +40,17 @@ function Checkout() {
     }
   }
 
+  let totalValue = listCart.reduce((previousValue, currentValue) => {
+    let price = 0;
+    listProduct.forEach((elem, index) => {
+      if (elem._id === currentValue.ID) {
+        price = elem.size.find((size, index) => {
+          return size.sizeId === currentValue.size;
+        }).price;
+      }
+    });
+    return previousValue + currentValue.count * price;
+  }, 0);
   const submitOrder = async () => {
     if (
       firstName &&
@@ -87,7 +107,8 @@ function Checkout() {
       } catch (error) {
         console.error(error);
       }
-      console.log(order);
+      dispatch(removeAll());
+      navigate("/thankyou");
     } else if (
       !firstName ||
       !lastName ||
@@ -228,11 +249,52 @@ function Checkout() {
                     name="paymentRadios"
                     id="paymentRadios1"
                     value="PayPal"
-                    disabled
+                    onChange={(e) => {
+                      console.log(e.target.checked);
+                      if (e.target.checked === true) {
+                        setCheckOut(true);
+                        setPayment(e.target.value);
+                      }
+                    }}
                   />
-                  <label className="form-check-label" htmlFor="paymentRadios1">
+                  <label
+                    className="form-check-label d-block"
+                    htmlFor="paymentRadios1"
+                  >
                     Thanh toán qua PayPal
                   </label>
+                  {/* {checkout ? <PayPal value={totalValue} /> : null} */}
+                  {checkout ? (
+                    <button
+                      className="my-3"
+                      onClick={() => {
+                        if (
+                          firstName &&
+                          lastName &&
+                          number &&
+                          address &&
+                          cityId &&
+                          districtId &&
+                          wardId &&
+                          payment
+                        ) {
+                          setPay(true);
+                        } else {
+                          {
+                            toast.error(
+                              "Vui lòng điển đầy đủ thông tin nhận hàng",
+                              {
+                                position: toast.POSITION.TOP_CENTER,
+                              }
+                            );
+                          }
+                        }
+                      }}
+                    >
+                      Thanh toán ngay{" "}
+                    </button>
+                  ) : null}
+                  {pay ? <PayPal value={totalValue} /> : null}
                 </div>
                 <div className="form-check">
                   <input
@@ -245,6 +307,7 @@ function Checkout() {
                       if (e.target.checked === true) {
                         setPayment(e.target.value);
                       }
+                      setCheckOut(false);
                     }}
                   />
                   <label className="form-check-label" htmlFor="paymentRadios2">
@@ -309,14 +372,16 @@ function Checkout() {
                     )}
                   </span>
                 </div>
-                <button
-                  onClick={() => {
-                    submitOrder();
-                  }}
-                  className="btn w-100"
-                >
-                  Check out
-                </button>
+                {payment === "COD" ? (
+                  <button
+                    onClick={() => {
+                      submitOrder();
+                    }}
+                    className="btn w-100"
+                  >
+                    Check out
+                  </button>
+                ) : null}
               </div>
             </div>
           </div>

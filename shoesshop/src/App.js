@@ -24,6 +24,7 @@ import Loading from "./components/Loading/Loading.js";
 import { useSelector } from "react-redux";
 import { getAllCategory } from "./Redux/slice/categorySlice.js";
 import { useEffect } from "react";
+import ThanksPage from "./pages/ThanksPage/index.js";
 
 function App() {
   const user = useSelector((state) => state.userInfo.info);
@@ -77,7 +78,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/forget" element={<ForgetPass />} />
           <Route path="/repass" element={<RePass />} />
-
+          <Route path="/thankyou" element={<ThanksPage />} />
           <Route path="/cart/checkout" element={<Checkout />} />
           <Route path="/verify/:id" element={<Verify />}></Route>
         </Route>
