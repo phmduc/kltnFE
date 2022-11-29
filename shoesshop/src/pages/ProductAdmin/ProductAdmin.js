@@ -14,13 +14,14 @@ import {
   deleteproduct,
   deleteImage,
 } from "../../Redux/apiRequests.js";
-
+import ReactPaginate from "react-paginate";
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
 import MainLayout from "../../layouts/MainLayout/MainLayout.js";
 import "./ProductAdmin.css";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form, Button } from "react-bootstrap";
 function ProductAdmin() {
+  const [products, setProducts] = useState([]);
   const listCate = useSelector((state) => state.category.category);
   const [isLoad, setLoaded] = useState(false);
   const [ID, setID] = useState("");
@@ -36,10 +37,16 @@ function ProductAdmin() {
   const [sizeId, setSizeId] = useState("");
   const [sizeCount, setSizeCount] = useState("");
   const [sizePrice, setSizePrice] = useState("");
-
-  const [products, setProducts] = useState([]);
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + 6;
+  const currentItems = products.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(products.length / 6);
   const dispatch = useDispatch();
 
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 6) % products.length;
+    setItemOffset(newOffset);
+  };
   async function getProducts() {
     try {
       const response = await axios.get("/api/products");
@@ -475,7 +482,7 @@ function ProductAdmin() {
                   </tr>
                 </thead>
                 <tbody className="table-group-divider">
-                  {products.map((item, index) => (
+                  {currentItems.map((item, index) => (
                     <tr className="item" key={item._id}>
                       <th scope="row">{index + 1}</th>
                       <td className="name">{item.name}</td>
@@ -709,6 +716,16 @@ function ProductAdmin() {
                   ))}
                 </tbody>
               </table>
+              <ReactPaginate
+                className="pagination"
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={5}
+                pageCount={pageCount}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+              />
             </div>
           </div>
         </div>

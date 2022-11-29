@@ -1,10 +1,20 @@
 import Admin from "../../layouts/Admin/Admin";
 import "./OrderAdmin.css";
 import axios from "axios";
+import ReactPaginate from "react-paginate";
+import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
 function OrderAdmin() {
   const [isLoad, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + 6;
+  const currentItems = orders.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(orders.length / 6);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 6) % orders.length;
+    setItemOffset(newOffset);
+  };
   useEffect(() => {
     getOrder();
   }, [isLoad]);
@@ -17,6 +27,17 @@ function OrderAdmin() {
       console.error(error);
     }
   }
+  const handleDelete = async (index) => {
+    try {
+      const res = await axios.delete("/api/order/" + orders[index]._id);
+    } catch (err) {
+      throw new Error("Invalid Order Data");
+    }
+    setLoaded(!isLoad);
+    toast.success(`Xóa thành công`, {
+      position: toast.POSITION.TOP_CENTER,
+    });
+  };
   return (
     <Admin>
       <div className="OrderManage">
@@ -34,7 +55,7 @@ function OrderAdmin() {
                     <th>Thao tác</th>
                   </thead>
                   <tbody>
-                    {orders.map((elem, index) => {
+                    {currentItems.map((elem, index) => {
                       return (
                         <tr>
                           <td>{elem._id}</td>
@@ -73,7 +94,7 @@ function OrderAdmin() {
                             )}
                           </td>
                           <td className="controls">
-                            {elem.isVerify ? (
+                            {elem.isCancel ? null : elem.isVerify ? (
                               <div className="btn btn-primary w-100 mb-3">
                                 Đã xác nhận
                               </div>
@@ -88,12 +109,29 @@ function OrderAdmin() {
                                 Xác nhận
                               </button>
                             )}
+                            {elem.isCancel ? (
+                              <div className="btn btn-primary w-100 mb-3">
+                                Đã hủy
+                              </div>
+                            ) : (
+                              <button
+                                className="btn btn-primary w-100 mb-3"
+                                onClick={async (e) => {
+                                  axios.put(`/api/order/cancel/${elem._id}`);
+                                  setLoaded(!isLoad);
+                                }}
+                              >
+                                Hủy
+                              </button>
+                            )}
 
                             <button
                               className="btn btn-primary w-100"
-                              onClick={(e) => {}}
+                              onClick={(e) => {
+                                handleDelete(index);
+                              }}
                             >
-                              Hủy
+                              Xóa
                             </button>
                           </td>
                         </tr>
@@ -101,6 +139,16 @@ function OrderAdmin() {
                     })}
                   </tbody>
                 </table>
+                <ReactPaginate
+                  className="pagination"
+                  breakLabel="..."
+                  nextLabel=">"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={5}
+                  pageCount={pageCount}
+                  previousLabel="<"
+                  renderOnZeroPageCount={null}
+                />
               </div>
             </div>
           </div>

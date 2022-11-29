@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import "draft-js/dist/Draft.css";
 import ModalForm from "../../components/Modal/Modal.js";
+import ReactPaginate from "react-paginate";
+
 import "./CategoryAdmin.css";
 import { toast } from "react-toastify";
 import {
@@ -23,7 +25,14 @@ function CategoryAdmin() {
   const [fileInput, setFileInput] = useState();
   const [message, setMessage] = useState("");
   const [nameMessage, setNameMessage] = useState("");
-
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + 6;
+  const currentItems = categories.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(categories.length / 6);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 6) % categories.length;
+    setItemOffset(newOffset);
+  };
   useEffect(() => {
     getCategory();
     setName();
@@ -213,7 +222,7 @@ function CategoryAdmin() {
                     </tr>
                   </thead>
                   <tbody>
-                    {categories.map((item, index) => (
+                    {currentItems.map((item, index) => (
                       <tr className="item" key={item._id}>
                         <th scope="row">{index + 1}</th>
                         <td className="name">{item.nameCate}</td>
@@ -296,6 +305,16 @@ function CategoryAdmin() {
                     ))}
                   </tbody>
                 </table>
+                <ReactPaginate
+                  className="pagination"
+                  breakLabel="..."
+                  nextLabel=">"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={5}
+                  pageCount={pageCount}
+                  previousLabel="<"
+                  renderOnZeroPageCount={null}
+                />
               </div>
             </div>
           </div>

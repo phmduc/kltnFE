@@ -3,11 +3,21 @@ import Admin from "../../layouts/Admin/Admin";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ReactPaginate from "react-paginate";
+
 import { useDispatch } from "react-redux";
 function UserAdmin() {
   const [isLoad, setLoaded] = useState(false);
 
   const [users, setUsers] = useState([]);
+  const [itemOffset, setItemOffset] = useState(0);
+  const endOffset = itemOffset + 6;
+  const currentItems = users.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(users.length / 6);
+  const handlePageClick = (event) => {
+    const newOffset = (event.selected * 6) % users.length;
+    setItemOffset(newOffset);
+  };
   useEffect(() => {
     getUser();
   }, [isLoad]);
@@ -46,7 +56,7 @@ function UserAdmin() {
                     <th>Controls</th>
                   </thead>
                   <tbody>
-                    {users.map((elem, index) => {
+                    {currentItems.map((elem, index) => {
                       return (
                         <tr>
                           <td>{elem.name}</td>
@@ -90,6 +100,16 @@ function UserAdmin() {
                     })}
                   </tbody>
                 </table>
+                <ReactPaginate
+                  className="pagination"
+                  breakLabel="..."
+                  nextLabel=">"
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={5}
+                  pageCount={pageCount}
+                  previousLabel="<"
+                  renderOnZeroPageCount={null}
+                />
               </div>
             </div>
           </div>

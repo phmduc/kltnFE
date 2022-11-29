@@ -294,7 +294,14 @@ function Checkout() {
                       Thanh toán ngay{" "}
                     </button>
                   ) : null}
-                  {pay ? <PayPal value={totalValue} /> : null}
+                  {pay ? (
+                    <PayPal
+                      value={totalValue}
+                      submit={(e) => {
+                        submitOrder();
+                      }}
+                    />
+                  ) : null}
                 </div>
                 <div className="form-check">
                   <input

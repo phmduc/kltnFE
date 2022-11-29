@@ -50,6 +50,7 @@ function PayPal(props) {
         const order = await actions.order.capture();
         console.log("success order: " + order);
         console.log(order);
+        props.submit();
       },
       onError: (err) => {
         console.log(err);
