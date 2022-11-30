@@ -1,0 +1,28 @@
+.historyOrder .title {
+  font-weight: bold;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+.historyOrder .img-wrap {
+  width: 13%;
+  padding-top: 13%;
+  margin-right: 1rem;
+}
+.historyOrder .nameWrap .name {
+  font-size: 1.4rem;
+}
+
+.historyOrder .product .price {
+  width: 10%;
+}
+.historyOrder .product .info {
+  width: 70%;
+}
+.historyOrder .item {
+  padding: 1rem;
+  border-radius: 5px;
+}
+.historyOrder .item:nth-child(odd) {
+  background-color: #bdb8b8;
+}

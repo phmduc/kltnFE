@@ -81,6 +81,9 @@ function Checkout() {
                 .size.filter((item, index) => {
                   return item.sizeId === elem.size;
                 })[0].price * elem.count,
+            img: listProduct.filter((item, index) => {
+              return item._id === elem.ID;
+            })[0].image[0].url,
           };
         }),
         paymentMethod: payment,

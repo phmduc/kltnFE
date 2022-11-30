@@ -24,6 +24,7 @@ import Loading from "./components/Loading/Loading.js";
 import { useSelector } from "react-redux";
 import { getAllCategory } from "./Redux/slice/categorySlice.js";
 import { useEffect } from "react";
+import HistoryOrder from "./pages/HistoryOrder/HistoryOrder.js";
 import ThanksPage from "./pages/ThanksPage/index.js";
 
 function App() {
@@ -58,6 +59,8 @@ function App() {
             <React.Fragment>
               <Route path="/login" element={<Home />} />
               <Route path="/register" element={<Home />} />
+              <Route path="/cart/checkout" element={<Checkout />} />
+              <Route path="/history" element={<HistoryOrder />} />
             </React.Fragment>
           )}
           <Route path="/products/">
@@ -79,7 +82,6 @@ function App() {
           <Route path="/forget" element={<ForgetPass />} />
           <Route path="/repass" element={<RePass />} />
           <Route path="/thankyou" element={<ThanksPage />} />
-          <Route path="/cart/checkout" element={<Checkout />} />
           <Route path="/verify/:id" element={<Verify />}></Route>
         </Route>
         <Route path="*" element={<Home />} />

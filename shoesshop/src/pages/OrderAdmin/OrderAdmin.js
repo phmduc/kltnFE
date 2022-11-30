@@ -102,7 +102,7 @@ function OrderAdmin() {
                               <button
                                 className="btn btn-primary w-100 mb-3"
                                 onClick={async (e) => {
-                                  axios.put(`/api/order/${elem._id}`);
+                                  await axios.put(`/api/order/${elem._id}`);
                                   setLoaded(!isLoad);
                                 }}
                               >
@@ -117,7 +117,9 @@ function OrderAdmin() {
                               <button
                                 className="btn btn-primary w-100 mb-3"
                                 onClick={async (e) => {
-                                  axios.put(`/api/order/cancel/${elem._id}`);
+                                  await axios.put(
+                                    `/api/order/cancel/${elem._id}`
+                                  );
                                   setLoaded(!isLoad);
                                 }}
                               >
