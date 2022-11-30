@@ -24,5 +24,13 @@
   border-radius: 5px;
 }
 .historyOrder .item:nth-child(odd) {
-  background-color: #bdb8b8;
+  background-color: #cec9c9;
+}
+.historyOrder .price {
+  color: var(--primary);
+  font-weight: bold;
+}
+.historyOrder .titleOrder .userInfo span {
+  margin-left: 0.3rem;
+  font-weight: bold;
 }

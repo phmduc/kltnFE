@@ -35,15 +35,19 @@ function HistoryOrder() {
                 <li className="item">
                   <div className="titleOrder d-flex justify-content-between mb-2">
                     <div className="userInfo d-flex flex-column">
-                      <span className="id">Mã hóa đơn: {elem._id}</span>
-                      <span className="nameBuyer">
-                        Tên người mua: {elem.name}{" "}
-                      </span>
-                      <span className="address">
-                        Địa chỉ: {elem.address.addressDetail},{" "}
-                        {elem.address.ward}, {elem.address.district},{" "}
-                        {elem.address.city}
-                      </span>
+                      <div className="id">
+                        Mã hóa đơn: <span>{elem._id}</span>
+                      </div>
+                      <div className="nameBuyer">
+                        Tên người mua: <span>{elem.name} </span>
+                      </div>
+                      <div className="address">
+                        Địa chỉ:
+                        <span>
+                          {elem.address.addressDetail}, {elem.address.ward},{" "}
+                          {elem.address.district}, {elem.address.city}
+                        </span>
+                      </div>
                     </div>
                     <div className="status">
                       {elem.isVerify ? (
@@ -69,7 +73,9 @@ function HistoryOrder() {
                             </div>
                             <div className="nameWrap d-flex flex-column justify-content-between">
                               <span className="name d-block">{item.name}</span>
-                              <span className="size">Size: </span>
+                              <span className="size">
+                                Size: {item.sizeId} x {item.count}{" "}
+                              </span>
                             </div>
                           </div>
                           <span className="price">
@@ -88,7 +94,11 @@ function HistoryOrder() {
                            )} */}
                           </span>
                           <div className="controls">
-                            <button className="btn">Hủy</button>
+                            {elem.isCancel ? (
+                              <div className="btn">Đã hủy</div>
+                            ) : (
+                              <button className="btn">Hủy</button>
+                            )}
                           </div>
                         </li>
                       );
@@ -97,54 +107,6 @@ function HistoryOrder() {
                 </li>
               );
             })}
-            <li className="item">
-              <div className="titleOrder d-flex justify-content-between mb-2">
-                <div className="userInfo d-flex flex-column">
-                  <span className="id">Mã hóa đơn</span>
-                  <span className="nameBuyer">Tên người mua: </span>
-                  <span className="address">Địa chỉ giao hàng: </span>
-                </div>
-                <div className="status">
-                  <span className="verify">Đã xác nhận</span>
-                  <span className="mx-1">/</span>
-                  <span className="paid">Đã Thanh Toán</span>
-                </div>
-              </div>
-              <ul className="listProduct">
-                <li className="product d-flex justify-content-between align-items-center">
-                  <div className="info d-flex">
-                    <div className="img-wrap">
-                      <img
-                        src="https://hanoispiritofplace.com/wp-content/uploads/2017/11/hinh-nen-thien-nhien-dep-nhat-1.jpg  "
-                        alt=""
-                      />
-                    </div>
-                    <div className="nameWrap d-flex flex-column justify-content-between">
-                      <span className="name d-block">Giày</span>
-                      <span className="size">Size: </span>
-                    </div>
-                  </div>
-                  <span className="price">
-                    {Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                    }).format(1000000)}
-
-                    {/* {Intl.NumberFormat("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        }).format(
-                          item.size.filter((size) => {
-                            return size.sizeId === elem.size;
-                          })[0].price * elem.count
-                        )} */}
-                  </span>
-                  <div className="controls">
-                    <button className="btn">Hủy</button>
-                  </div>
-                </li>
-              </ul>
-            </li>
           </ul>
           <ReactPaginate
             className="pagination"
