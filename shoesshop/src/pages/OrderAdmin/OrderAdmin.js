@@ -7,12 +7,13 @@ import { useState, useEffect } from "react";
 function OrderAdmin() {
   const [isLoad, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [filter, setFilter] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + 6;
-  const currentItems = orders.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(orders.length / 6);
+  const currentItems = filter.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(filter.length / 6);
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % orders.length;
+    const newOffset = (event.selected * 6) % filter.length;
     setItemOffset(newOffset);
   };
   useEffect(() => {
@@ -21,8 +22,8 @@ function OrderAdmin() {
   async function getOrder() {
     try {
       const response = await axios.get("/api/order");
-      console.log(response.data);
       setOrders(response.data);
+      setFilter(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -42,6 +43,76 @@ function OrderAdmin() {
     <Admin>
       <div className="OrderManage">
         <div className="container">
+          <div className="tab d-flex mb-3">
+            <button
+              className="btn"
+              onClick={() => {
+                getOrder();
+              }}
+            >
+              Tất cả
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setFilter(
+                  orders.filter((elem, index) => {
+                    return elem.isCancel === true;
+                  })
+                );
+              }}
+            >
+              Đã hủy
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setFilter(
+                  orders.filter((elem, index) => {
+                    return elem.isVerify === false;
+                  })
+                );
+              }}
+            >
+              Chờ xác nhận
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setFilter(
+                  orders.filter((elem, index) => {
+                    return elem.isVerify === true;
+                  })
+                );
+              }}
+            >
+              Đã xác nhận
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setFilter(
+                  orders.filter((elem, index) => {
+                    return elem.isPaid === false;
+                  })
+                );
+              }}
+            >
+              Chưa thanh toán
+            </button>
+            <button
+              className="btn"
+              onClick={() => {
+                setFilter(
+                  orders.filter((elem, index) => {
+                    return elem.isPaid === true;
+                  })
+                );
+              }}
+            >
+              Đã thanh toán
+            </button>
+          </div>
           <div className="row">
             <div className="col-12">
               <div class="content table-responsive table-full-width">

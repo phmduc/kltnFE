@@ -31,7 +31,7 @@ function UserAdmin() {
   }
   const handleDelete = async (index) => {
     try {
-      const res = await axios.delete("/api/users/" + users[index]._id);
+      const res = await axios.delete("/api/users/" + users[index + 1]._id);
     } catch (err) {
       throw new Error("Invalid Product Data");
     }
@@ -89,7 +89,7 @@ function UserAdmin() {
                             <button
                               className="btn btn-primary"
                               onClick={(e) => {
-                                handleDelete(index);
+                                handleDelete(index - 1);
                               }}
                             >
                               <i className="bi bi-trash-fill"></i>

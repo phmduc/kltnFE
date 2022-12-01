@@ -32,7 +32,7 @@ function ProductDetail({ match }) {
   }
   useEffect(() => {
     getProductDetail();
-  }, []);
+  }, [ID]);
   const handleAddCart = () => {
     const size = $(".size .nav-link.active").html();
     let countInStock;

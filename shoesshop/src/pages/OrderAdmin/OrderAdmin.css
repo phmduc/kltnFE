@@ -7,3 +7,6 @@
 .OrderManage td {
   padding-left: 0 !important;
 }
+.OrderManage .tab {
+  gap: 1rem;
+}

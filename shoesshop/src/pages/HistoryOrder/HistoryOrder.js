@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 function HistoryOrder() {
   const user = useSelector((state) => state.userInfo.info);
   const [orders, setOrders] = useState([]);
+  const [isLoad, setLoaded] = useState(false);
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + 6;
   const currentItems = orders.slice(itemOffset, endOffset);
@@ -23,7 +24,7 @@ function HistoryOrder() {
   console.log(orders);
   useEffect(() => {
     getOrdersByUser();
-  }, []);
+  }, [isLoad]);
   return (
     <MainLayout>
       <div className="historyOrder">
@@ -97,7 +98,17 @@ function HistoryOrder() {
                             {elem.isCancel ? (
                               <div className="btn">Đã hủy</div>
                             ) : (
-                              <button className="btn">Hủy</button>
+                              <button
+                                className="btn btn-primary w-100 mb-3"
+                                onClick={async (e) => {
+                                  await axios.put(
+                                    `/api/order/cancel/${elem._id}`
+                                  );
+                                  setLoaded(!isLoad);
+                                }}
+                              >
+                                Hủy
+                              </button>
                             )}
                           </div>
                         </li>

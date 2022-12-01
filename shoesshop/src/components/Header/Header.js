@@ -11,6 +11,10 @@ import { validation } from "../../js/validation";
 
 function Header() {
   const user = useSelector((state) => state.userInfo.info);
+  const listProducts = useSelector((state) => state.product.productsList);
+  const [result, setResult] = useState([]);
+  const [hasResult, setHasResult] = useState(false);
+
   const [isActive, setIsActive] = useState(false);
   const [newName, setNewName] = useState("");
   const [oldPass, setOldPass] = useState("");
@@ -49,7 +53,16 @@ function Header() {
       logout();
     }
   };
-
+  const search = async (e) => {
+    if (e.target.value === "") {
+      setHasResult(false);
+    } else
+      setResult(
+        listProducts.filter((elem, index) => {
+          return elem.name.toLowerCase().includes(e.target.value.toLowerCase());
+        })
+      );
+  };
   return (
     <header className="py-3">
       <div className="container">
@@ -83,21 +96,41 @@ function Header() {
               <ul className="list-control p-0 m-0">
                 <li className="items-control has-input">
                   <div className="input-group">
-                    <button
-                      className="btn btn-outline-secondary"
-                      type="button"
-                      id="button-addon1"
-                    >
-                      <i className="bi bi-search"></i>
-                    </button>
                     <input
                       type="text"
                       className="form-control"
                       placeholder="Search"
                       aria-label="Example text with button addon"
                       aria-describedby="button-addon1"
+                      onChange={(e) => {
+                        setHasResult(true);
+                        search(e);
+                      }}
                     />
                   </div>
+                  {hasResult ? (
+                    <ul className="result">
+                      {result.length !== 0 ? (
+                        result.map((elem, index) => {
+                          return (
+                            <li>
+                              <Link
+                                to={`/products/${elem._id}`}
+                                className="item d-flex"
+                              >
+                                <div className="img-wrap">
+                                  <img src={elem.image[0].url} alt="" />
+                                </div>
+                                <span>{elem.name}</span>
+                              </Link>
+                            </li>
+                          );
+                        })
+                      ) : (
+                        <li>Không tìm thấy sản phẩm</li>
+                      )}
+                    </ul>
+                  ) : null}
                 </li>
                 <li className="items-control d-lg-flex d-none align-items-center">
                   <a href="/cart">
