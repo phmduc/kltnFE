@@ -50,18 +50,35 @@ function HistoryOrder() {
                         </span>
                       </div>
                     </div>
-                    <div className="status">
-                      {elem.isVerify ? (
-                        <span className="verify"> Đã xác nhận</span>
-                      ) : (
-                        <span className="verify"> Chưa xác nhận</span>
-                      )}
-                      <span className="mx-1">/</span>
-                      {elem.isPaid ? (
-                        <span className="paid"> Đã thanh toán</span>
-                      ) : (
-                        <span className="verify"> Chưa thanh toán</span>
-                      )}
+                    <div className="statusWrap d-flex flex-column justify-content-between">
+                      <div className="status">
+                        {elem.isVerify ? (
+                          <span className="verify"> Đã xác nhận</span>
+                        ) : (
+                          <span className="verify"> Chưa xác nhận</span>
+                        )}
+                        <span className="mx-1">/</span>
+                        {elem.isPaid ? (
+                          <span className="paid"> Đã thanh toán</span>
+                        ) : (
+                          <span className="verify"> Chưa thanh toán</span>
+                        )}
+                      </div>
+                      <div className="controls">
+                        {elem.isCancel ? (
+                          <div className="btn w-100">Đã hủy</div>
+                        ) : (
+                          <button
+                            className="btn btn-primary w-100 "
+                            onClick={async (e) => {
+                              await axios.put(`/api/order/cancel/${elem._id}`);
+                              setLoaded(!isLoad);
+                            }}
+                          >
+                            Hủy
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                   <ul className="listProduct">
@@ -94,23 +111,6 @@ function HistoryOrder() {
                              })[0].price * elem.count
                            )} */}
                           </span>
-                          <div className="controls">
-                            {elem.isCancel ? (
-                              <div className="btn">Đã hủy</div>
-                            ) : (
-                              <button
-                                className="btn btn-primary w-100 mb-3"
-                                onClick={async (e) => {
-                                  await axios.put(
-                                    `/api/order/cancel/${elem._id}`
-                                  );
-                                  setLoaded(!isLoad);
-                                }}
-                              >
-                                Hủy
-                              </button>
-                            )}
-                          </div>
                         </li>
                       );
                     })}
