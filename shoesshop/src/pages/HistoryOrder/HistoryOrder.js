@@ -1,10 +1,10 @@
-import MainLayout from '../../layouts/MainLayout/MainLayout';
-import './HistoryOrder.css';
-import axios from 'axios';
-import ReactPaginate from 'react-paginate';
+import MainLayout from "../../layouts/MainLayout/MainLayout";
+import "./HistoryOrder.css";
+import axios from "axios";
+import ReactPaginate from "react-paginate";
 
-import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 function HistoryOrder() {
   const user = useSelector((state) => state.userInfo.info);
   const [orders, setOrders] = useState([]);
@@ -18,7 +18,7 @@ function HistoryOrder() {
     setItemOffset(newOffset);
   };
   const getOrdersByUser = async () => {
-    const orders = await axios.get('/api/order/user', { userId: user.ID });
+    const orders = await axios.get("/api/order/user", { userId: user.ID });
     setOrders(orders.data);
   };
   console.log(orders);
@@ -27,78 +27,79 @@ function HistoryOrder() {
   }, [isLoad]);
   return (
     <MainLayout>
-      <div className='historyOrder'>
-        <div className='container'>
-          <span className='title'>Lịch sử mua hàng</span>
-          <ul className='list'>
+      <div className="historyOrder">
+        <div className="container">
+          <span className="title">Lịch sử mua hàng</span>
+          <ul className="list">
             {currentItems.map((elem, index) => {
               return (
-                <li className='item'>
-                  <div className='titleOrder d-flex justify-content-between mb-2'>
-                    <div className='userInfo d-flex flex-column'>
-                      <div className='id'>
+                <li className="item">
+                  <div className="titleOrder d-flex justify-content-between mb-2">
+                    <div className="userInfo d-flex flex-column">
+                      <div className="id">
                         Mã hóa đơn: <span>{elem._id}</span>
                       </div>
-                      <div className='nameBuyer'>
+                      <div className="nameBuyer">
                         Tên người mua: <span>{elem.name} </span>
                       </div>
-                      <div className='address'>
+                      <div className="address">
                         Địa chỉ:
                         <span>
-                          {elem.address.addressDetail}, {elem.address.ward},{' '}
+                          {elem.address.addressDetail}, {elem.address.ward},{" "}
                           {elem.address.district}, {elem.address.city}
                         </span>
                       </div>
                     </div>
-                    <div className='statusWrap d-flex flex-column justify-content-between'>
-                      <div className='status'>
+                    <div className="statusWrap d-flex flex-column justify-content-between">
+                      <div className="status">
                         {elem.isVerify ? (
-                          <span className='verify'> Đã xác nhận</span>
+                          <span className="verify"> Đã xác nhận</span>
                         ) : (
-                          <span className='verify'> Chưa xác nhận</span>
+                          <span className="verify"> Chưa xác nhận</span>
                         )}
-                        <span className='mx-1'>/</span>
+                        <span className="mx-1">/</span>
                         {elem.isPaid ? (
-                          <span className='paid'> Đã thanh toán</span>
+                          <span className="paid"> Đã thanh toán</span>
                         ) : (
-                          <span className='verify'> Chưa thanh toán</span>
+                          <span className="verify"> Chưa thanh toán</span>
                         )}
                       </div>
-                      <div className='controls'>
+                      <div className="controls">
                         {elem.isCancel ? (
-                          <div className='btn w-100'>Đã hủy</div>
+                          <div className="btn w-100">Đã hủy</div>
                         ) : (
                           <button
-                            className='btn btn-primary w-100 '
+                            className="btn btn-primary w-100 "
                             onClick={async (e) => {
                               await axios.put(`/api/order/cancel/${elem._id}`);
                               setLoaded(!isLoad);
-                            }}>
+                            }}
+                          >
                             Hủy
                           </button>
                         )}
                       </div>
                     </div>
                   </div>
-                  <ul className='listProduct'>
+                  <ul className="listProduct">
                     {elem.orderItems.map((item, index) => {
                       return (
-                        <li className='product d-flex justify-content-between align-items-center'>
-                          <div className='info d-flex'>
-                            <div className='img-wrap'>
-                              <img src={item.img} alt='' />
+                        <li className="product d-flex justify-content-between align-items-center">
+                          <div className="info d-flex">
+                            <div className="img-wrap">
+                              <img src={item.img} alt="" />
                             </div>
-                            <div className='nameWrap d-flex flex-column justify-content-between'>
-                              <span className='name d-block'>{item.name}</span>
-                              <span className='size'>
-                                Size: {item.sizeId} x {item.count}{' '}
+                            <div className="nameWrap d-flex flex-column justify-content-between">
+                              <span className="name d-block">{item.name}</span>
+                              <span className="size">
+                                Size: {item.sizeId} x {item.count}{" "}
                               </span>
                             </div>
                           </div>
-                          <span className='price'>
-                            {Intl.NumberFormat('vi-VN', {
-                              style: 'currency',
-                              currency: 'VND',
+                          <span className="price">
+                            {Intl.NumberFormat("vi-VN", {
+                              style: "currency",
+                              currency: "VND",
                             }).format(1000000)}
 
                             {/* {Intl.NumberFormat("vi-VN", {
@@ -119,13 +120,13 @@ function HistoryOrder() {
             })}
           </ul>
           <ReactPaginate
-            className='pagination'
-            breakLabel='...'
-            nextLabel='>'
+            className="pagination"
+            breakLabel="..."
+            nextLabel=">"
             onPageChange={handlePageClick}
             pageRangeDisplayed={5}
             pageCount={pageCount}
-            previousLabel='<'
+            previousLabel="<"
             renderOnZeroPageCount={null}
           />
         </div>

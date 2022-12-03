@@ -219,21 +219,15 @@
 }
 
 .vote__board {
-  width: 70%;
-  flex-direction: column;
+  display: flex;
   margin: auto 0;
-  padding-top: 15px;
+  padding: 1rem;
 }
 
 .vote__board-item {
   padding: 5px 5px;
   margin-right: 15px;
   border: 1px solid #e5e7eb;
-}
-
-.vote__board .btn{
-  margin-top: 20px;
-  margin-bottom: 5px;
 }
 
 .vote__btn {
@@ -305,10 +299,8 @@
 }
 
 .input-group {
-
 }
 
 .vote-star i {
   color: #f59e0b;
-  
 }
