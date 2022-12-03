@@ -11,8 +11,8 @@ import '@fancyapps/ui/dist/fancybox.css';
 import Tabs from 'react-bootstrap/Tabs';
 import axios from 'axios';
 import $ from 'jquery';
-
 import './productDetail.css';
+import { Rate } from 'antd';
 
 function ProductDetail({ match }) {
   const listCart = useSelector((state) => state.cart.listCart);
@@ -27,6 +27,7 @@ function ProductDetail({ match }) {
     try {
       const response = await axios.get(`/api/products/${ID}`);
       setItem(response.data);
+      console.log(item?.voting.starVote);
       // console.log(response.data.voting);
     } catch (error) {
       setError(error.response.data.message);
@@ -41,7 +42,7 @@ function ProductDetail({ match }) {
   const handleAddCart = () => {
     const size = $('.size .nav-link.active').html();
     let countInStock;
-    item.size.map((item, index) => {
+    item.size.map((item) => {
       if (size === item.sizeId) {
         countInStock = item.count;
       }
@@ -70,6 +71,7 @@ function ProductDetail({ match }) {
       });
     }
   };
+
   return (
     <MainLayout>
       {item === undefined ? (
@@ -81,11 +83,18 @@ function ProductDetail({ match }) {
               <div className='col-lg-7'>
                 <div className='previewImg'>
                   <Tabs id='imageTab' className='mb-3'>
-                    {item.image.map((item, index) => {
+                    {item.image.map((item) => {
                       return (
                         <Tab
-                          eventKey={`#image-${index}`}
-                          title={<img className='img-fluid' src={item.url} />}>
+                          key={item.id}
+                          eventKey={`#image-${item.id}`}
+                          title={
+                            <img
+                              className='img-fluid'
+                              src={item.url}
+                              alt='sneaker-product'
+                            />
+                          }>
                           <a
                             data-fancybox='gallery'
                             href={item.url}
@@ -104,10 +113,11 @@ function ProductDetail({ match }) {
                   <div className='size my-3'>
                     <span>Size:</span>
                     <Tabs id='sizeTab' className='mb-3'>
-                      {item.size.map((item, index) => {
+                      {item.size.map((item) => {
                         return (
                           <Tab
-                            eventKey={`#size-${index}`}
+                            key={item.id}
+                            eventKey={`#size-${item.id}`}
                             onSelect={(e) => {}}
                             title={item.sizeId}>
                             <span className='price'>
@@ -187,13 +197,20 @@ function ProductDetail({ match }) {
                 </div>
                 <div className='vote__menu'>
                   <div className='vote__info'>
-                    <p className='vote__info-star'>4.9/5</p>
+                    <p className='vote__info-star'>4.5/5</p>
                     <span>
-                      <i class='bi bi-star-fill'></i>
-                      <i class='bi bi-star-fill'></i>
-                      <i class='bi bi-star-fill'></i>
-                      <i class='bi bi-star-fill'></i>
-                      <i class='bi bi-star-fill'></i>
+                      <Rate
+                        disabled
+                        allowHalf
+                        defaultValue={4.5}
+                        style={{
+                          position: 'relative',
+                          top: '-1px',
+                          fontSize: '15px',
+                          marginLeft: '10px',
+                          color: '#f59e0b',
+                        }}
+                      />
                     </span>
                     <p className='vote__info-des'>
                       <b>{item.length}</b> đánh giá và nhận xét
@@ -202,30 +219,144 @@ function ProductDetail({ match }) {
                   <div className='vote__board text-center'>
                     <span className='vote__board-item'>
                       <span>5</span>
-                      <i class='bi bi-star-fill'></i>
+                      <Rate
+                        disabled
+                        defaultValue={1}
+                        count={1}
+                        style={{
+                          position: 'relative',
+                          top: '-1px',
+                          fontSize: '15px',
+                          margin: '0 5px',
+                          color: '#f59e0b',
+                        }}
+                      />
                       <span>68 đánh giá</span>
                     </span>
                     <span className='vote__board-item'>
                       <span>4</span>
-                      <i class='bi bi-star-fill'></i>
+                      <Rate
+                        disabled
+                        defaultValue={1}
+                        count={1}
+                        style={{
+                          position: 'relative',
+                          top: '-1px',
+                          fontSize: '15px',
+                          margin: '0 5px',
+                          color: '#f59e0b',
+                        }}
+                      />
                       <span>1 đánh giá</span>
                     </span>
                     <span className='vote__board-item'>
                       <span>3</span>
-                      <i class='bi bi-star-fill'></i>
+                      <Rate
+                        disabled
+                        defaultValue={1}
+                        count={1}
+                        style={{
+                          position: 'relative',
+                          top: '-1px',
+                          fontSize: '15px',
+                          margin: '0 5px',
+                          color: '#f59e0b',
+                        }}
+                      />
                       <span>0 đánh giá</span>
                     </span>
                     <span className='vote__board-item'>
                       <span>2</span>
-                      <i class='bi bi-star-fill'></i>
+                      <Rate
+                        disabled
+                        defaultValue={1}
+                        count={1}
+                        style={{
+                          position: 'relative',
+                          top: '-1px',
+                          fontSize: '15px',
+                          margin: '0 5px',
+                          color: '#f59e0b',
+                        }}
+                      />
                       <span>0 đánh giá</span>
                     </span>
                     <span className='vote__board-item'>
                       <span>1</span>
-                      <i class='bi bi-star-fill'></i>
+                      <Rate
+                        disabled
+                        defaultValue={1}
+                        count={1}
+                        style={{
+                          fontSize: '15px',
+                          margin: '0 5px',
+                          color: '#f59e0b',
+                        }}
+                      />
                       <span>0 đánh giá</span>
                     </span>
-                    <div className='btn'>Đánh giá ngay</div>
+                    <button
+                      type='button'
+                      class='btn btn-primary'
+                      data-bs-toggle='modal'
+                      data-bs-target='#exampleModal'>
+                      Đánh giá ngay
+                    </button>
+
+                    <div
+                      class='modal fade'
+                      id='exampleModal'
+                      tabindex='-1'
+                      aria-labelledby='exampleModalLabel'
+                      aria-hidden='true'>
+                      <div class='modal-dialog'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h1 class='modal-title fs-5' id='exampleModalLabel'>
+                              Đánh giá sản phẩm
+                            </h1>
+                            <button
+                              type='button'
+                              class='btn-close'
+                              data-bs-dismiss='modal'
+                              aria-label='Close'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <div className='btn'>Đăng nhập để đánh giá</div>
+                            <p className='vote-star'>
+                              <Rate disabled defaultValue={5} />
+                            </p>
+                            <div class='input-group'>
+                              <input
+                                type='text'
+                                class='form-control'
+                                placeholder='Họ và tên'
+                                aria-label='Username'
+                                aria-describedby='basic-addon1'></input>
+                            </div>
+                            <div class='input-group'>
+                              <input
+                                type='text'
+                                class='form-control'
+                                placeholder='Email'
+                                aria-label='Username'
+                                aria-describedby='basic-addon1'></input>
+                            </div>
+                          </div>
+                          <div class='modal-footer'>
+                            <button
+                              type='button'
+                              class='btn btn-secondary'
+                              data-bs-dismiss='modal'>
+                              Close
+                            </button>
+                            <button type='button' class='btn btn-primary'>
+                              Save changes
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -259,7 +390,7 @@ function ProductDetail({ match }) {
                     </div>
                   </div> */}
                   {item.voting.map((elm) => (
-                    <div className='vote__comment-item'>
+                    <div className='vote__comment-item' key={elm.id}>
                       <div className='vote__comment-heading'>
                         <div className='vote__comment-user'>
                           <span className='vote__comment-ava'>
@@ -276,13 +407,16 @@ function ProductDetail({ match }) {
                       <div className='vote__comment-des'>
                         <p>
                           Đánh giá:
-                          <span>
-                            <i class='bi bi-star-fill'></i>
-                            {elm.starVote}
-                            {/* {elm.starVote.map(() => (
-                              <i class='bi bi-star-fill'></i>
-                            ))} */}
-                          </span>
+                          <Rate
+                            disabled
+                            character={<i class='bi bi-star-fill'></i>}
+                            defaultValue={elm.starVote}
+                            style={{
+                              fontSize: '15px',
+                              marginLeft: '10px',
+                              color: '#f59e0b',
+                            }}
+                          />
                         </p>
                         <p>
                           Nhận xét:
@@ -293,11 +427,6 @@ function ProductDetail({ match }) {
                   ))}
                 </div>
               </div>
-              {/* {item.voting.map((elm) => (
-                <div>
-                  <div>{elm.username}</div>
-                </div>
-              ))} */}
             </div>
           </div>
         </div>

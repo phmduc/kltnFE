@@ -231,12 +231,6 @@
   border: 1px solid #e5e7eb;
 }
 
-.vote__board-item i {
-  font-size: 0.9rem;
-  margin: 5px;
-  color: #f59e0b;
-}
-
 .vote__board .btn{
   margin-top: 20px;
   margin-bottom: 5px;
@@ -308,4 +302,13 @@
 .vote__comment-des p span i {
   margin-right: 5px;
   color: #f59e0b;
+}
+
+.input-group {
+
+}
+
+.vote-star i {
+  color: #f59e0b;
+  
 }
