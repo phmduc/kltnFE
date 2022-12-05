@@ -107,6 +107,13 @@ function Checkout() {
       };
       try {
         const response = await axios.post("/api/order", order);
+        const promise = listCart.map(async (elem, index) => {
+          await axios.put(`/api/products/updateqtt/${elem.ID}`, {
+            sizeId: elem.size,
+            count: Number(elem.count),
+          });
+        });
+        await Promise.all(promise);
       } catch (error) {
         console.error(error);
       }

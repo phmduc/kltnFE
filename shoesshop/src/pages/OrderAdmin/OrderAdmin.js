@@ -191,6 +191,18 @@ function OrderAdmin() {
                                   await axios.put(
                                     `/api/order/cancel/${elem._id}`
                                   );
+                                  const promise = elem.orderItems.map(
+                                    async (elem, index) => {
+                                      await axios.put(
+                                        `/api/products/updateqtt/${elem.id}`,
+                                        {
+                                          sizeId: elem.sizeId,
+                                          count: -Number(elem.count),
+                                        }
+                                      );
+                                    }
+                                  );
+                                  await Promise.all(promise);
                                   setLoaded(!isLoad);
                                 }}
                               >

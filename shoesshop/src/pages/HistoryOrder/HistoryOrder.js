@@ -95,6 +95,18 @@ function HistoryOrder() {
                           <button
                             className="btn btn-primary w-100 "
                             onClick={async (e) => {
+                              const promise = elem.orderItems.map(
+                                async (elem, index) => {
+                                  await axios.put(
+                                    `/api/products/updateqtt/${elem.id}`,
+                                    {
+                                      sizeId: elem.sizeId,
+                                      count: -Number(elem.count),
+                                    }
+                                  );
+                                }
+                              );
+                              await Promise.all(promise);
                               await axios.put(`/api/order/cancel/${elem._id}`);
                               setLoaded(!isLoad);
                             }}
