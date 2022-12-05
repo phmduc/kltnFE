@@ -21,10 +21,10 @@ export const validation = {
       return "Mật khẩu tối thiểu 6 ký tự";
     } else return true;
   },
-  validateRePass: function (name, rePass) {
+  validateRePass: function (rePass, name) {
     if (!name || name === "") {
       return "Vui lòng nhập lại mật khẩu (*)";
-    } else if (name !== rePass) {
+    } else if (rePass.localeCompare(name) !== 0) {
       return "Mật khẩu không trùng khớp";
     } else return true;
   },

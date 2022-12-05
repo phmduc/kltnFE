@@ -2,26 +2,28 @@ import MainLayout from "../../layouts/MainLayout/MainLayout";
 import "./HistoryOrder.css";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
-
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+
 function HistoryOrder() {
   const user = useSelector((state) => state.userInfo.info);
   const [orders, setOrders] = useState([]);
+  const [filter, setFilter] = useState([]);
   const [isLoad, setLoaded] = useState(false);
   const [itemOffset, setItemOffset] = useState(0);
   const endOffset = itemOffset + 6;
-  const currentItems = orders.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(orders.length / 6);
+  const currentItems = filter.slice(itemOffset, endOffset);
+  console.log(currentItems);
+  const pageCount = Math.ceil(filter.length / 6);
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % orders.length;
+    const newOffset = (event.selected * 6) % filter.length;
     setItemOffset(newOffset);
   };
   const getOrdersByUser = async () => {
     const orders = await axios.get("/api/order/user", { userId: user.ID });
     setOrders(orders.data);
+    setFilter(orders.data);
   };
-  console.log(orders);
   useEffect(() => {
     getOrdersByUser();
   }, [isLoad]);
@@ -30,6 +32,28 @@ function HistoryOrder() {
       <div className="historyOrder">
         <div className="container">
           <span className="title">Lịch sử mua hàng</span>
+          <div className="tab d-flex mb-3">
+            <button
+              className="btn"
+              onClick={() => {
+                getOrdersByUser();
+              }}
+            >
+              Tất cả
+            </button>
+            <button
+              className="btn mx-3"
+              onClick={() => {
+                setFilter(
+                  orders.filter((elem, index) => {
+                    return elem.isPaid === true;
+                  })
+                );
+              }}
+            >
+              Đã thanh toán
+            </button>
+          </div>
           <ul className="list">
             {currentItems.map((elem, index) => {
               return (
@@ -65,7 +89,7 @@ function HistoryOrder() {
                         )}
                       </div>
                       <div className="controls">
-                        {elem.isCancel ? (
+                        {elem.isPaid ? null : elem.isCancel ? (
                           <div className="btn w-100">Đã hủy</div>
                         ) : (
                           <button
@@ -100,7 +124,7 @@ function HistoryOrder() {
                             {Intl.NumberFormat("vi-VN", {
                               style: "currency",
                               currency: "VND",
-                            }).format(1000000)}
+                            }).format(item.price)}
 
                             {/* {Intl.NumberFormat("vi-VN", {
                              style: "currency",

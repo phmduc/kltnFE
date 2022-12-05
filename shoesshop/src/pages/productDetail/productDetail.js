@@ -230,12 +230,21 @@ function ProductDetail({ match }) {
                 </div>
                 <div className="vote__menu">
                   <div className="vote__info">
-                    <p className="vote__info-star">4.5/5</p>
+                    <p className="vote__info-star">
+                      {item.vote.reduce((previousValue, currentValue) => {
+                        return previousValue + currentValue.starVote;
+                      }, 0) / item.vote.length}
+                      /5
+                    </p>
                     <span>
                       <Rate
                         disabled
                         allowHalf
-                        defaultValue={4.5}
+                        defaultValue={
+                          item.vote.reduce((previousValue, currentValue) => {
+                            return previousValue + currentValue.starVote;
+                          }, 0) / item.vote.length
+                        }
                         style={{
                           position: "relative",
                           top: "-1px",
@@ -264,7 +273,10 @@ function ProductDetail({ match }) {
                           color: "#f59e0b",
                         }}
                       />
-                      <span>68 đánh giá</span>
+                      <span>
+                        {item.vote.filter((elem) => elem.starVote === 5).length}{" "}
+                        đánh giá
+                      </span>
                     </span>
                     <span className="vote__board-item">
                       <span>4</span>
@@ -280,7 +292,10 @@ function ProductDetail({ match }) {
                           color: "#f59e0b",
                         }}
                       />
-                      <span>1 đánh giá</span>
+                      <span>
+                        {item.vote.filter((elem) => elem.starVote === 4).length}{" "}
+                        đánh giá
+                      </span>
                     </span>
                     <span className="vote__board-item">
                       <span>3</span>
@@ -296,7 +311,10 @@ function ProductDetail({ match }) {
                           color: "#f59e0b",
                         }}
                       />
-                      <span>0 đánh giá</span>
+                      <span>
+                        {item.vote.filter((elem) => elem.starVote === 3).length}{" "}
+                        đánh giá
+                      </span>
                     </span>
                     <span className="vote__board-item">
                       <span>2</span>
@@ -312,7 +330,10 @@ function ProductDetail({ match }) {
                           color: "#f59e0b",
                         }}
                       />
-                      <span>0 đánh giá</span>
+                      <span>
+                        {item.vote.filter((elem) => elem.starVote === 2).length}{" "}
+                        đánh giá
+                      </span>
                     </span>
                     <span className="vote__board-item">
                       <span>1</span>
@@ -326,7 +347,10 @@ function ProductDetail({ match }) {
                           color: "#f59e0b",
                         }}
                       />
-                      <span>0 đánh giá</span>
+                      <span>
+                        {item.vote.filter((elem) => elem.starVote === 1).length}{" "}
+                        đánh giá
+                      </span>
                     </span>
                     {item.vote.some((elem) => {
                       return elem.userId === user.ID;

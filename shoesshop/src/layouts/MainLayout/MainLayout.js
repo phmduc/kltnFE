@@ -44,7 +44,6 @@ function MainLayout({ children }) {
           </div>
         </div>
         {children}
-        <Chat></Chat>
       </div>
       <Footer />
     </Fragment>

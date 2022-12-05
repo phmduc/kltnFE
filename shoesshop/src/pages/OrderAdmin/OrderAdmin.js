@@ -81,7 +81,7 @@ function OrderAdmin() {
               onClick={() => {
                 setFilter(
                   orders.filter((elem, index) => {
-                    return elem.isVerify === true;
+                    return elem.isVerify === true && elem.isPaid === false;
                   })
                 );
               }}
