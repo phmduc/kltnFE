@@ -427,7 +427,7 @@ h1 .subtitle {
   height: 100%;
   width: 100%;
   display: block;
-  background: url("https://source.unsplash.com/random/?nature");
+  background: url("https: //wallpapercave.com/wp/wp4883875.jpg");
   top: 0;
   left: 0;
   background-size: cover;
@@ -566,7 +566,7 @@ h1 .subtitle {
 
 .sidebar:before {
   opacity: 0.77;
-  background: linear-gradient(to bottom, #9368e9 0%, #943bea 100%);
+  background: #111315;
 }
 
 .sidebar:after {
@@ -1449,11 +1449,85 @@ fieldset[disabled] .form-control {
   margin-left: 0;
 }
 
+.navbar {
+  margin-bottom: 20px;
+  border-bottom: 1px solid #d8dbe0 !important;
+}
+
 .navbar .navbar-brand {
   font-weight: 400;
-  margin: 5px 0px;
-  padding: 15px 15px;
+  margin: 0px 0px 5px;
+  padding: 20px 0 0 0;
+  font-size: 25px;
+}
+
+.account {
+  margin-right: 8px;
+  margin-top: 15px;
+  font-weight: 600;
+}
+
+.account p{
   font-size: 20px;
+  font-weight: 600;
+}
+
+.account:hover .dropdown__account {
+  display: block;
+}
+
+.dropdown__account {
+  position: absolute;
+  width: max-content;
+  display: none;
+  top: 65px;
+  background-color: white;
+  box-shadow: 0 0 6px 0 #c3c3c3;
+  right: 20px;
+  z-index: 999;
+  text-align: right;
+}
+
+.dropdown__account::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 2rem;
+  transform: translateY(-100%);
+  background-color: transparent;
+  right: 0;
+}
+
+.dropdown__account li:hover {
+  background: #f0f0f0;
+}
+
+.dropdown__account li a:hover {
+  color: black;
+}
+
+.dropdown__account a {
+  font-family: "Roboto", sans-serif;
+  font-weight: 600;
+  color: black;
+}
+
+.dropdown__account button {
+  width: 100%;
+  font-weight: bold;
+  border: none;
+  text-align: right;
+  background: transparent;
+  padding: 1rem;
+}
+
+.navbar .navbar-brand img {
+  position: relative;
+  top: -5px;
+  width: 55px;
+  height: auto;
 }
 
 .navbar .navbar-nav > li > a {
