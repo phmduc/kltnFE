@@ -12,7 +12,7 @@ export const cartSlice = createSlice({
           item.ID === action.payload.ID && item.size === action.payload.size
       );
       if (hasItem) {
-        hasItem.count += action.payload.count;
+        hasItem.count = Number(hasItem.count) + Number(action.payload.count);
         localStorage.setItem("cartItem", JSON.stringify(state.listCart));
       } else {
         state.listCart = [...state.listCart, action.payload];
