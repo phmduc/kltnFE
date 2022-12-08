@@ -26,30 +26,9 @@ import { getAllCategory } from "./Redux/slice/categorySlice.js";
 import { useEffect } from "react";
 import HistoryOrder from "./pages/HistoryOrder/HistoryOrder.js";
 import ThanksPage from "./pages/ThanksPage/index.js";
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import Dashboard from "./pages/Dashboard/Dashboard.js";
 
 function App() {
-  // Import the functions you need from the SDKs you need
-
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyDwd6l504dDOQ8mGr34HYi94ocXFYVLfLs",
-    authDomain: "sneaker-app-aa3d9.firebaseapp.com",
-    projectId: "sneaker-app-aa3d9",
-    storageBucket: "sneaker-app-aa3d9.appspot.com",
-    messagingSenderId: "170234709869",
-    appId: "1:170234709869:web:13a7273aaf98ffb8b2bc64",
-    measurementId: "G-0Y6KQNQQXN",
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
   const user = useSelector((state) => state.userInfo.info);
   console.log(user);
   const dispatch = useDispatch();
@@ -69,47 +48,46 @@ function App() {
   return (
     <BrowserRouter>
       <ToastContainer />
-      <HashRouter basename="/">
-        <Routes>
-          <Route path="/">
-            <Route index element={<Home {...user} />} />
-            {!user.ID ? (
-              <React.Fragment>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <Route path="/login" element={<Home />} />
-                <Route path="/register" element={<Home />} />
-                <Route path="/cart/checkout" element={<Checkout />} />
-                <Route path="/history" element={<HistoryOrder />} />
-              </React.Fragment>
-            )}
-            <Route path="/products/">
-              <Route index element={<Products />} />
-              <Route path=":id" element={<ProductDetail />} />
-            </Route>
-            {user.isAdmin === true ? (
-              <Route path="/admin/">
-                <Route path="products" element={<ProductAdmin />} />
-                <Route path="category" element={<CategoryAdmin />} />
-                <Route path="user" element={<UserAdmin />} />
-                <Route path="order" element={<OrderAdmin />} />
-              </Route>
-            ) : (
-              <Route path="/admin" element={<Home />} />
-            )}
-
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/forget" element={<ForgetPass />} />
-            <Route path="/repass" element={<RePass />} />
-            <Route path="/thankyou" element={<ThanksPage />} />
-            <Route path="/verify/:id" element={<Verify />}></Route>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Home {...user} />} />
+          {!user.ID ? (
+            <React.Fragment>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Route path="/login" element={<Home />} />
+              <Route path="/register" element={<Home />} />
+              <Route path="/cart/checkout" element={<Checkout />} />
+              <Route path="/history" element={<HistoryOrder />} />
+            </React.Fragment>
+          )}
+          <Route path="/products/">
+            <Route index element={<Products />} />
+            <Route path=":id" element={<ProductDetail />} />
           </Route>
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </HashRouter>
+          {user.isAdmin === true ? (
+            <Route path="/admin/">
+              <Route path="products" element={<ProductAdmin />} />
+              <Route path="category" element={<CategoryAdmin />} />
+              <Route path="user" element={<UserAdmin />} />
+              <Route path="order" element={<OrderAdmin />} />
+              <Route path="dashboard" element={<Dashboard />} />
+            </Route>
+          ) : (
+            <Route path="/admin" element={<Home />} />
+          )}
+
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/forget" element={<ForgetPass />} />
+          <Route path="/repass" element={<RePass />} />
+          <Route path="/thankyou" element={<ThanksPage />} />
+          <Route path="/verify/:id" element={<Verify />}></Route>
+        </Route>
+        <Route path="*" element={<Home />} />
+      </Routes>
     </BrowserRouter>
   );
 }

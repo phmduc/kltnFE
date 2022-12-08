@@ -44,7 +44,6 @@ function Header() {
       validation.validatePass(newPassword) === true &&
       validation.validateRePass(newPassword, reNewPass) === true
     ) {
-      console.log("giong nhau");
       const newPass = {
         email: user.email,
         password: oldPass,

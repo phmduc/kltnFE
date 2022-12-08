@@ -20,7 +20,7 @@ function HistoryOrder() {
     setItemOffset(newOffset);
   };
   const getOrdersByUser = async () => {
-    const orders = await axios.get("/api/order/user", { userId: user.ID });
+    const orders = await axios.post("/api/order/user", { userId: user.ID });
     setOrders(orders.data);
     setFilter(orders.data);
   };
@@ -55,7 +55,7 @@ function HistoryOrder() {
             </button>
           </div>
           <ul className="list">
-            {currentItems.map((elem, index) => {
+            {currentItems.reverse().map((elem, index) => {
               return (
                 <li className="item">
                   <div className="titleOrder d-flex justify-content-between mb-2">
@@ -120,7 +120,7 @@ function HistoryOrder() {
                   <ul className="listProduct">
                     {elem.orderItems.map((item, index) => {
                       return (
-                        <li className="product d-flex justify-content-between align-items-center">
+                        <li className="product mb-3 d-flex justify-content-between align-items-center">
                           <div className="info d-flex">
                             <div className="img-wrap">
                               <img src={item.img} alt="" />

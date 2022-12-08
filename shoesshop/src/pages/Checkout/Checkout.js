@@ -19,13 +19,13 @@ function Checkout() {
   const [wardId, setWardId] = useState();
   const [payment, setPayment] = useState("");
   const [pay, setPay] = useState(false);
-
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
   const [checkout, setCheckOut] = useState(false);
   const [number, setNumber] = useState();
   const [address, setAddress] = useState();
   const total = useRef();
+  var currentdate = new Date();
 
   const dispatch = useDispatch();
 
@@ -104,6 +104,18 @@ function Checkout() {
           });
           return previousValue + currentValue.count * price;
         }, 0),
+        date:
+          currentdate.getDate() +
+          "/" +
+          (currentdate.getMonth() + 1) +
+          "/" +
+          currentdate.getFullYear() +
+          " @ " +
+          currentdate.getHours() +
+          ":" +
+          currentdate.getMinutes() +
+          ":" +
+          currentdate.getSeconds(),
       };
       try {
         const response = await axios.post("/api/order", order);

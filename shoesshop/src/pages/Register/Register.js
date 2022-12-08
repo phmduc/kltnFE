@@ -17,7 +17,7 @@ function Register() {
   const [nameMessage, setNameMessage] = useState();
   const [passwordMessage, setPasswordMessage] = useState();
   const [rePasswordMessage, setRePasswordMessage] = useState();
-
+  var currentdate = new Date();
   const submitRegister = async () => {
     if (validation.validateName(name) !== true) {
       setNameMessage(validation.validateName(name));
@@ -41,6 +41,18 @@ function Register() {
         name: name,
         email: email.toLowerCase(),
         password: password,
+        date:
+          currentdate.getDate() +
+          "/" +
+          (currentdate.getMonth() + 1) +
+          "/" +
+          currentdate.getFullYear() +
+          " @ " +
+          currentdate.getHours() +
+          ":" +
+          currentdate.getMinutes() +
+          ":" +
+          currentdate.getSeconds(),
       };
       const result = await registerUser(newUser);
       if (typeof result === "string") {

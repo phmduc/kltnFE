@@ -69,7 +69,7 @@ function OrderAdmin() {
               onClick={() => {
                 setFilter(
                   orders.filter((elem, index) => {
-                    return elem.isVerify === false;
+                    return elem.isVerify === false && elem.isCancel === false;
                   })
                 );
               }}
@@ -93,7 +93,7 @@ function OrderAdmin() {
               onClick={() => {
                 setFilter(
                   orders.filter((elem, index) => {
-                    return elem.isPaid === false;
+                    return elem.isPaid === false && elem.isCancel === false;
                   })
                 );
               }}
@@ -105,7 +105,7 @@ function OrderAdmin() {
               onClick={() => {
                 setFilter(
                   orders.filter((elem, index) => {
-                    return elem.isPaid === true;
+                    return elem.isPaid === true && elem.isCancel === false;
                   })
                 );
               }}
