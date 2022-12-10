@@ -19,9 +19,7 @@ function Dashboard() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [data, setData] = useState([]);
-
   const [orders, setOrders] = useState([]);
-
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -33,7 +31,6 @@ function Dashboard() {
         </div>
       );
     }
-
     return null;
   };
   return (

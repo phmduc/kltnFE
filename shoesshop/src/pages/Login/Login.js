@@ -41,6 +41,9 @@ function Login() {
       <section className="login">
         <div className="container">
           <form>
+            <div className="logo text-center">
+              <a href="/">Rekeans</a>
+            </div>
             <h1>Đăng nhập tại đây</h1>
             <div className="form-group">
               <p>Email</p>

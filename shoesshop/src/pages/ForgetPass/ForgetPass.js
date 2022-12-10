@@ -5,36 +5,36 @@ import { toast } from "react-toastify";
 
 import { useState } from "react";
 function ForgetPass() {
-  const [oldPass, setOldPass] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [reNewPass, setReNewPass] = useState("");
   const [email, setEmail] = useState();
-  const [mount, setUnnmount] = useState();
   const [messageEmail, setMessageEmail] = useState();
   const checkmail = async () => {
     if (validation.validateEmail(email) === true) {
-      const match = await axios.get(`/api/users/forgetpass/${email}`);
-      if (typeof match === "object") {
+      try {
+        const match = await axios.get(`/api/users/forgetpass/${email}`);
+        if (match.data) {
+          const web = `http://${window.location.host}/repass/${match.data._id}`;
+          await axios.post("/api/email/send", {
+            email: email,
+            subject: "Thay đổi mật khẩu",
+            content: `<span>Nhấn vào đường link sau để thay đổi mật khẩu </span> <a href="${web}">Click Here</a>`,
+          });
+          toast.success("Vui lòng check mail", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      } catch (error) {
+        setMessageEmail(error.response.data.message);
       }
     } else {
       setMessageEmail(validation.validateEmail(email));
     }
   };
-  const changePass = async () => {
-    if (validation.validatePass(newPassword)) {
-      const newPass = {
-        password: oldPass,
-        newPass: newPassword,
-      };
-      await axios.put(`/api/users/changeforgetpass`, newPass);
-      toast.success(`Đổi mật khẩu thành công`, {
-        position: toast.POSITION.TOP_CENTER,
-      });
-    }
-  };
   return (
     <div className="wrapperForget d-flex align-items-center justify-content-center flex-column">
       <div className="formForget ">
+        <div className="logo text-center">
+          <a href="/">Rekeans</a>
+        </div>
         <span className="title">Lấy lại mật khẩu</span>
         <form>
           <div className="form-group">
@@ -60,57 +60,6 @@ function ForgetPass() {
             }}
           >
             Submit
-          </button>
-        </form>
-      </div>
-      <div className="formForget ">
-        <span className="title">Lấy lại mật khẩu</span>
-        <form>
-          <div className="form-group  mb-3">
-            <label>Mật khẩu cũ</label>
-            <input
-              type="password"
-              className="form-control"
-              id="oldPass"
-              value={oldPass}
-              onChange={(e) => {
-                setOldPass(e.target.value);
-              }}
-            />
-          </div>
-          <div className="form-group  mb-3">
-            <label>Mật khẩu mới</label>
-            <input
-              type="password"
-              className="form-control "
-              id="newPass"
-              value={newPassword}
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-              }}
-            />
-          </div>
-          <div className="form-group mb-3">
-            <label>Nhập mật khẩu mới</label>
-            <input
-              type="password"
-              className="form-control"
-              id="reNewPass"
-              value={reNewPass}
-              onChange={(e) => {
-                setReNewPass(e.target.value);
-              }}
-            />
-          </div>
-          <button
-            type="submit"
-            onClick={(e) => {
-              e.preventDefault();
-              changePass();
-            }}
-            className="btn btn-primary"
-          >
-            Đổi mật khẩu
           </button>
         </form>
       </div>

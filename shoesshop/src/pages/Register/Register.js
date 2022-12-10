@@ -76,6 +76,9 @@ function Register() {
       <section className="register">
         <div className="container">
           <form>
+            <div className="logo text-center">
+              <a href="/">Rekeans</a>
+            </div>
             <h1>Đăng ký thành viên</h1>
             <div className="form-group">
               <p>Tên của bạn</p>

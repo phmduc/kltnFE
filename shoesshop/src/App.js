@@ -79,10 +79,9 @@ function App() {
           ) : (
             <Route path="/admin" element={<Home />} />
           )}
-
           <Route path="/cart" element={<Cart />} />
           <Route path="/forget" element={<ForgetPass />} />
-          <Route path="/repass" element={<RePass />} />
+          <Route path="/repass/:id" element={<RePass />} />
           <Route path="/thankyou" element={<ThanksPage />} />
           <Route path="/verify/:id" element={<Verify />}></Route>
         </Route>

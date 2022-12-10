@@ -60,7 +60,7 @@ header .topbar {
   float: right;
 }
 
-header .logo a {
+.logo a {
   color: var(--primary) !important;
   font-family: "Italiana", sans-serif;
   font-size: 2.5rem;
