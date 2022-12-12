@@ -18,7 +18,11 @@ const { RangePicker } = DatePicker;
 function Dashboard() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
+  const [users, setUsers] = useState([]);
+
   const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
+
   const [orders, setOrders] = useState([]);
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -61,11 +65,18 @@ function Dashboard() {
           <button
             className="btn mx-3"
             onClick={async () => {
-              const response = await axios.post("/api/order/date", {
+              const order = await axios.post("/api/order/date", {
                 fromDate: from,
                 toDate: to,
               });
-              setOrders(response.data);
+
+              const user = await axios.post("/api/users/date", {
+                fromDate: from,
+                toDate: to,
+              });
+              setUsers(user.data);
+
+              setOrders(order.data);
             }}
           >
             Xác nhận
@@ -105,6 +116,12 @@ function Dashboard() {
                 </span>
               </div>
             </div>
+            <div className="col-4">
+              <div className="box">
+                <span className="title">Số tài khoản tham gia</span>
+                <span className="info">{users.length}</span>
+              </div>
+            </div>
             <div className="col-12">
               <div className="box">
                 <div className="w-50 d-flex justify-content-between">
@@ -136,6 +153,42 @@ function Dashboard() {
                   <XAxis dataKey="name" />
                   <YAxis />
                   <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar dataKey="total" fill="#8884d8" />
+                </BarChart>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="box">
+                <div className="w-50 d-flex justify-content-between">
+                  <span className="title">Lượng người dùng theo năm</span>{" "}
+                  <Space direction="vertical">
+                    <DatePicker
+                      picker="year"
+                      onChange={async (e) => {
+                        const response = await axios.post("/api/users/year", {
+                          year: e.$y,
+                        });
+                        setData1(response.data);
+                      }}
+                    />
+                  </Space>
+                </div>
+                <BarChart
+                  width={1000}
+                  height={400}
+                  data={data1}
+                  margin={{
+                    top: 5,
+                    right: 30,
+                    left: 20,
+                    bottom: 5,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
                   <Legend />
                   <Bar dataKey="total" fill="#8884d8" />
                 </BarChart>

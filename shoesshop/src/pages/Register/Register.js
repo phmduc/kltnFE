@@ -28,8 +28,8 @@ function Register() {
     if (validation.validatePass(password) !== true) {
       setPasswordMessage(validation.validatePass(password));
     }
-    if (validation.validateRePass(passwordSame) !== true) {
-      setRePasswordMessage(validation.validateRePass(passwordSame));
+    if (validation.validateRePass(password, passwordSame) !== true) {
+      setRePasswordMessage(validation.validateRePass(password, passwordSame));
     }
     if (
       validation.validateName(name) === true &&
@@ -140,6 +140,9 @@ function Register() {
                 }}
                 className="form-control"
               />
+              {rePasswordMessage ? (
+                <span className="message">{rePasswordMessage}</span>
+              ) : null}
             </div>
             <button
               onClick={() => {
