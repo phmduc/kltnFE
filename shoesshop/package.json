@@ -1,7 +1,7 @@
 {
   "name": "shoesshop",
   "version": "0.1.0",
-  "proxy": "http://localhost:8000/",
+  "proxy": "http://localhost:8080/",
   "private": true,
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^35.2.1",
