@@ -91,10 +91,10 @@ function Header() {
                   <a href="#">Blog</a>
                 </li>
                 <li className="items">
-                  <a href="#">Giới thiệu</a>
+                  <a href="/aboutus">Giới thiệu</a>
                 </li>
                 <li className="items">
-                  <a href="#">Liên hệ</a>
+                  <a href="/contact">Liên hệ</a>
                 </li>
               </ul>
             </div>

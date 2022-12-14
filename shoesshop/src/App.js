@@ -26,6 +26,8 @@ import { getAllCategory } from "./Redux/slice/categorySlice.js";
 import { useEffect } from "react";
 import HistoryOrder from "./pages/HistoryOrder/HistoryOrder.js";
 import ThanksPage from "./pages/ThanksPage/index.js";
+import AboutUs from "./pages/AboutUs/AboutUs.js";
+import Contact from "./pages/contact/Contact.js";
 import Dashboard from "./pages/Dashboard/Dashboard.js";
 
 function App() {
@@ -82,6 +84,9 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/forget" element={<ForgetPass />} />
           <Route path="/repass/:id" element={<RePass />} />
+          <Route path="/thankyou" element={<ThanksPage />} />
+          <Route path="/aboutus" element={<AboutUs />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/thankyou" element={<ThanksPage />} />
           <Route path="/verify/:id" element={<Verify />}></Route>
         </Route>
