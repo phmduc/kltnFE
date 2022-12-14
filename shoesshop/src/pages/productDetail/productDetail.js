@@ -168,6 +168,9 @@ function ProductDetail({ match }) {
                                 currency: "VND",
                               }).format(item.price)}
                             </span>
+                            <span className="inStock">
+                              Tồn kho: {item.count}
+                            </span>
                           </Tab>
                         );
                       })}
