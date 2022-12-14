@@ -261,16 +261,16 @@ function Header() {
                           <a href="/">Rekeans</a>
                         </div>
                         <li>
-                          <Link to="/admin">Trang chủ</Link>
+                          <Link to="/">Trang chủ</Link>
                         </li>
                         <li>
                           <Link to="/products">Sản phẩm</Link>
                         </li>
                         <li>
-                          <Link to="/blog">Blog</Link>
+                          <Link to="/">Blog</Link>
                         </li>
                         <li>
-                          <Link to="/introduct">Giới thiệu</Link>
+                          <Link to="/aboutus">Giới thiệu</Link>
                         </li>
                         <li>
                           <Link to="/contact">Liên hệ</Link>
