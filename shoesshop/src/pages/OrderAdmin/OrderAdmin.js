@@ -193,6 +193,13 @@ function OrderAdmin() {
                             ) : (
                               <span className="d-block">Chưa thanh toán</span>
                             )}
+                            {elem.isDelivered === -1 ? (
+                              <span className="d-block">Đang giao</span>
+                            ) : elem.isDelivered === 1 ? (
+                              <span className="d-block">Đã giao</span>
+                            ) : (
+                              <span className="d-block">Giao thất bại</span>
+                            )}
                           </td>
                           <td className="controls">
                             {elem.isCancel ? null : elem.isVerify ? (
@@ -239,15 +246,45 @@ function OrderAdmin() {
                                 Hủy
                               </button>
                             ) : null}
-
-                            <button
+                            {elem.isDelivered === 0 ? (
+                              <button
+                                className="btn btn-primary w-100 mb-3"
+                                onClick={async (e) => {
+                                  await axios.put(
+                                    `/api/order/delivered/${elem._id}`,
+                                    { bool: -1 }
+                                  );
+                                  setLoaded(!isLoad);
+                                }}
+                              >
+                                Giao lại
+                              </button>
+                            ) : null}
+                            {elem.isDelivered === -1 ? (
+                              <button
+                                className="btn btn-primary w-100 mb-3"
+                                onClick={async (e) => {
+                                  await axios.put(
+                                    `/api/order/delivered/${elem._id}`,
+                                    { bool: 1 }
+                                  );
+                                  await axios.put(
+                                    `/api/order/paid/${elem._id}`
+                                  );
+                                  setLoaded(!isLoad);
+                                }}
+                              >
+                                Hoàn thành
+                              </button>
+                            ) : null}
+                            {/* <button
                               className="btn btn-primary w-100"
                               onClick={(e) => {
                                 handleDelete(index);
                               }}
                             >
                               Xóa
-                            </button>
+                            </button> */}
                           </td>
                         </tr>
                       );

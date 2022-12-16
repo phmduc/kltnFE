@@ -124,18 +124,6 @@ function HistoryOrder() {
                             ) : elem.isDelivered === -1 ? (
                               <React.Fragment>
                                 <button
-                                  className="btn btn-primary w-100 mb-2 "
-                                  onClick={async (e) => {
-                                    await axios.put(
-                                      `/api/order/delivered/${elem._id}`,
-                                      { bool: 1 }
-                                    );
-                                    setLoaded(!isLoad);
-                                  }}
-                                >
-                                  Đã nhận hàng
-                                </button>
-                                <button
                                   className="btn btn-primary w-100 "
                                   onClick={async (e) => {
                                     await axios.put(
