@@ -23,11 +23,13 @@ export const cartSlice = createSlice({
       const cartItem = localStorage.getItem("cartItem")
         ? JSON.parse(localStorage.getItem("cartItem"))
         : [];
+      console.log(cartItem);
       const newItem = cartItem.filter((elem, index) => {
         return (
           elem.ID !== action.payload.ID || elem.size !== action.payload.size
         );
       });
+      console.log(newItem);
       state.listCart = newItem;
       localStorage.setItem("cartItem", JSON.stringify(state.listCart));
     },
