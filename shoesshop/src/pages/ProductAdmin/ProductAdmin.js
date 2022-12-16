@@ -260,12 +260,12 @@ function ProductAdmin() {
     });
   };
   const updatePrepare = async (index) => {
-    setID(products[index]._id);
-    setName(products[index].name);
-    setCate(products[index].idCate);
-    setDesc(products[index].desc);
-    setSize(products[index].size);
-    const promise = products[index].image.map(async (elem, index) => {
+    setID(currentItems[index]._id);
+    setName(currentItems[index].name);
+    setCate(currentItems[index].idCate);
+    setDesc(currentItems[index].desc);
+    setSize(currentItems[index].size);
+    const promise = currentItems[index].image.map(async (elem, index) => {
       return await convertToBase64(elem.url).then((response) => response);
     });
     let images = await Promise.all(promise);
@@ -488,7 +488,7 @@ function ProductAdmin() {
               <input
                 type="text"
                 className="form-control my-3"
-                placeholder="Nhập tên hoặc id sản phẩm"
+                placeholder="Nhập tên sản phẩm "
                 aria-label="Example text with button addon"
                 aria-describedby="button-addon1"
                 onChange={(e) => {
