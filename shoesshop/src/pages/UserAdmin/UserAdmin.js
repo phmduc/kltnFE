@@ -14,7 +14,7 @@ function UserAdmin() {
   const [result, setResult] = useState([]);
   const [hasResult, setHasResult] = useState(false);
   const endOffset = itemOffset + 6;
-  const currentItems = hasResult
+  let currentItems = hasResult
     ? result.slice(itemOffset, endOffset)
     : users.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(hasResult ? result.length / 6 : users.length / 6);
@@ -98,7 +98,6 @@ function UserAdmin() {
                               id="exampleCheck1"
                               defaultChecked={elem.isAdmin}
                               onChange={async (e) => {
-                                console.log(elem.name);
                                 const res = await axios.put(
                                   "/api/users/" + elem._id,
                                   { isAdmin: e.target.checked }
