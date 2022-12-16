@@ -9,11 +9,17 @@ function OrderAdmin() {
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
+  const [result, setResult] = useState([]);
+  const [hasResult, setHasResult] = useState(false);
   const endOffset = itemOffset + 6;
-  const currentItems = filter.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(filter.length / 6);
+  const currentItems = hasResult
+    ? result.slice(itemOffset, endOffset)
+    : orders.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(
+    hasResult ? result.length / 6 : orders.length / 6
+  );
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % filter.length;
+    const newOffset = (event.selected * 6) % orders.length;
     setItemOffset(newOffset);
   };
   useEffect(() => {
@@ -38,6 +44,19 @@ function OrderAdmin() {
     toast.success(`Xóa thành công`, {
       position: toast.POSITION.TOP_CENTER,
     });
+  };
+  const search = async (e) => {
+    if (e.target.value === "") {
+      setHasResult(false);
+    } else
+      setResult(
+        orders.filter((elem, index) => {
+          return (
+            elem._id.toLowerCase().includes(e.target.value.toLowerCase()) ||
+            elem.name.toLowerCase().includes(e.target.value.toLowerCase())
+          );
+        })
+      );
   };
   return (
     <Admin>
@@ -115,6 +134,17 @@ function OrderAdmin() {
           </div>
           <div className="row">
             <div className="col-12">
+              <input
+                type="text"
+                className="form-control my-3"
+                placeholder="Nhập tên người nhận hoặc id hóa đơn"
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                onChange={(e) => {
+                  setHasResult(true);
+                  search(e);
+                }}
+              />
               <div class="content table-responsive table-full-width">
                 <table class="table table-hover table-striped">
                   <thead>
@@ -184,7 +214,7 @@ function OrderAdmin() {
                               <div className="btn btn-primary w-100 mb-3">
                                 Đã hủy
                               </div>
-                            ) : (
+                            ) : !elem.isVerify || !elem.isPaid ? (
                               <button
                                 className="btn btn-primary w-100 mb-3"
                                 onClick={async (e) => {
@@ -208,7 +238,7 @@ function OrderAdmin() {
                               >
                                 Hủy
                               </button>
-                            )}
+                            ) : null}
 
                             <button
                               className="btn btn-primary w-100"

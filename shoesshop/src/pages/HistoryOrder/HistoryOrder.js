@@ -3,7 +3,7 @@ import "./HistoryOrder.css";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function HistoryOrder() {
   const user = useSelector((state) => state.userInfo.info);
@@ -89,7 +89,7 @@ function HistoryOrder() {
                         )}
                       </div>
                       <div className="controls">
-                        {elem.isPaid ? null : elem.isCancel ? (
+                        {elem.isPaid || elem.isVerify ? null : elem.isCancel ? (
                           <div className="btn w-100">Đã hủy</div>
                         ) : (
                           <button
@@ -114,6 +114,43 @@ function HistoryOrder() {
                             Hủy
                           </button>
                         )}
+                        {(elem.isPaid && !elem.isCancel) ||
+                        (elem.isVerify && !elem.isCancel) ? (
+                          <React.Fragment>
+                            {elem.isDelivered === 1 ? (
+                              <div className="btn w-100">Đã giao</div>
+                            ) : elem.isDelivered === 0 ? (
+                              <div className="btn w-100">Giao thất bại</div>
+                            ) : elem.isDelivered === -1 ? (
+                              <React.Fragment>
+                                <button
+                                  className="btn btn-primary w-100 mb-2 "
+                                  onClick={async (e) => {
+                                    await axios.put(
+                                      `/api/order/delivered/${elem._id}`,
+                                      { bool: 1 }
+                                    );
+                                    setLoaded(!isLoad);
+                                  }}
+                                >
+                                  Đã nhận hàng
+                                </button>
+                                <button
+                                  className="btn btn-primary w-100 "
+                                  onClick={async (e) => {
+                                    await axios.put(
+                                      `/api/order/delivered/${elem._id}`,
+                                      { bool: 0 }
+                                    );
+                                    setLoaded(!isLoad);
+                                  }}
+                                >
+                                  Chưa nhận được hàng
+                                </button>
+                              </React.Fragment>
+                            ) : null}
+                          </React.Fragment>
+                        ) : null}
                       </div>
                     </div>
                   </div>

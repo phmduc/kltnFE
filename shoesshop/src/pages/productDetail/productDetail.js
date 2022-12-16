@@ -246,9 +246,11 @@ function ProductDetail({ match }) {
                 <div className="vote__menu">
                   <div className="vote__info">
                     <p className="vote__info-star">
-                      {item.vote.reduce((previousValue, currentValue) => {
-                        return previousValue + currentValue.starVote;
-                      }, 0) / item.vote.length}
+                      {item.vote.length === 0
+                        ? 5
+                        : item.vote.reduce((previousValue, currentValue) => {
+                            return previousValue + currentValue.starVote;
+                          }, 0) / item.vote.length}
                       /5
                     </p>
                     <span>
@@ -256,9 +258,14 @@ function ProductDetail({ match }) {
                         disabled
                         allowHalf
                         defaultValue={
-                          item.vote.reduce((previousValue, currentValue) => {
-                            return previousValue + currentValue.starVote;
-                          }, 0) / item.vote.length
+                          item.vote.length === 0
+                            ? 5
+                            : item.vote.reduce(
+                                (previousValue, currentValue) => {
+                                  return previousValue + currentValue.starVote;
+                                },
+                                0
+                              ) / item.vote.length
                         }
                         style={{
                           position: "relative",

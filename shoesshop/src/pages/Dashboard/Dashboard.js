@@ -19,10 +19,10 @@ function Dashboard() {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [users, setUsers] = useState([]);
-
+  const [mostSold, setMostSold] = useState([]);
+  const [bestseller, setBestseller] = useState([]);
   const [data, setData] = useState([]);
   const [data1, setData1] = useState([]);
-
   const [orders, setOrders] = useState([]);
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -75,8 +75,8 @@ function Dashboard() {
                 toDate: to,
               });
               setUsers(user.data);
-
-              setOrders(order.data);
+              setOrders(order.data.sortOrders);
+              setMostSold(order.data.soldestProduct);
             }}
           >
             Xác nhận
@@ -122,9 +122,17 @@ function Dashboard() {
                 <span className="info">{users.length}</span>
               </div>
             </div>
+            <div className="col-8">
+              <div className="box">
+                <span className="title">Sản phẩm bán chạy nhất</span>
+                <span className="info">
+                  {mostSold.length !== 0 ? mostSold.name : "empty"}
+                </span>
+              </div>
+            </div>
             <div className="col-12">
               <div className="box">
-                <div className="w-50 d-flex justify-content-between">
+                <div className="w-100 d-flex justify-content-between">
                   <span className="title">Doanh thu theo năm</span>{" "}
                   <Space direction="vertical">
                     <DatePicker
@@ -160,7 +168,7 @@ function Dashboard() {
             </div>
             <div className="col-12">
               <div className="box">
-                <div className="w-50 d-flex justify-content-between">
+                <div className="w-100 d-flex justify-content-between">
                   <span className="title">Lượng người dùng theo năm</span>{" "}
                   <Space direction="vertical">
                     <DatePicker
@@ -192,6 +200,73 @@ function Dashboard() {
                   <Legend />
                   <Bar dataKey="total" fill="#8884d8" />
                 </BarChart>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="box">
+                <div className="w-100 d-flex justify-content-between">
+                  <span className="title">Sản phẩm bán chạy nhất theo năm</span>{" "}
+                  <Space direction="vertical">
+                    <DatePicker
+                      picker="year"
+                      onChange={async (e) => {
+                        const response = await axios.post(
+                          "/api/order/bestseller/year",
+                          {
+                            year: e.$y,
+                          }
+                        );
+                        setBestseller(response.data);
+                      }}
+                    />
+                  </Space>
+                </div>
+                <table className="table seller">
+                  <thead>
+                    <tr>
+                      <th scope="col" className="text-center">
+                        Top
+                      </th>
+                      <th scope="col">Sản phẩm</th>
+                      <th scope="col" className="text-center">
+                        Số lượng bán ra
+                      </th>
+                      <th scope="col" className="text-center">
+                        Tổng doanh thu
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bestseller.map((elem, index) => {
+                      return (
+                        <tr>
+                          <th scope="row" className="text-center">
+                            {index + 1}
+                          </th>
+                          <td>
+                            <div className="d-flex align-items-center">
+                              <div className="img-wrap">
+                                <img src={elem.img} alt="" />
+                              </div>
+                              <span>{elem.name}</span>
+                            </div>
+                          </td>
+                          <td className="text-center">
+                            <span>{elem.count}</span>
+                          </td>
+                          <td className="text-center">
+                            <span>
+                              {Intl.NumberFormat("vi-VN", {
+                                style: "currency",
+                                currency: "VND",
+                              }).format(elem.total)}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

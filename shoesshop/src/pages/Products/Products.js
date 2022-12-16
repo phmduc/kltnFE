@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import MainLayout from '../../layouts/MainLayout/MainLayout.js';
-import './Products.css';
-import { getAllProduct } from '../../Redux/slice/productSlice.js';
-import { Form } from 'react-bootstrap';
-import ProductCard from '../../components/ProductCard/ProductCard.js';
-import ReactPaginate from 'react-paginate';
+import { useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import MainLayout from "../../layouts/MainLayout/MainLayout.js";
+import "./Products.css";
+import { getAllProduct } from "../../Redux/slice/productSlice.js";
+import { Form } from "react-bootstrap";
+import ProductCard from "../../components/ProductCard/ProductCard.js";
+import ReactPaginate from "react-paginate";
 function Products() {
   const listCate = useSelector((state) => state.category.category);
   const listProducts = useSelector((state) => state.product.productsList);
@@ -29,7 +29,7 @@ function Products() {
   const dispatch = useDispatch();
   async function getProducts() {
     try {
-      const response = await axios.get('/api/products');
+      const response = await axios.get("/api/products");
       dispatch(getAllProduct(response.data));
       setProducts(response.data);
     } catch (error) {
@@ -39,14 +39,14 @@ function Products() {
 
   const filter = () => {
     let filterList = listProducts;
-    if (inputSize.current.value !== '0') {
+    if (inputSize.current.value !== "0") {
       filterList = filterList.filter((elem, index) => {
         return elem.size.some(function (item, index) {
           return item.sizeId === inputSize.current.value;
         });
       });
     }
-    if (inputCate.current.value !== '0') {
+    if (inputCate.current.value !== "0") {
       filterList = filterList.filter((elem, index) => {
         return elem.idCate === inputCate.current.value;
       });
@@ -65,7 +65,7 @@ function Products() {
         });
       });
     }
-
+    console.log(inputPriceMin.current);
     setProducts(filterList);
   };
   const handlePageClick = (event) => {
@@ -79,15 +79,15 @@ function Products() {
 
   return (
     <MainLayout>
-      <div className='container'>
-        <div className='row'>
-          <div className='col-lg-3'>
-            <div className='siteBar'>
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-3">
+            <div className="siteBar">
               <Form>
-                <Form.Group className='mb-3'>
-                  <Form.Label htmlFor='category'>Danh mục</Form.Label>
-                  <Form.Select ref={inputCate} value={cate} id='category'>
-                    <option value='0'>Chọn danh mục</option>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="category">Danh mục</Form.Label>
+                  <Form.Select ref={inputCate} value={cate} id="category">
+                    <option value="0">Chọn danh mục</option>
                     {listCate.map((elem, index) => {
                       return (
                         <option key={index} value={elem._id}>
@@ -97,10 +97,10 @@ function Products() {
                     })}
                   </Form.Select>
                 </Form.Group>
-                <Form.Group className='mb-3'>
-                  <Form.Label htmlFor='size'>Size</Form.Label>
-                  <Form.Select ref={inputSize} value={size} id='size'>
-                    <option value='0'>Chọn size</option>
+                <Form.Group className="mb-3">
+                  <Form.Label htmlFor="size">Size</Form.Label>
+                  <Form.Select ref={inputSize} value={size} id="size">
+                    <option value="0">Chọn size</option>
                     {products.map((elem, index) => {
                       return elem.size.map((value, index) => {
                         if (
@@ -119,43 +119,45 @@ function Products() {
                     })}
                   </Form.Select>
                 </Form.Group>
-                <div className='priceFilter d-flex'>
-                  <Form.Group className='mb-3'>
-                    <Form.Label htmlFor='category'>Giá thấp nhất</Form.Label>
-                    <Form.Control />
+                <div className="priceFilter d-flex">
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="category">Từ</Form.Label>
+                    <Form.Control ref={inputPriceMin} placeholder="Giá" />
                   </Form.Group>
-                  <Form.Group className='mb-3'>
-                    <Form.Label htmlFor='category'>Giá cao nhất</Form.Label>
-                    <Form.Control />
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="category">Đến</Form.Label>
+                    <Form.Control ref={inputPriceMax} placeholder="Giá" />
                   </Form.Group>
                 </div>
-                <div className='row g-3 d-flex justify-content-between'>
+                <div className="row g-3 d-flex justify-content-between">
                   <button
-                    type='button'
+                    type="button"
                     onClick={() => {
                       filter();
                     }}
-                    className='filter btn col-lg-12 col-md-5'>
+                    className="filter btn col-lg-12 col-md-5"
+                  >
                     Lọc
                   </button>
                   <button
-                    type='button'
+                    type="button"
                     onClick={() => {
                       setProducts(listProducts);
                     }}
-                    className='filter btn col-lg-12 col-md-5'>
+                    className="filter btn col-lg-12 col-md-5"
+                  >
                     Hủy lọc
                   </button>
                 </div>
               </Form>
             </div>
           </div>
-          <div className='col-lg-9'>
-            <div className='list-product'>
-              <div className='row'>
+          <div className="col-lg-9">
+            <div className="list-product">
+              <div className="row">
                 {currentItems.length !== 0 ? (
                   currentItems.map((item, index) => (
-                    <div className='col-lg-4'>
+                    <div className="col-lg-4">
                       <ProductCard item={item} />
                     </div>
                   ))
@@ -165,13 +167,13 @@ function Products() {
               </div>
             </div>
             <ReactPaginate
-              className='pagination'
-              breakLabel='...'
-              nextLabel='>'
+              className="pagination"
+              breakLabel="..."
+              nextLabel=">"
               onPageChange={handlePageClick}
               pageRangeDisplayed={5}
               pageCount={pageCount}
-              previousLabel='<'
+              previousLabel="<"
               renderOnZeroPageCount={null}
             />
           </div>

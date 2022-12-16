@@ -25,9 +25,15 @@ function CategoryAdmin() {
   const [message, setMessage] = useState("");
   const [nameMessage, setNameMessage] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
+  const [result, setResult] = useState([]);
+  const [hasResult, setHasResult] = useState(false);
   const endOffset = itemOffset + 6;
-  const currentItems = categories.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(categories.length / 6);
+  const currentItems = hasResult
+    ? result.slice(itemOffset, endOffset)
+    : categories.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(
+    hasResult ? result.length / 6 : categories.length / 6
+  );
   const handlePageClick = (event) => {
     const newOffset = (event.selected * 6) % categories.length;
     setItemOffset(newOffset);
@@ -150,6 +156,18 @@ function CategoryAdmin() {
       position: toast.POSITION.TOP_CENTER,
     });
   };
+  const search = async (e) => {
+    if (e.target.value === "") {
+      setHasResult(false);
+    } else
+      setResult(
+        categories.filter((elem, index) => {
+          return elem.nameCate
+            .toLowerCase()
+            .includes(e.target.value.toLowerCase());
+        })
+      );
+  };
   return (
     <Admin>
       <div className="categoryManage">
@@ -210,6 +228,17 @@ function CategoryAdmin() {
                   </Form>
                 </div>
               </ModalForm>
+              <input
+                type="text"
+                className="form-control my-3"
+                placeholder="Nhập tên hoặc id sản phẩm"
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                onChange={(e) => {
+                  setHasResult(true);
+                  search(e);
+                }}
+              />
               <div class="content table-responsive table-full-width">
                 <table className="table categoryList table-hover table-striped">
                   <thead>

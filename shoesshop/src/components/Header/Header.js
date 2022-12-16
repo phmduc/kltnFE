@@ -87,9 +87,7 @@ function Header() {
                 <li className="items">
                   <Link to="/products">Sản phẩm</Link>
                 </li>
-                <li className="items">
-                  <a href="#">Blog</a>
-                </li>
+
                 <li className="items">
                   <a href="/aboutus">Giới thiệu</a>
                 </li>
@@ -266,9 +264,7 @@ function Header() {
                         <li>
                           <Link to="/products">Sản phẩm</Link>
                         </li>
-                        <li>
-                          <Link to="/">Blog</Link>
-                        </li>
+
                         <li>
                           <Link to="/aboutus">Giới thiệu</Link>
                         </li>
