@@ -35,7 +35,9 @@ function UserAdmin() {
   }
   const handleDelete = async (index) => {
     try {
-      const res = await axios.delete("/api/users/" + users[index + 1]._id);
+      const res = await axios.delete(
+        "/api/users/" + currentItems[index + 1]._id
+      );
     } catch (err) {
       throw new Error("Invalid Product Data");
     }
@@ -96,10 +98,12 @@ function UserAdmin() {
                               id="exampleCheck1"
                               defaultChecked={elem.isAdmin}
                               onChange={async (e) => {
+                                console.log(elem.name);
                                 const res = await axios.put(
                                   "/api/users/" + elem._id,
                                   { isAdmin: e.target.checked }
                                 );
+                                setLoaded(!isLoad);
                                 toast.success(`Thay đổi thành công`, {
                                   position: toast.POSITION.TOP_CENTER,
                                 });

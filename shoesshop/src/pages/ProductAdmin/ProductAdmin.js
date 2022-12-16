@@ -75,11 +75,6 @@ function ProductAdmin() {
     setFileInput();
   };
   const handleSubmitAdd = async () => {
-    console.log(validation.validateName(name));
-    console.log(validation.validateCate(cate));
-
-    console.log(validation.validateSize(size));
-
     if (
       validation.validateName(name) === true &&
       validation.validateCate(cate) === true &&
@@ -232,7 +227,7 @@ function ProductAdmin() {
           idCate: cate,
           size: size,
         };
-        products[index].image.forEach((elem, index) => {
+        currentItems[index].image.forEach((elem, index) => {
           deleteImage(elem.publicId);
         });
         await updateproduct(updatedProduct, dispatch);
@@ -248,9 +243,9 @@ function ProductAdmin() {
   };
   const handleDelete = async (index) => {
     const deletedProduct = {
-      _id: products[index]._id,
+      _id: currentItems[index]._id,
     };
-    products[index].image.forEach((elem, index) => {
+    currentItems[index].image.forEach((elem, index) => {
       deleteImage(elem.publicId);
     });
     await deleteproduct(deletedProduct, dispatch);
