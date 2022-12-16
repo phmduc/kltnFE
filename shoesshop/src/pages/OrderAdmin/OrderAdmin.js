@@ -193,13 +193,15 @@ function OrderAdmin() {
                             ) : (
                               <span className="d-block">Chưa thanh toán</span>
                             )}
-                            {elem.isDelivered === -1 ? (
-                              <span className="d-block">Đang giao</span>
-                            ) : elem.isDelivered === 1 ? (
-                              <span className="d-block">Đã giao</span>
-                            ) : (
-                              <span className="d-block">Giao thất bại</span>
-                            )}
+                            {elem.isVerify ? (
+                              elem.isDelivered === -1 ? (
+                                <span className="d-block">Đang giao</span>
+                              ) : elem.isDelivered === 1 ? (
+                                <span className="d-block">Đã giao</span>
+                              ) : (
+                                <span className="d-block">Giao thất bại</span>
+                              )
+                            ) : null}
                           </td>
                           <td className="controls">
                             {elem.isCancel ? null : elem.isVerify ? (
@@ -260,22 +262,24 @@ function OrderAdmin() {
                                 Giao lại
                               </button>
                             ) : null}
-                            {elem.isDelivered === -1 ? (
-                              <button
-                                className="btn btn-primary w-100 mb-3"
-                                onClick={async (e) => {
-                                  await axios.put(
-                                    `/api/order/delivered/${elem._id}`,
-                                    { bool: 1 }
-                                  );
-                                  await axios.put(
-                                    `/api/order/paid/${elem._id}`
-                                  );
-                                  setLoaded(!isLoad);
-                                }}
-                              >
-                                Hoàn thành
-                              </button>
+                            {elem.isVerify ? (
+                              elem.isDelivered === -1 ? (
+                                <button
+                                  className="btn btn-primary w-100 mb-3"
+                                  onClick={async (e) => {
+                                    await axios.put(
+                                      `/api/order/delivered/${elem._id}`,
+                                      { bool: 1 }
+                                    );
+                                    await axios.put(
+                                      `/api/order/paid/${elem._id}`
+                                    );
+                                    setLoaded(!isLoad);
+                                  }}
+                                >
+                                  Hoàn thành
+                                </button>
+                              ) : null
                             ) : null}
                             {/* <button
                               className="btn btn-primary w-100"

@@ -438,10 +438,10 @@ function ProductAdmin() {
                         {!size ||
                           size.map((item, index) => {
                             return (
-                              <div key={index} className="sizewrap d-flex">
+                              <div key={index} className="sizewrap d-flex mb-2">
                                 <button
                                   type="button"
-                                  className="btn  d-flex justify-content-between w-100 align-items-center"
+                                  className="btn  d-flex justify-content-between w-100 align-items-center "
                                   onClick={() => {
                                     setSizeId(item.sizeId);
                                     setSizeCount(item.count);
@@ -688,7 +688,7 @@ function ProductAdmin() {
                                       return (
                                         <div
                                           key={index}
-                                          className="sizewrap d-flex"
+                                          className="sizewrap d-flex  mb-2"
                                         >
                                           <button
                                             type="button"
