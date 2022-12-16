@@ -225,7 +225,7 @@ function Dashboard() {
                   <thead>
                     <tr>
                       <th scope="col" className="text-center">
-                        Top
+                        STT
                       </th>
                       <th scope="col">Sản phẩm</th>
                       <th scope="col" className="text-center">

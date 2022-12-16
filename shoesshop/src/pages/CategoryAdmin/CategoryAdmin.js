@@ -17,6 +17,7 @@ import { getAllCategory } from "../../Redux/slice/categorySlice.js";
 import { Form, Button } from "react-bootstrap";
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
 function CategoryAdmin() {
+  const products = useSelector((state) => state.product.productsList);
   const [categories, setCategory] = useState([]);
   const [name, setName] = useState();
   const [isLoad, setLoaded] = useState(false);
@@ -142,19 +143,26 @@ function CategoryAdmin() {
 
   const handleDelete = async (index) => {
     const deletedCategory = {
-      _id: categories[index]._id,
+      _id: currentItems[index]._id,
     };
-    dispatch(loading());
-
-    Promise.all([
-      await deleteImage(categories[index].avatarCate[0].publicId),
-      await deletecategory(deletedCategory, dispatch),
-    ]);
-    setLoaded(!isLoad);
-    dispatch(unLoadding());
-    toast.success(`Xóa thành công`, {
-      position: toast.POSITION.TOP_CENTER,
-    });
+    if (
+      products.some((elem) => {
+        return elem.idCate === currentItems[index]._id;
+      })
+    ) {
+      toast.error(`Xóa thất bại, danh mục còn sản phẩm`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    } else {
+      Promise.all([
+        await deleteImage(currentItems[index].avatarCate[0].publicId),
+        await deletecategory(deletedCategory, dispatch),
+      ]);
+      setLoaded(!isLoad);
+      toast.success(`Xóa thành công`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
   };
   const search = async (e) => {
     if (e.target.value === "") {
