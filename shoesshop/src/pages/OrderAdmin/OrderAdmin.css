@@ -10,3 +10,55 @@
 .OrderManage .tab {
   gap: 1rem;
 }
+.info span:first-child {
+  font-weight: 600;
+}
+.detail {
+  margin-top: 10px;
+}
+.detail .title {
+  font-size: 18px;
+  font-weight: 600;
+}
+.detail .list {
+  margin-top: 20px;
+}
+.item .detail__img{
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  padding: 0;
+  object-fit: cover;
+}
+.detail__list {
+  max-height: 240px;
+  overflow-y: scroll;
+}
+.detail__item {
+  width: 100%;
+  align-items: flex-start;
+  margin-left: 20px;
+}
+.detail__item-name {
+  margin-bottom: 40px;
+  color: black;
+  font-weight: 600;
+}
+.detail__item-price {
+  position: relative;
+  float: right;
+  margin-right: 20px;
+  color: var(--primary);
+}
+.detail__price-total {
+  position: relative;
+  float: right;
+  margin: 15px 10px 0 0;
+}
+.detail__price-total b{
+  font-size: 20px;
+}
+.detail__price-total span {
+  font-size: 20px;
+  color: var(--primary);
+}
