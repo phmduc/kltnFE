@@ -3,11 +3,13 @@ import "./OrderAdmin.css";
 import axios from "axios";
 import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
+import ModalOrder from "../../components/ModalOrder/ModalOrder";
 import { useState, useEffect } from "react";
 function OrderAdmin() {
   const [isLoad, setLoaded] = useState(false);
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState([]);
+  const [users, setUsers] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
   const [result, setResult] = useState([]);
   const [hasResult, setHasResult] = useState(false);
@@ -24,6 +26,7 @@ function OrderAdmin() {
   };
   useEffect(() => {
     getOrder();
+    getUser();
   }, [isLoad]);
   async function getOrder() {
     try {
@@ -58,10 +61,19 @@ function OrderAdmin() {
         })
       );
   };
+  async function getUser() {
+    try {
+      const response = await axios.get("/api/users");
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <Admin>
       <div className="OrderManage">
         <div className="container">
+          {/* Tab */}
           <div className="tab d-flex mb-3">
             <button
               className="btn"
@@ -132,8 +144,10 @@ function OrderAdmin() {
               Đã thanh toán
             </button>
           </div>
+          {/*End Tab */}
           <div className="row">
             <div className="col-12">
+              {/* Search */}
               <input
                 type="text"
                 className="form-control my-3"
@@ -145,7 +159,9 @@ function OrderAdmin() {
                   search(e);
                 }}
               />
+              {/* End Search  */}
               <div class="content table-responsive table-full-width">
+                {/* Table  */}
                 <table class="table table-hover table-striped">
                   <thead>
                     <th>Mã đơn</th>
@@ -156,6 +172,7 @@ function OrderAdmin() {
                     <th>Thao tác</th>
                   </thead>
                   <tbody>
+                    {/* Render Table  */}
                     {currentItems.map((elem, index) => {
                       return (
                         <tr>
@@ -281,6 +298,62 @@ function OrderAdmin() {
                                 </button>
                               ) : null
                             ) : null}
+                            <ModalOrder title="Chi tiết hóa đơn" size="lg">
+                              <div className="info">
+                                Mã hóa đơn: <span>{elem._id}</span>
+                              </div>
+                              <div className="info">
+                                Ngày lập: <span>{elem.date.split("@")[0]}</span>
+                              </div>
+                              <div className="info">
+                                Tài khoản:{" "}
+                                <span>
+                                  {
+                                    users.find((user) => {
+                                      return elem.user === user._id;
+                                    }).email
+                                  }
+                                </span>
+                              </div>
+                              <div className="info">
+                                Địa chỉ cụ thể:{" "}
+                                <span>
+                                  {elem.address.addressDetail},
+                                  {elem.address.ward}, {elem.address.district},
+                                  {elem.address.city}
+                                </span>
+                              </div>
+                              <div className="info">
+                                Số điện thoại <span>0974746436</span>
+                              </div>
+                              <div className="info">
+                                Giá trị hóa đơn <span>{elem.totalPrice}</span>
+                              </div>
+                              <div className="detail">
+                                <span className="title">Sản phẩm cụ thể</span>
+                                <div className="list">
+                                  {elem.orderItems.map((item, index) => {
+                                    return (
+                                      <div className="item">
+                                        <div className="img-wrap">
+                                          <img src={item.img} alt="" />
+                                        </div>
+                                        <span className="d-block">
+                                          {item.name}
+                                        </span>
+                                        <div className="price justify-content-between">
+                                          <span>
+                                            Size: {item.sizeId} x Số lượng:
+                                            {item.count}{" "}
+                                          </span>
+                                          <span>Giá: {item.price}</span>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </ModalOrder>
                             {/* <button
                               className="btn btn-primary w-100"
                               onClick={(e) => {
@@ -293,8 +366,10 @@ function OrderAdmin() {
                         </tr>
                       );
                     })}
+                    {/*End Render Table  */}
                   </tbody>
                 </table>
+                {/* End Table  */}
                 <ReactPaginate
                   className="pagination"
                   breakLabel="..."

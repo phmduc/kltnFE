@@ -70,7 +70,7 @@ function App() {
             <Route index element={<Products />} />
             <Route path=":id" element={<ProductDetail />} />
           </Route>
-          {user.isAdmin === true ? (
+          {user.isAdmin === 0 || user.isAdmin === 1 ? (
             <Route path="/admin/">
               <Route path="products" element={<ProductAdmin />} />
               <Route path="category" element={<CategoryAdmin />} />

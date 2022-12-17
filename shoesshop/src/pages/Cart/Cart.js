@@ -13,7 +13,6 @@ function Cart() {
     const removeItem = { ID: ID, size: sizeId };
     dispatch(removeFromCart(removeItem));
   };
-  console.log(listProduct);
   useEffect(() => {
     listCart.map((elem, index) => {
       if (
@@ -21,7 +20,6 @@ function Cart() {
           return elem.ID === product._id;
         }) === false
       ) {
-        console.log("lon");
         dispatch(removeFromCart({ ID: elem.ID, size: elem.size }));
       }
     });

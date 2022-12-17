@@ -27,22 +27,35 @@ function CategoryAdmin() {
   const [nameMessage, setNameMessage] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
   const [result, setResult] = useState([]);
+  const [currentPage, setcurrent] = useState();
+
   const [hasResult, setHasResult] = useState(false);
+
   const endOffset = itemOffset + 6;
-  const currentItems = hasResult
+
+  let currentItems = hasResult
     ? result.slice(itemOffset, endOffset)
     : categories.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(
+  let pageCount = Math.ceil(
     hasResult ? result.length / 6 : categories.length / 6
   );
   const handlePageClick = (event) => {
     const newOffset = (event.selected * 6) % categories.length;
     setItemOffset(newOffset);
   };
+
   useEffect(() => {
     getCategory();
     setName();
+    currentItems = hasResult
+      ? result.slice(itemOffset, endOffset)
+      : categories.slice(itemOffset, endOffset);
+    pageCount = Math.ceil(
+      hasResult ? result.length / 6 : categories.length / 6
+    );
     setFileInput();
+    console.log("dấu");
+    setcurrent(0);
   }, [isLoad]);
   const dispatch = useDispatch();
   async function getCategory() {
@@ -85,25 +98,24 @@ function CategoryAdmin() {
     setPreviewSource([]);
     setFileInput();
   };
-
   const handleSubmitUpdate = async (index) => {
     let imageData;
     let newName;
     if (previewSource.length === 0) {
-      imageData = categories[index].avatarCate;
+      imageData = currentItems[index].avatarCate;
       console.log(imageData);
     } else {
-      deleteImage(categories[index].avatarCate[0].publicId);
+      deleteImage(currentItems[index].avatarCate[0].publicId);
       imageData = await uploadImage(previewSource);
       imageData = imageData.map((elem, index) => {
         return { publicId: elem.public_id, url: elem.url };
       });
     }
     if (!name) {
-      newName = categories[index].nameCate;
+      newName = currentItems[index].nameCate;
     }
     const newCategory = {
-      _id: categories[index]._id,
+      _id: currentItems[index]._id,
       nameCate: name || newName,
       avatarCate: imageData,
     };
@@ -140,7 +152,6 @@ function CategoryAdmin() {
       console.error(err);
     }
   };
-
   const handleDelete = async (index) => {
     const deletedCategory = {
       _id: currentItems[index]._id,
@@ -164,10 +175,11 @@ function CategoryAdmin() {
       });
     }
   };
+
   const search = async (e) => {
     if (e.target.value === "") {
       setHasResult(false);
-    } else
+    } else {
       setResult(
         categories.filter((elem, index) => {
           return elem.nameCate
@@ -175,6 +187,9 @@ function CategoryAdmin() {
             .includes(e.target.value.toLowerCase());
         })
       );
+    }
+    setItemOffset(0);
+    setLoaded(!isLoad);
   };
   return (
     <Admin>
@@ -349,7 +364,6 @@ function CategoryAdmin() {
                   pageRangeDisplayed={5}
                   pageCount={pageCount}
                   previousLabel="<"
-                  renderOnZeroPageCount={null}
                 />
               </div>
             </div>
