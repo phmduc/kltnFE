@@ -1,12 +1,16 @@
 import "./UserAdmin.css";
 import Admin from "../../layouts/Admin/Admin";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import ModalOrder from "../../components/ModalOrder/ModalOrder";
 import ReactPaginate from "react-paginate";
+import { Form } from "react-bootstrap";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 function UserAdmin() {
+  const user = useSelector((state) => state.userInfo.info);
+
   const [isLoad, setLoaded] = useState(false);
 
   const [users, setUsers] = useState([]);
@@ -93,11 +97,11 @@ function UserAdmin() {
               <div class="content table-responsive table-full-width">
                 <table class="table table-hover table-striped">
                   <thead>
-                    <th>Name</th>
+                    <th>Tên</th>
                     <th>Email</th>
-                    <th>Admin</th>
-                    <th>Active</th>
-                    <th>Controls</th>
+                    <th>Ngày tham gia</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
                   </thead>
                   <tbody>
                     {currentItems.map((elem, index) => {
@@ -105,24 +109,7 @@ function UserAdmin() {
                         <tr>
                           <td>{elem.name}</td>
                           <td>{elem.email}</td>
-                          <td>
-                            <input
-                              type="checkbox"
-                              class="form-check-input"
-                              id="exampleCheck1"
-                              defaultChecked={elem.isAdmin}
-                              onChange={async (e) => {
-                                const res = await axios.put(
-                                  "/api/users/" + elem._id,
-                                  { isAdmin: e.target.checked }
-                                );
-                                setLoaded(!isLoad);
-                                toast.success(`Thay đổi thành công`, {
-                                  position: toast.POSITION.TOP_CENTER,
-                                });
-                              }}
-                            />
-                          </td>
+                          <td>{elem.date.split("@")[0]}</td>
                           <td>
                             {elem.isVerify ? (
                               <span className="d-block">Activated</span>
@@ -131,14 +118,115 @@ function UserAdmin() {
                             )}
                           </td>
                           <td className="controls">
-                            <button
-                              className="btn btn-primary"
-                              onClick={(e) => {
-                                handleDelete(index - 1);
-                              }}
-                            >
-                              <i className="bi bi-trash-fill"></i>
-                            </button>
+                            {user.isAdmin === 0 ? (
+                              <React.Fragment>
+                                <button
+                                  className="btn btn-primary w-100 mb-2"
+                                  onClick={(e) => {
+                                    handleDelete(index - 1);
+                                  }}
+                                >
+                                  <i className="bi bi-trash-fill"></i>
+                                </button>
+
+                                <ModalOrder
+                                  icon="Quyền"
+                                  title="Cập nhật quyền "
+                                >
+                                  <div className="info">
+                                    <div className="label">
+                                      Tên: <span>{elem.name}</span>
+                                    </div>
+                                  </div>
+                                  <div className="info">
+                                    <div className="label">
+                                      Email: <span>{elem.email}</span>
+                                    </div>
+                                  </div>
+                                  <div className="info">
+                                    <div className="label">
+                                      Quyền hiện tại:{" "}
+                                      <span>
+                                        {elem.isAdmin === 0
+                                          ? "Sở hữu"
+                                          : elem.isAdmin === 1
+                                          ? "Quản lý chung"
+                                          : "Quyền User"}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="change">
+                                    <span className="title">
+                                      Thay đổi quyền
+                                    </span>
+                                    <Form.Select
+                                      defaultValue={elem.isAdmin}
+                                      onChange={async (e) => {
+                                        await axios.put(
+                                          `/api/users/${elem._id}`,
+                                          { isAdmin: e.target.value }
+                                        );
+                                        setLoaded(!isLoad);
+
+                                        toast.success(`Thay đổi thành công`, {
+                                          position: toast.POSITION.TOP_CENTER,
+                                        });
+                                      }}
+                                    >
+                                      <option value={null}>
+                                        Chọn quyền...
+                                      </option>
+                                      <option value={0}>Quyền sở hữu</option>
+                                      <option value={1}>Quyền quản lý</option>
+                                      <option value={2}>Quyền user</option>
+                                    </Form.Select>
+                                  </div>
+                                </ModalOrder>
+                              </React.Fragment>
+                            ) : null}
+                            {user.isAdmin === 1 || user.isAdmin === 0 ? (
+                              elem.isAdmin !== 0 ? (
+                                elem._id !== user.ID ? (
+                                  elem.isLock === 0 ? (
+                                    <button
+                                      className="btn btn-primary w-100 mt-2"
+                                      onClick={async (e) => {
+                                        await axios.put(
+                                          `/api/users/${elem._id}`,
+                                          {
+                                            isLock: 1,
+                                          }
+                                        );
+                                        setLoaded(!isLoad);
+                                        toast.success(`Thay đổi thành công`, {
+                                          position: toast.POSITION.TOP_CENTER,
+                                        });
+                                      }}
+                                    >
+                                      Khóa
+                                    </button>
+                                  ) : (
+                                    <button
+                                      className="btn btn-primary w-100 mt-2"
+                                      onClick={async (e) => {
+                                        await axios.put(
+                                          `/api/users/${elem._id}`,
+                                          {
+                                            isLock: 0,
+                                          }
+                                        );
+                                        setLoaded(!isLoad);
+                                        toast.success(`Thay đổi thành công`, {
+                                          position: toast.POSITION.TOP_CENTER,
+                                        });
+                                      }}
+                                    >
+                                      Mở khóa
+                                    </button>
+                                  )
+                                ) : null
+                              ) : null
+                            ) : null}
                           </td>
                         </tr>
                       );
