@@ -8,7 +8,6 @@ function Cart() {
   const listCart = useSelector((state) => state.cart.listCart);
   const listProduct = useSelector((state) => state.product.productsList);
   const dispatch = useDispatch();
-
   const handleDelete = (ID, sizeId) => {
     const removeItem = { ID: ID, size: sizeId };
     dispatch(removeFromCart(removeItem));
@@ -48,19 +47,23 @@ function Cart() {
                                 <div class="number">
                                   <button
                                     onClick={() => {
-                                      const itemUpdate = {
-                                        ID: elem.ID,
-                                        size: elem.size,
-                                        count: -1,
-                                      };
-                                      dispatch(addToCart(itemUpdate));
+                                      if (elem.count === 1) {
+                                        handleDelete(elem.ID, elem.size);
+                                      } else {
+                                        const itemUpdate = {
+                                          ID: elem.ID,
+                                          size: elem.size,
+                                          count: -1,
+                                        };
+                                        dispatch(addToCart(itemUpdate));
+                                      }
                                     }}
                                     class="minus"
                                   >
                                     -
                                   </button>
                                   <input
-                                    onChange={() => {}}
+                                    onChange={(e) => {}}
                                     value={elem.count}
                                   />
                                   <button

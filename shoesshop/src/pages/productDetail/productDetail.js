@@ -65,7 +65,6 @@ function ProductDetail({ match }) {
         countInCart = item.count;
       }
     });
-    console.log(countInCart);
     if (Number(countInCart) + Number(count) > Number(countInStock)) {
       toast.error(`Số lượng trong giỏ hiện vượt quá kho`, {
         position: toast.POSITION.TOP_CENTER,

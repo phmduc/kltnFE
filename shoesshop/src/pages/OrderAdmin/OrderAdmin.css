@@ -10,9 +10,7 @@
 .OrderManage .tab {
   gap: 1rem;
 }
-.info span:first-child {
-  font-weight: 600;
-}
+
 .detail {
   margin-top: 10px;
 }
@@ -23,14 +21,13 @@
 .detail .list {
   margin-top: 20px;
 }
-.item .detail__img{
-  display: inline-block;
-  width: 80px;
-  height: 80px;
-  padding: 0;
-  object-fit: cover;
+.detail__list .item .img-wrap {
+  width: 16%;
+  padding-top: 13%;
 }
+
 .detail__list {
+  margin-top: 2rem;
   max-height: 240px;
   overflow-y: scroll;
 }
@@ -55,10 +52,26 @@
   float: right;
   margin: 15px 10px 0 0;
 }
-.detail__price-total b{
+.detail__price-total b {
   font-size: 20px;
 }
 .detail__price-total span {
   font-size: 20px;
   color: var(--primary);
+}
+.table tbody td {
+  padding-right: 0 !important;
+}
+.table .info * {
+  font-weight: normal;
+}
+.table .info .name {
+  font-weight: bold;
+}
+.table .controls {
+  width: 15%;
+}
+
+.detail__info .info span:first-child {
+  font-weight: bold;
 }

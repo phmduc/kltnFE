@@ -1,10 +1,7 @@
 import Admin from "../../layouts/Admin/Admin.js";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import axios from "axios";
 import ModalForm from "../../components/Modal/Modal.js";
 import { validation } from "../../js/validation.js";
@@ -16,7 +13,6 @@ import {
 } from "../../Redux/apiRequests.js";
 import ReactPaginate from "react-paginate";
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
-import MainLayout from "../../layouts/MainLayout/MainLayout.js";
 import "./ProductAdmin.css";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
 import { Form, Button } from "react-bootstrap";
@@ -29,7 +25,6 @@ function ProductAdmin() {
   const [cate, setCate] = useState();
   const [desc, setDesc] = useState("");
   const [size, setSize] = useState([]);
-  const [image, setImage] = useState([]);
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
   const [imgMessage, setImgMessage] = useState("");
@@ -38,26 +33,29 @@ function ProductAdmin() {
   const [sizeCount, setSizeCount] = useState("");
   const [sizePrice, setSizePrice] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
-  const [result, setResult] = useState([]);
-  const [hasResult, setHasResult] = useState(false);
-  const endOffset = itemOffset + 6;
-  const currentItems = hasResult
-    ? result.slice(itemOffset, endOffset)
-    : products.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(
-    hasResult ? result.length / 6 : products.length / 6
-  );
+  const [endOffset, setendOffset] = useState(6);
+  const [currentItems, setCurrent] = useState([]);
+  const [pageCount, setPageCount] = useState();
+  // const currentItems = hasResult
+  //   ? result.slice(itemOffset, endOffset)
+  //   : products.slice(itemOffset, endOffset);
+  // const pageCount = Math.ceil(
+  //   hasResult ? result.length / 6 : products.length / 6
+  // );
   const dispatch = useDispatch();
 
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % products.length;
-    setItemOffset(newOffset);
+    setItemOffset((event.selected * 6) % products.length);
+    setendOffset(((event.selected * 6) % products.length) + 6);
+    setLoaded(!isLoad);
   };
   async function getProducts() {
     try {
       const response = await axios.get("/api/products");
       dispatch(getAllProduct(response.data));
       setProducts(response.data);
+      setCurrent(response.data.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(response.data.length / 6));
     } catch (error) {
       console.error(error);
     }
@@ -230,6 +228,7 @@ function ProductAdmin() {
         currentItems[index].image.forEach((elem, index) => {
           deleteImage(elem.publicId);
         });
+        console.log(updatedProduct);
         await updateproduct(updatedProduct, dispatch);
         dispatch(unLoadding());
         toast.success(`Update thành công`, {
@@ -267,14 +266,24 @@ function ProductAdmin() {
     setPreviewSource(images);
   };
   const search = async (e) => {
-    if (e.target.value === "") {
-      setHasResult(false);
-    } else
-      setResult(
+    if (!e.target.value) {
+      setLoaded(!isLoad);
+    } else {
+      setCurrent(
         products.filter((elem, index) => {
           return elem.name.toLowerCase().includes(e.target.value.toLowerCase());
         })
       );
+      setPageCount(
+        Math.ceil(
+          products.filter((elem, index) => {
+            return elem.name
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase());
+          }).length / 6
+        )
+      );
+    }
   };
   return (
     <Admin>
@@ -487,7 +496,6 @@ function ProductAdmin() {
                 aria-label="Example text with button addon"
                 aria-describedby="button-addon1"
                 onChange={(e) => {
-                  setHasResult(true);
                   search(e);
                 }}
               />
@@ -572,7 +580,10 @@ function ProductAdmin() {
                                 <div className="form-group">
                                   <label htmlFor="cate">Danh Mục</label>
                                   <Form.Select
-                                    onChange={(e) => setCate(e.target.value)}
+                                    onChange={(e) => {
+                                      console.log(e.target.value);
+                                      setCate(e.target.value);
+                                    }}
                                     value={cate}
                                   >
                                     <option>Chọn danh mục...</option>

@@ -86,6 +86,7 @@ function Checkout() {
             })[0].image[0].url,
           };
         }),
+        phoneNumber: number,
         paymentMethod: payment,
         address: {
           addressDetail: address,

@@ -13,6 +13,7 @@ function ModalOrder(props) {
     <>
       <Button
         variant="primary"
+        className="w-100"
         onClick={() => {
           handleShow();
         }}

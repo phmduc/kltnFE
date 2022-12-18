@@ -26,36 +26,25 @@ function CategoryAdmin() {
   const [message, setMessage] = useState("");
   const [nameMessage, setNameMessage] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
-  const [result, setResult] = useState([]);
-  const [currentPage, setcurrent] = useState();
+  const [endOffset, setendOffset] = useState(6);
+  const [currentItems, setCurrent] = useState([]);
+  const [pageCount, setPageCount] = useState();
 
-  const [hasResult, setHasResult] = useState(false);
-
-  const endOffset = itemOffset + 6;
-
-  let currentItems = hasResult
-    ? result.slice(itemOffset, endOffset)
-    : categories.slice(itemOffset, endOffset);
-  let pageCount = Math.ceil(
-    hasResult ? result.length / 6 : categories.length / 6
-  );
+  // let currentItems = hasResult
+  //   ? result.slice(itemOffset, endOffset)
+  //   : categories.slice(itemOffset, endOffset);
+  // let pageCount = Math.ceil(
+  //   hasResult ? result.length / 6 : categories.length / 6
+  // );
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % categories.length;
-    setItemOffset(newOffset);
+    setItemOffset((event.selected * 6) % categories.length);
+    setendOffset(((event.selected * 6) % categories.length) + 6);
+    setLoaded(!isLoad);
   };
-
   useEffect(() => {
     getCategory();
     setName();
-    currentItems = hasResult
-      ? result.slice(itemOffset, endOffset)
-      : categories.slice(itemOffset, endOffset);
-    pageCount = Math.ceil(
-      hasResult ? result.length / 6 : categories.length / 6
-    );
     setFileInput();
-    console.log("dấu");
-    setcurrent(0);
   }, [isLoad]);
   const dispatch = useDispatch();
   async function getCategory() {
@@ -63,10 +52,14 @@ function CategoryAdmin() {
       const response = await axios.get("/api/category");
       dispatch(getAllCategory(response.data));
       setCategory(response.data);
+      setCurrent(response.data.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(response.data.length / 6));
     } catch (error) {
       console.error(error);
     }
   }
+
+  //CRUD
   const handleSubmitAdd = async () => {
     if (!name) {
       setNameMessage("Tên danh mục không được bỏ trống");
@@ -175,21 +168,28 @@ function CategoryAdmin() {
       });
     }
   };
-
+  //End CRUD
   const search = async (e) => {
-    if (e.target.value === "") {
-      setHasResult(false);
+    if (!e.target.value) {
+      setLoaded(!isLoad);
     } else {
-      setResult(
+      setCurrent(
         categories.filter((elem, index) => {
           return elem.nameCate
             .toLowerCase()
             .includes(e.target.value.toLowerCase());
         })
       );
+      setPageCount(
+        Math.ceil(
+          categories.filter((elem, index) => {
+            return elem.nameCate
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase());
+          }).length / 6
+        )
+      );
     }
-    setItemOffset(0);
-    setLoaded(!isLoad);
   };
   return (
     <Admin>
@@ -258,7 +258,7 @@ function CategoryAdmin() {
                 aria-label="Example text with button addon"
                 aria-describedby="button-addon1"
                 onChange={(e) => {
-                  setHasResult(true);
+                  // setInputSearch(e.target.value);
                   search(e);
                 }}
               />

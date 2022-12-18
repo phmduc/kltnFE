@@ -11,16 +11,18 @@ function UserAdmin() {
 
   const [users, setUsers] = useState([]);
   const [itemOffset, setItemOffset] = useState(0);
-  const [result, setResult] = useState([]);
-  const [hasResult, setHasResult] = useState(false);
-  const endOffset = itemOffset + 6;
-  let currentItems = hasResult
-    ? result.slice(itemOffset, endOffset)
-    : users.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(hasResult ? result.length / 6 : users.length / 6);
+  const [endOffset, setendOffset] = useState(6);
+  const [currentItems, setCurrent] = useState([]);
+  const [pageCount, setPageCount] = useState();
+
+  // let currentItems = hasResult
+  //   ? result.slice(itemOffset, endOffset)
+  //   : users.slice(itemOffset, endOffset);
+  // const pageCount = Math.ceil(hasResult ? result.length / 6 : users.length / 6);
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * 6) % users.length;
-    setItemOffset(newOffset);
+    setItemOffset((event.selected * 6) % users.length);
+    setendOffset(((event.selected * 6) % users.length) + 6);
+    setLoaded(!isLoad);
   };
   useEffect(() => {
     getUser();
@@ -29,6 +31,8 @@ function UserAdmin() {
     try {
       const response = await axios.get("/api/users");
       setUsers(response.data);
+      setCurrent(response.data.slice(itemOffset, endOffset));
+      setPageCount(Math.ceil(response.data.length / 6));
     } catch (error) {
       console.error(error);
     }
@@ -47,10 +51,10 @@ function UserAdmin() {
     });
   };
   const search = async (e) => {
-    if (e.target.value === "") {
-      setHasResult(false);
-    } else
-      setResult(
+    if (!e.target.value) {
+      setLoaded(!isLoad);
+    } else {
+      setCurrent(
         users.filter((elem, index) => {
           return (
             elem.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
@@ -58,6 +62,17 @@ function UserAdmin() {
           );
         })
       );
+      setPageCount(
+        Math.ceil(
+          users.filter((elem, index) => {
+            return (
+              elem.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+              elem.email.toLowerCase().includes(e.target.value.toLowerCase())
+            );
+          }).length / 6
+        )
+      );
+    }
   };
   return (
     <Admin>
@@ -72,7 +87,6 @@ function UserAdmin() {
                 aria-label="Example text with button addon"
                 aria-describedby="button-addon1"
                 onChange={(e) => {
-                  setHasResult(true);
                   search(e);
                 }}
               />
