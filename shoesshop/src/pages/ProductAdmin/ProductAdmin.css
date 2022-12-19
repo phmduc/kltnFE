@@ -13,22 +13,7 @@
   vertical-align: middle;
   /* width: calc(100% / 6); */
 }
-.productList .item td.name {
-  width: 15%;
-}
-.productList .item td.imgs-wrap {
-  width: 15%;
-}
-.imgs {
-  width: 100%;
-}
 
-.productList .item td.price {
-  width: 10%;
-}
-.productList .item td.cate {
-  width: 10%;
-}
 .productList .item td.size {
   width: 20%;
   white-space: nowrap;
@@ -41,11 +26,6 @@
   width: 25%;
 }
 
-.descriptions {
-  width: 25%;
-  overflow-y: scroll;
-}
-
 .descriptions-sub {
   height: 125px;
   vertical-align: top;
@@ -53,9 +33,6 @@
 
 .productList .item th {
   vertical-align: middle;
-}
-.productList .item td.img-wrap {
-  padding-top: 7%;
 }
 
 .productList tbody td.controls button:not(:last-child) {
@@ -152,4 +129,36 @@
 
 .border {
   width: 10px;
+}
+
+.table th:first-child {
+  width: 3%;
+}
+.table th:nth-child(2) {
+  width: 25%;
+}
+.table th:nth-child(3) {
+  width: 16%;
+}
+.table th:last-child {
+  width: 15%;
+}
+.table .controls button {
+  width: 100%;
+}
+.table .item .img-wrap {
+  padding-top: 91%;
+}
+.table .size td,
+.table .size th {
+  vertical-align: middle;
+}
+.size .controls {
+  gap: 1rem;
+}
+.sizeForm {
+  gap: 1rem;
+}
+.sizeForm button {
+  width: 15%;
 }

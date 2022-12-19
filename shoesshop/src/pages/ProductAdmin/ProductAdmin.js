@@ -2,8 +2,12 @@ import Admin from "../../layouts/Admin/Admin.js";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { EditorState, convertToRaw } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import axios from "axios";
 import ModalForm from "../../components/Modal/Modal.js";
+import ModalOrder from "../../components/ModalOrder/ModalOrder.js";
 import { validation } from "../../js/validation.js";
 import {
   addproduct,
@@ -22,12 +26,15 @@ function ProductAdmin() {
   const [isLoad, setLoaded] = useState(false);
   const [ID, setID] = useState("");
   const [name, setName] = useState("");
+  const [edit, setEdit] = useState(false);
+
   const [cate, setCate] = useState();
   const [desc, setDesc] = useState("");
   const [size, setSize] = useState([]);
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
   const [imgMessage, setImgMessage] = useState("");
+  const [descInput, setDescInput] = useState(EditorState.createEmpty());
   const [message, setMessage] = useState("");
   const [sizeId, setSizeId] = useState("");
   const [sizeCount, setSizeCount] = useState("");
@@ -125,52 +132,52 @@ function ProductAdmin() {
       previewFile(file);
     }
   };
-  const previewSize = () => {
-    if (sizeId && sizeCount && sizePrice) {
-      if (
-        Number(sizeCount) > 0 &&
-        Number.isInteger(Number(sizeCount)) &&
-        Number(sizePrice) > 0 &&
-        Number.isInteger(Number(sizePrice))
-      ) {
-        if (
-          size.some(function (item, index) {
-            return sizeId === item.sizeId;
-          })
-        ) {
-          const data = size.slice();
-          const newmap = data.filter(function (value, index) {
-            return value.sizeId !== sizeId;
-          });
-          setSize([
-            ...newmap,
-            {
-              sizeId: sizeId,
-              count: sizeCount,
-              price: sizePrice,
-            },
-          ]);
-        } else {
-          setSize([
-            ...size,
-            {
-              sizeId: sizeId,
-              count: sizeCount,
-              price: sizePrice,
-            },
-          ]);
-        }
-        setSizeId("");
-        setSizeCount("");
-        setSizePrice("");
-      } else {
-        if (Number(sizeCount) > 0 && Number.isInteger(Number(sizeCount)))
-          setSizeCount("Không Hợp Lệ");
-        if (Number(sizePrice) > 0 && Number.isInteger(Number(sizePrice)))
-          setSizePrice("Không Hợp Lệ");
-      }
-    }
-  };
+  // const previewSize = () => {
+  //   if (sizeId && sizeCount && sizePrice) {
+  //     if (
+  //       Number(sizeCount) > 0 &&
+  //       Number.isInteger(Number(sizeCount)) &&
+  //       Number(sizePrice) > 0 &&
+  //       Number.isInteger(Number(sizePrice))
+  //     ) {
+  //       if (
+  //         size.some(function (item, index) {
+  //           return sizeId === item.sizeId;
+  //         })
+  //       ) {
+  //         const data = size.slice();
+  //         const newmap = data.filter(function (value, index) {
+  //           return value.sizeId !== sizeId;
+  //         });
+  //         setSize([
+  //           ...newmap,
+  //           {
+  //             sizeId: sizeId,
+  //             count: sizeCount,
+  //             price: sizePrice,
+  //           },
+  //         ]);
+  //       } else {
+  //         setSize([
+  //           ...size,
+  //           {
+  //             sizeId: sizeId,
+  //             count: sizeCount,
+  //             price: sizePrice,
+  //           },
+  //         ]);
+  //       }
+  //       setSizeId("");
+  //       setSizeCount("");
+  //       setSizePrice("");
+  //     } else {
+  //       if (Number(sizeCount) > 0 && Number.isInteger(Number(sizeCount)))
+  //         setSizeCount("Không Hợp Lệ");
+  //       if (Number(sizePrice) > 0 && Number.isInteger(Number(sizePrice)))
+  //         setSizePrice("Không Hợp Lệ");
+  //     }
+  //   }
+  // };
   const previewFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -373,7 +380,7 @@ function ProductAdmin() {
                         + Thêm Ảnh
                       </label>
                     </div>
-                    <div className="group-flex-3 d-flex flex-wrap">
+                    {/* <div className="group-flex-3 d-flex flex-wrap">
                       <div className="form-group">
                         <label htmlFor="sizeProduct">Size</label>
                         <input
@@ -475,7 +482,7 @@ function ProductAdmin() {
                           {validation.validateSize(size)}
                         </span>
                       )}
-                    </div>
+                    </div> */}
                     <div className="form-group">
                       <label htmlFor="descProduct">Mô tả</label>
                       <textarea
@@ -499,16 +506,22 @@ function ProductAdmin() {
                   search(e);
                 }}
               />
-              <table className="table table-bordered table-hover border-dark productList">
+              <table className="table  table-hover  productList">
                 <thead>
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Tên sản phẩm</th>
                     <th scope="col">Hình ảnh</th>
-                    <th scope="col">Mô tả</th>
-                    <th scope="col">Hãng</th>
-                    <th scope="col">Size - Số lượng</th>
-                    <th scope="col">Tùy chọn</th>
+                    <th scope="col" className="text-center">
+                      Mô tả
+                    </th>
+                    <th scope="col" className="text-center">
+                      Hãng
+                    </th>
+                    {/* <th scope="col">Size - Số lượng</th> */}
+                    <th scope="col" className="text-center">
+                      Tùy chọn
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="table-group-divider">
@@ -516,30 +529,28 @@ function ProductAdmin() {
                     <tr className="item" key={item._id}>
                       <th scope="row">{index + 1}</th>
                       <td className="name">{item.name}</td>
-                      <td className="imgs-wrap">
-                        <img className="imgs" src={item.image[0].url} alt="" />
+                      <td className="img-wrap">
+                        <img className="img" src={item.image[0].url} alt="" />
                       </td>
-                      <td className="descriptions">
-                        <div className="descriptions-sub">{item.desc}</div>
-                      </td>
-                      <td className="cate">
+                      <td className="descriptions"></td>
+                      <td className="cate text-center">
                         {listCate.map((elem, index) => {
                           if (elem._id === item.idCate) {
                             return elem.nameCate;
                           }
                         })}
                       </td>
-                      <td className="size">
+                      {/* <td className="size">
                         {item.size.map((size) => (
                           <div key={size.sizeId} className="sizeNumber">
                             Size {size.sizeId} - {size.count} Đôi - Giá:{" "}
                             {size.price} VND
                           </div>
                         ))}
-                      </td>
+                      </td> */}
                       <td className="controls">
                         <button
-                          className="btn"
+                          className="btn w-100"
                           onClick={() => {
                             handleDelete(index);
                           }}
@@ -628,7 +639,6 @@ function ProductAdmin() {
                                       );
                                     })}
                                 </div>
-
                                 <label
                                   className="fileLabel"
                                   htmlFor="fileProduct"
@@ -636,7 +646,7 @@ function ProductAdmin() {
                                   + Thêm Ảnh
                                 </label>
                               </div>
-                              <div className="group-flex-3 d-flex flex-wrap">
+                              {/* <div className="group-flex-3 d-flex flex-wrap">
                                 <div className="form-group">
                                   <label htmlFor="sizeProduct">Size</label>
                                   <input
@@ -730,7 +740,7 @@ function ProductAdmin() {
                                       );
                                     })}
                                 </div>
-                              </div>
+                              </div> */}
                               <div className="form-group">
                                 <label htmlFor="descProduct">Mô tả</label>
                                 <textarea
@@ -744,6 +754,101 @@ function ProductAdmin() {
                             </form>
                           </div>
                         </ModalForm>
+                        <ModalOrder
+                          size="lg"
+                          title="Sản phẩm trong kho"
+                          icon="Kho"
+                        >
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th className="text-center" scope="col">
+                                  Size
+                                </th>
+                                <th className="text-center" scope="col">
+                                  Status
+                                </th>
+                                <th className="text-center" scope="col">
+                                  Count
+                                </th>
+                                <th className="text-center" scope="col">
+                                  Price
+                                </th>
+                                <th className="text-center" scope="col">
+                                  Controls
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody className="size">
+                              {item.size.map((size) => (
+                                <tr>
+                                  <th className="text-center" scope="row">
+                                    {size.sizeId}
+                                  </th>
+                                  <td className="text-center">
+                                    {size.count > 0 ? "Còn hàng" : "Hết hàng"}
+                                  </td>
+                                  <td className="text-center">{size.count}</td>
+                                  <td className="text-center">{size.price}</td>
+                                  <td className="text-center ">
+                                    <button className="btn w-100 mb-2">
+                                      Xóa
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        setEdit(true);
+                                      }}
+                                      className="btn w-100"
+                                    >
+                                      Sửa
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                          <span className="title">
+                            {edit ? "Sửa size" : "Thêm size"}
+                          </span>
+                          <form className="d-flex sizeForm">
+                            <div className="form-group">
+                              <input
+                                placeholder="Mã size"
+                                type="text"
+                                className="form-control"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <input
+                                placeholder="Số lượng"
+                                type="text"
+                                className="form-control"
+                              />
+                            </div>
+                            <div className="form-group">
+                              <input
+                                placeholder="Giá"
+                                type="text"
+                                className="form-control"
+                              />
+                            </div>
+                            {edit ? (
+                              <button
+                                onClick={() => {
+                                  setEdit(false);
+                                }}
+                                className="btn"
+                                type="button"
+                              >
+                                Sửa
+                              </button>
+                            ) : (
+                              <button type="button" className="btn">
+                                Thêm
+                              </button>
+                            )}
+                          </form>
+                        </ModalOrder>
                       </td>
                     </tr>
                   ))}
