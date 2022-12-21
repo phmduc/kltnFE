@@ -279,12 +279,13 @@ function OrderAdmin() {
                                     `/api/order/cancel/${elem._id}`
                                   );
                                   const promise = elem.orderItems.map(
-                                    async (elem, index) => {
+                                    async (product, index) => {
                                       await axios.put(
-                                        `/api/products/updateqtt/${elem.id}`,
+                                        `/api/products/updateqtt/${product.id}`,
                                         {
-                                          sizeId: elem.sizeId,
-                                          count: -Number(elem.count),
+                                          sizeId: product.sizeId,
+                                          count: -Number(product.count),
+                                          fromOrder: elem._id,
                                         }
                                       );
                                     }

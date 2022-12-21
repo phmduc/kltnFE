@@ -120,10 +120,12 @@ function Checkout() {
       };
       try {
         const response = await axios.post("/api/order", order);
+        console.log(response.data._id);
         const promise = listCart.map(async (elem, index) => {
           await axios.put(`/api/products/updateqtt/${elem.ID}`, {
             sizeId: elem.size,
             count: Number(elem.count),
+            fromOrder: response.data._id,
           });
         });
         await Promise.all(promise);

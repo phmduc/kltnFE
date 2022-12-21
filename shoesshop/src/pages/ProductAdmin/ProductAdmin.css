@@ -22,8 +22,19 @@
   width: 7%;
   text-align: center;
 }
-.productList .item td.description {
+.productList .item td.desc {
   width: 25%;
+}
+.productList .item td.desc span {
+  line-height: 1.8rem;
+  color: var(--black-color);
+  max-height: 9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 
 .descriptions-sub {
@@ -156,9 +167,42 @@
 .size .controls {
   gap: 1rem;
 }
+
+.size .countAtt button,
+.size .priceAtt button {
+  width: max-content !important;
+  margin-left: 0.5rem;
+}
 .sizeForm {
   gap: 1rem;
 }
 .sizeForm button {
   width: 15%;
+}
+.updateSizeForm .form-group label {
+  width: 16%;
+}
+.updateSizeForm button {
+  display: inline-block;
+  float: right;
+}
+.tableHistory {
+  max-height: 50vh;
+  overflow-y: scroll;
+}
+.tableHistory .item {
+  padding: 1rem;
+  border-radius: 20px;
+}
+.tableHistory .item:nth-child(2n + 1) {
+  background-color: rgb(229, 232, 235);
+}
+.tableHistory .top {
+  gap: 3rem;
+}
+.tableHistory .body {
+  gap: 2rem;
+}
+table td {
+  vertical-align: middle;
 }

@@ -11,7 +11,6 @@ function ModalForm(props) {
     if (props.prepare) {
       props.prepare();
     }
-    console.log(props.size);
     setShow(true);
   };
   return (
@@ -21,6 +20,7 @@ function ModalForm(props) {
         onClick={() => {
           handleShow();
         }}
+        className={props.button ? props.button : null}
       >
         {props.icon}
       </Button>

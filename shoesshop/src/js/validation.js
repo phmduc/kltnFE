@@ -38,7 +38,6 @@ export const validation = {
     }
   },
   validateCate: function (name) {
-    console.log(name);
     if (!name || name == 0) {
       return "Phần này không được bỏ trống (*)";
     } else {

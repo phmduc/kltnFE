@@ -102,6 +102,7 @@ function HistoryOrder() {
                                     {
                                       sizeId: elem.sizeId,
                                       count: -Number(elem.count),
+                                      fromOrder: elem._id,
                                     }
                                   );
                                 }

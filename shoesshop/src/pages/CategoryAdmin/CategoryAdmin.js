@@ -286,7 +286,7 @@ function CategoryAdmin() {
                         </td>
                         <td className="controls">
                           <button
-                            className="btn btn-primary"
+                            className="btn btn-primary mb-2"
                             onClick={() => {
                               handleDelete(index);
                             }}

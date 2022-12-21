@@ -16,41 +16,41 @@ import {
   deleteImage,
 } from "../../Redux/apiRequests.js";
 import ReactPaginate from "react-paginate";
+import { removeFromCart } from "../../Redux/slice/cartSlice.js";
+import React from "react";
 import { loading, unLoadding } from "../../Redux/slice/loading.js";
 import "./ProductAdmin.css";
 import { getAllProduct } from "../../Redux/slice/productSlice.js";
-import { Form, Button } from "react-bootstrap";
+import { Form } from "react-bootstrap";
+import { DatePicker, Space } from "antd";
+
 function ProductAdmin() {
+  //State
   const [products, setProducts] = useState([]);
   const listCate = useSelector((state) => state.category.category);
   const [isLoad, setLoaded] = useState(false);
   const [ID, setID] = useState("");
   const [name, setName] = useState("");
-  const [edit, setEdit] = useState(false);
-
   const [cate, setCate] = useState();
+  const [from, setFrom] = useState();
+  const [to, setTo] = useState();
   const [desc, setDesc] = useState("");
   const [size, setSize] = useState([]);
   const [previewSource, setPreviewSource] = useState([]);
   const [fileInput, setFileInput] = useState();
   const [imgMessage, setImgMessage] = useState("");
-  const [descInput, setDescInput] = useState(EditorState.createEmpty());
   const [message, setMessage] = useState("");
   const [sizeId, setSizeId] = useState("");
-  const [sizeCount, setSizeCount] = useState("");
+  const [sizeCount, setSizeCount] = useState(0);
   const [sizePrice, setSizePrice] = useState("");
   const [itemOffset, setItemOffset] = useState(0);
   const [endOffset, setendOffset] = useState(6);
   const [currentItems, setCurrent] = useState([]);
+  const [history, setHistory] = useState([]);
   const [pageCount, setPageCount] = useState();
-  // const currentItems = hasResult
-  //   ? result.slice(itemOffset, endOffset)
-  //   : products.slice(itemOffset, endOffset);
-  // const pageCount = Math.ceil(
-  //   hasResult ? result.length / 6 : products.length / 6
-  // );
   const dispatch = useDispatch();
 
+  //function
   const handlePageClick = (event) => {
     setItemOffset((event.selected * 6) % products.length);
     setendOffset(((event.selected * 6) % products.length) + 6);
@@ -75,6 +75,9 @@ function ProductAdmin() {
     setName("");
     setCate("");
     setDesc("");
+    setSizeId("");
+    setSizeCount(0);
+    setSizePrice("");
     setSize([]);
     setPreviewSource([]);
     setFileInput();
@@ -82,8 +85,7 @@ function ProductAdmin() {
   const handleSubmitAdd = async () => {
     if (
       validation.validateName(name) === true &&
-      validation.validateCate(cate) === true &&
-      validation.validateSize(size) === true
+      validation.validateCate(cate) === true
     ) {
       if (
         products.find(function (product, index) {
@@ -107,7 +109,6 @@ function ProductAdmin() {
             desc: desc,
             image: imageData,
             idCate: cate,
-            size: size,
           };
           await addproduct(newProduct, dispatch);
           dispatch(unLoadding());
@@ -121,7 +122,6 @@ function ProductAdmin() {
       setMessage("Thông tin chưa hợp lệ, vui lòng kiểm tra lại");
     }
   };
-
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
     setMessage("");
@@ -132,52 +132,31 @@ function ProductAdmin() {
       previewFile(file);
     }
   };
-  // const previewSize = () => {
-  //   if (sizeId && sizeCount && sizePrice) {
-  //     if (
-  //       Number(sizeCount) > 0 &&
-  //       Number.isInteger(Number(sizeCount)) &&
-  //       Number(sizePrice) > 0 &&
-  //       Number.isInteger(Number(sizePrice))
-  //     ) {
-  //       if (
-  //         size.some(function (item, index) {
-  //           return sizeId === item.sizeId;
-  //         })
-  //       ) {
-  //         const data = size.slice();
-  //         const newmap = data.filter(function (value, index) {
-  //           return value.sizeId !== sizeId;
-  //         });
-  //         setSize([
-  //           ...newmap,
-  //           {
-  //             sizeId: sizeId,
-  //             count: sizeCount,
-  //             price: sizePrice,
-  //           },
-  //         ]);
-  //       } else {
-  //         setSize([
-  //           ...size,
-  //           {
-  //             sizeId: sizeId,
-  //             count: sizeCount,
-  //             price: sizePrice,
-  //           },
-  //         ]);
-  //       }
-  //       setSizeId("");
-  //       setSizeCount("");
-  //       setSizePrice("");
-  //     } else {
-  //       if (Number(sizeCount) > 0 && Number.isInteger(Number(sizeCount)))
-  //         setSizeCount("Không Hợp Lệ");
-  //       if (Number(sizePrice) > 0 && Number.isInteger(Number(sizePrice)))
-  //         setSizePrice("Không Hợp Lệ");
-  //     }
-  //   }
-  // };
+  const updateSize = async (id) => {
+    if (sizeId && sizePrice) {
+      if (Number(sizePrice) > 0 && Number.isInteger(Number(sizePrice))) {
+        await axios.put(`/api/products/size/${id}`, {
+          sizeId,
+          sizeCount,
+          sizePrice,
+        });
+        toast.success("Cập nhật thành công", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        resetInput();
+        setLoaded(!isLoad);
+      } else {
+        if (Number(sizePrice) < 0 && Number.isInteger(Number(sizePrice)))
+          toast.error(`Giá không hợp lệ`, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+      }
+    } else {
+      toast.error(`Vui lòng nhập đầy đủ thông tin`, {
+        position: toast.POSITION.TOP_CENTER,
+      });
+    }
+  };
   const previewFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -194,7 +173,6 @@ function ProductAdmin() {
       console.error(err);
     }
   };
-
   const convertToBase64 = (url) => {
     return fetch(url)
       .then((res) => res.blob())
@@ -380,109 +358,7 @@ function ProductAdmin() {
                         + Thêm Ảnh
                       </label>
                     </div>
-                    {/* <div className="group-flex-3 d-flex flex-wrap">
-                      <div className="form-group">
-                        <label htmlFor="sizeProduct">Size</label>
-                        <input
-                          value={sizeId}
-                          onChange={(e) => {
-                            setSizeId(e.target.value);
-                          }}
-                          type="text"
-                          className="form-control"
-                          id="sizeProduct"
-                          placeholder="Nhập size"
-                        />
-                        {validation.validateSizeId(sizeId) || (
-                          <span className="message">
-                            {validation.validateSizeId(sizeId)}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group">
-                        <label htmlFor="countProduct">Số lượng</label>
-                        <input
-                          value={sizeCount}
-                          onChange={(e) => {
-                            setSizeCount(e.target.value);
-                          }}
-                          type="text"
-                          className="form-control"
-                          id="countProduct"
-                          placeholder="Nhập số lượng"
-                        />
-                        {validation.validateCount(sizeCount) || (
-                          <span className="message">
-                            {validation.validateCount(sizeCount)}
-                          </span>
-                        )}
-                      </div>
-                      <div className="form-group  ">
-                        <label htmlFor="priceProduct">Giá sản phẩm</label>
-                        <input
-                          value={sizePrice}
-                          onChange={(e) => {
-                            setSizePrice(e.target.value);
-                          }}
-                          type="text"
-                          className="form-control"
-                          id="priceProduct"
-                          placeholder="Nhập giá sản phẩm"
-                        />
-                        {validation.validatePrice(sizePrice) || (
-                          <span className="message">
-                            {validation.validatePrice(sizePrice)}
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        className="addsize btn mt-2"
-                        onClick={() => {
-                          previewSize();
-                        }}
-                      >
-                        Thêm size
-                      </button>
 
-                      <div className="sizePreview mt-2 ">
-                        {!size ||
-                          size.map((item, index) => {
-                            return (
-                              <div key={index} className="sizewrap d-flex mb-2">
-                                <button
-                                  type="button"
-                                  className="btn  d-flex justify-content-between w-100 align-items-center "
-                                  onClick={() => {
-                                    setSizeId(item.sizeId);
-                                    setSizeCount(item.count);
-                                    setSizePrice(item.price);
-                                  }}
-                                >
-                                  <span>Size: {item.sizeId} </span>
-                                  <span>Số lượng: {item.count} </span>
-                                  <span>Giá: {item.price} </span>
-                                </button>
-                                <button
-                                  className="btn"
-                                  type="button"
-                                  onClick={(e) => {
-                                    size.splice(index, 1);
-                                    setLoaded(!isLoad);
-                                  }}
-                                >
-                                  X
-                                </button>
-                              </div>
-                            );
-                          })}
-                      </div>
-                      {validation.validateSize(size) || (
-                        <span className="message">
-                          {validation.validateSize(size)}
-                        </span>
-                      )}
-                    </div> */}
                     <div className="form-group">
                       <label htmlFor="descProduct">Mô tả</label>
                       <textarea
@@ -532,7 +408,9 @@ function ProductAdmin() {
                       <td className="img-wrap">
                         <img className="img" src={item.image[0].url} alt="" />
                       </td>
-                      <td className="descriptions"></td>
+                      <td className="desc">
+                        <span>{item.desc}</span>
+                      </td>
                       <td className="cate text-center">
                         {listCate.map((elem, index) => {
                           if (elem._id === item.idCate) {
@@ -540,14 +418,7 @@ function ProductAdmin() {
                           }
                         })}
                       </td>
-                      {/* <td className="size">
-                        {item.size.map((size) => (
-                          <div key={size.sizeId} className="sizeNumber">
-                            Size {size.sizeId} - {size.count} Đôi - Giá:{" "}
-                            {size.price} VND
-                          </div>
-                        ))}
-                      </td> */}
+
                       <td className="controls">
                         <button
                           className="btn w-100"
@@ -646,101 +517,7 @@ function ProductAdmin() {
                                   + Thêm Ảnh
                                 </label>
                               </div>
-                              {/* <div className="group-flex-3 d-flex flex-wrap">
-                                <div className="form-group">
-                                  <label htmlFor="sizeProduct">Size</label>
-                                  <input
-                                    value={sizeId}
-                                    onChange={(e) => {
-                                      setSizeId(e.target.value);
-                                    }}
-                                    type="text"
-                                    className="form-control"
-                                    id="sizeProduct"
-                                    placeholder="Nhập size"
-                                  />
-                                </div>
-                                <div className="form-group">
-                                  <label htmlFor="countProduct">Số lượng</label>
-                                  <input
-                                    value={sizeCount}
-                                    onChange={(e) => {
-                                      setSizeCount(e.target.value);
-                                    }}
-                                    type="text"
-                                    className="form-control"
-                                    id="countProduct"
-                                    placeholder="Nhập số lượng"
-                                  />
-                                </div>
-                                <div className="form-group  ">
-                                  <label htmlFor="priceProduct">
-                                    Giá sản phẩm
-                                  </label>
-                                  <input
-                                    value={sizePrice}
-                                    onChange={(e) => {
-                                      setSizePrice(e.target.value);
-                                    }}
-                                    type="text"
-                                    className="form-control"
-                                    id="priceProduct"
-                                    placeholder="Nhập giá sản phẩm"
-                                  />
-                                </div>
-                                <button
-                                  type="button"
-                                  className="addsize btn mt-2"
-                                  onClick={() => {
-                                    previewSize();
-                                  }}
-                                >
-                                  Thêm size
-                                </button>
 
-                                <div className="sizePreview mt-2 ">
-                                  {!size ||
-                                    size.map((item, index) => {
-                                      return (
-                                        <div
-                                          key={index}
-                                          className="sizewrap d-flex  mb-2"
-                                        >
-                                          <button
-                                            type="button"
-                                            className="btn  d-flex justify-content-between w-100 align-items-center"
-                                            onClick={() => {
-                                              setSizeId(item.sizeId);
-                                              setSizeCount(item.count);
-                                              setSizePrice(item.price);
-                                            }}
-                                          >
-                                            <span>Size: {item.sizeId} </span>
-                                            <span>Số lượng: {item.count} </span>
-                                            <span>Giá: {item.price} </span>
-                                          </button>
-                                          <button
-                                            className="btn"
-                                            type="button"
-                                            onClick={(e) => {
-                                              console.log(size.slice());
-                                              let list = size.slice();
-                                              list = list.filter(
-                                                (value, index) => {
-                                                  return value._id !== item._id;
-                                                }
-                                              );
-                                              setSize(list);
-                                              setLoaded(!isLoad);
-                                            }}
-                                          >
-                                            X
-                                          </button>
-                                        </div>
-                                      );
-                                    })}
-                                </div>
-                              </div> */}
                               <div className="form-group">
                                 <label htmlFor="descProduct">Mô tả</label>
                                 <textarea
@@ -759,6 +536,147 @@ function ProductAdmin() {
                           title="Sản phẩm trong kho"
                           icon="Kho"
                         >
+                          <ModalOrder
+                            size="lg"
+                            title="Lịch sử nhập xuất"
+                            icon="Lịch sử nhập xuất"
+                          >
+                            <div className="pickDate d-flex align-items-center">
+                              <div className="from">
+                                Từ:
+                                <input
+                                  type="date"
+                                  className="mx-2"
+                                  onChange={(e) => {
+                                    setFrom(e.target.value);
+                                  }}
+                                ></input>
+                              </div>
+                              <div className="to mx-2">
+                                Đến:
+                                <input
+                                  type="date"
+                                  className="mx-2"
+                                  onChange={(e) => {
+                                    setTo(e.target.value);
+                                  }}
+                                ></input>
+                              </div>
+                              <button
+                                className="btn mx-2"
+                                onClick={() => {
+                                  if (!from || !to) {
+                                    toast.error(
+                                      `Vui lòng nhập ngày bắt đầu và kết thúc`,
+                                      {
+                                        position: toast.POSITION.TOP_CENTER,
+                                      }
+                                    );
+                                  } else {
+                                    if (
+                                      Number(new Date(from)) >
+                                      Number(new Date(to))
+                                    ) {
+                                      toast.error(`Ngày không hợp lệ `, {
+                                        position: toast.POSITION.TOP_CENTER,
+                                      });
+                                    } else {
+                                      const showHistory =
+                                        item.historyUpdate.filter((elem) => {
+                                          const elemDate = Number(
+                                            new Date(
+                                              elem.date
+                                                .split("@")[0]
+                                                .split("/")[2]
+                                                .trim() +
+                                                "-" +
+                                                elem.date
+                                                  .split("@")[0]
+                                                  .split("/")[1] +
+                                                "-" +
+                                                elem.date
+                                                  .split("@")[0]
+                                                  .split("/")[0]
+                                            )
+                                          );
+                                          return (
+                                            elemDate >=
+                                              Number(new Date(from)) &&
+                                            elemDate <= Number(new Date(to))
+                                          );
+                                        });
+                                      setHistory(showHistory);
+                                    }
+                                  }
+                                }}
+                              >
+                                Chọn
+                              </button>
+                            </div>
+                            <div class="tableHistory my-3 ">
+                              {history.length !== 0 ? (
+                                history.map((elem, index) => {
+                                  return (
+                                    <div key={index} className="item">
+                                      <div className="top d-flex ">
+                                        <div className="info">
+                                          Ngày: <span>{elem.date}</span>
+                                        </div>
+                                        <div className="info">
+                                          Trạng thái:
+                                          <span>
+                                            {elem.status === 0
+                                              ? "Xuất"
+                                              : elem.status === 1
+                                              ? "Nhập"
+                                              : elem.status === 4
+                                              ? "Xóa"
+                                              : "Thêm"}
+                                          </span>
+                                        </div>
+                                        <div className="info">
+                                          Size: <span>{elem.sizeId}</span>
+                                        </div>
+                                      </div>
+
+                                      <div className="body d-flex mt-2">
+                                        {elem.number ? (
+                                          <React.Fragment>
+                                            <div className="info">
+                                              Số lượng:
+                                              <span>{elem.number}</span>
+                                            </div>
+                                            <div className="info">
+                                              Tồn kho cũ:
+                                              <span>{elem.oldCount}</span>
+                                            </div>
+                                            <div className="info">
+                                              Tồn kho mới:
+                                              <span>{elem.newCount}</span>
+                                            </div>
+                                            <div className="info">
+                                              Chi tiết:
+                                              {elem.fromOrder !== undefined ? (
+                                                <span>
+                                                  Từ hóa đơn {elem.fromOrder}
+                                                </span>
+                                              ) : (
+                                                <span>Trực tiếp từ kho</span>
+                                              )}
+                                            </div>
+                                          </React.Fragment>
+                                        ) : null}
+                                      </div>
+                                    </div>
+                                  );
+                                })
+                              ) : (
+                                <div className="message text-center">
+                                  Chưa có lịch sử
+                                </div>
+                              )}
+                            </div>
+                          </ModalOrder>
                           <table class="table">
                             <thead>
                               <tr>
@@ -788,40 +706,154 @@ function ProductAdmin() {
                                   <td className="text-center">
                                     {size.count > 0 ? "Còn hàng" : "Hết hàng"}
                                   </td>
-                                  <td className="text-center">{size.count}</td>
-                                  <td className="text-center">{size.price}</td>
+                                  <td className="text-center">
+                                    <div className="countAtt d-flex align-items-center justify-content-center">
+                                      {size.count}{" "}
+                                      <ModalForm
+                                        title="Chỉnh Sửa Số Lượng"
+                                        icon={
+                                          <i className="bi bi-pencil-square"></i>
+                                        }
+                                        button="w-100"
+                                        reset={resetInput}
+                                        size="md"
+                                        handleSubmit={async () => {
+                                          if (
+                                            Number.isInteger(Number(sizeCount))
+                                          ) {
+                                            if (sizeCount > 0) {
+                                              await axios.put(
+                                                `/api/products/updateqtt/${item._id}`,
+                                                {
+                                                  sizeId: sizeId,
+                                                  count: size.count - sizeCount,
+                                                }
+                                              );
+                                              toast.success(
+                                                "Cập nhật thành công",
+                                                {
+                                                  position:
+                                                    toast.POSITION.TOP_CENTER,
+                                                }
+                                              );
+                                              setLoaded(!isLoad);
+                                            } else {
+                                              toast.error(
+                                                "Số lượng không hợp lệ",
+                                                {
+                                                  position:
+                                                    toast.POSITION.TOP_CENTER,
+                                                }
+                                              );
+                                            }
+                                          } else {
+                                            toast.error(
+                                              "Số lượng không hợp lệ",
+                                              {
+                                                position:
+                                                  toast.POSITION.TOP_CENTER,
+                                              }
+                                            );
+                                          }
+                                        }}
+                                        prepare={() => {
+                                          setSizeId(size.sizeId);
+                                          setSizeCount(size.count);
+                                        }}
+                                      >
+                                        <div className="sizeTitle mb-4">
+                                          Size: {size.sizeId}
+                                        </div>
+                                        <form className="updateSizeForm">
+                                          <div className="form-group d-flex mb-2">
+                                            <label htmlFor="">Số lượng: </label>
+                                            <input
+                                              type="text"
+                                              value={sizeCount}
+                                              onChange={(e) => {
+                                                setSizeCount(e.target.value);
+                                              }}
+                                            />
+                                          </div>
+                                        </form>
+                                      </ModalForm>
+                                    </div>
+                                  </td>
+                                  <td className="text-center">
+                                    <div className="priceAtt align-items-center d-flex justify-content-center">
+                                      {size.price}
+                                      <ModalForm
+                                        title="Chỉnh Sửa Giá"
+                                        icon={
+                                          <i className="bi bi-pencil-square"></i>
+                                        }
+                                        button="w-100"
+                                        reset={resetInput}
+                                        size="md"
+                                        handleSubmit={() => {
+                                          updateSize(item._id);
+                                        }}
+                                        prepare={() => {
+                                          setSizeId(size.sizeId);
+                                          setSizePrice(size.price);
+                                        }}
+                                      >
+                                        <div className="sizeTitle mb-4">
+                                          Size: {size.sizeId}
+                                        </div>
+                                        <form className="updateSizeForm">
+                                          <div className="form-group d-flex">
+                                            <label htmlFor="">Giá: </label>
+                                            <input
+                                              type="text"
+                                              value={sizePrice}
+                                              onChange={(e) => {
+                                                setSizePrice(e.target.value);
+                                              }}
+                                            />
+                                          </div>
+                                        </form>
+                                      </ModalForm>
+                                    </div>
+                                  </td>
                                   <td className="text-center ">
-                                    <button className="btn w-100 mb-2">
-                                      Xóa
-                                    </button>
                                     <button
-                                      onClick={() => {
-                                        setEdit(true);
+                                      className="btn w-100 mb-2"
+                                      onClick={async () => {
+                                        await axios.put(
+                                          `/api/products/size/delete/${item._id}`,
+                                          { sizeId: size.sizeId }
+                                        );
+                                        toast.success(`Xóa thành công`, {
+                                          position: toast.POSITION.TOP_CENTER,
+                                        });
+                                        dispatch(
+                                          removeFromCart({
+                                            ID: item._id,
+                                            size: size.sizeId,
+                                          })
+                                        );
+
+                                        setLoaded(!isLoad);
                                       }}
-                                      className="btn w-100"
                                     >
-                                      Sửa
+                                      Xóa
                                     </button>
                                   </td>
                                 </tr>
                               ))}
                             </tbody>
                           </table>
-                          <span className="title">
-                            {edit ? "Sửa size" : "Thêm size"}
-                          </span>
+                          <span className="title">{"Thêm size"}</span>
                           <form className="d-flex sizeForm">
                             <div className="form-group">
                               <input
                                 placeholder="Mã size"
                                 type="text"
-                                className="form-control"
-                              />
-                            </div>
-                            <div className="form-group">
-                              <input
-                                placeholder="Số lượng"
-                                type="text"
+                                value={sizeId}
+                                onChange={(e) => {
+                                  setSizeId(e.target.value);
+                                }}
                                 className="form-control"
                               />
                             </div>
@@ -830,23 +862,29 @@ function ProductAdmin() {
                                 placeholder="Giá"
                                 type="text"
                                 className="form-control"
+                                value={sizePrice}
+                                onChange={(e) => {
+                                  setSizePrice(e.target.value);
+                                }}
                               />
                             </div>
-                            {edit ? (
-                              <button
-                                onClick={() => {
-                                  setEdit(false);
-                                }}
-                                className="btn"
-                                type="button"
-                              >
-                                Sửa
-                              </button>
-                            ) : (
-                              <button type="button" className="btn">
-                                Thêm
-                              </button>
-                            )}
+                            <button
+                              type="button"
+                              className="btn"
+                              onClick={() => {
+                                if (
+                                  item.size.some((elem) => {
+                                    return elem.sizeId === sizeId;
+                                  })
+                                ) {
+                                  toast.error(`Size đã tồn tại`, {
+                                    position: toast.POSITION.TOP_CENTER,
+                                  });
+                                } else updateSize(item._id);
+                              }}
+                            >
+                              Thêm
+                            </button>
                           </form>
                         </ModalOrder>
                       </td>

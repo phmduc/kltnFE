@@ -120,14 +120,16 @@ function UserAdmin() {
                           <td className="controls">
                             {user.isAdmin === 0 ? (
                               <React.Fragment>
-                                <button
-                                  className="btn btn-primary w-100 mb-2"
-                                  onClick={(e) => {
-                                    handleDelete(index - 1);
-                                  }}
-                                >
-                                  <i className="bi bi-trash-fill"></i>
-                                </button>
+                                {elem._id !== user.ID ? (
+                                  <button
+                                    className="btn btn-primary w-100 mb-2"
+                                    onClick={(e) => {
+                                      handleDelete(index - 1);
+                                    }}
+                                  >
+                                    <i className="bi bi-trash-fill"></i>
+                                  </button>
+                                ) : null}
 
                                 <ModalOrder
                                   icon="Quyền"
