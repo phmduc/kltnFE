@@ -2,9 +2,6 @@ import Admin from "../../layouts/Admin/Admin.js";
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { EditorState, convertToRaw } from "draft-js";
-import { Editor } from "react-draft-wysiwyg";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import axios from "axios";
 import ModalForm from "../../components/Modal/Modal.js";
 import ModalOrder from "../../components/ModalOrder/ModalOrder.js";
@@ -693,7 +690,7 @@ function ProductAdmin() {
                                   Price
                                 </th>
                                 <th className="text-center" scope="col">
-                                  Controls
+                                  Control
                                 </th>
                               </tr>
                             </thead>
