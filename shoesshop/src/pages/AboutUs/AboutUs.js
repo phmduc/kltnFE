@@ -43,7 +43,7 @@ function AboutUs() {
           <div className='about__content'>
             <h3 className='about__local'>LOCATION</h3>
             <p className='about__address'>
-              69 Nguyen Van Linh, Hai Chau District, Da Nang City, Vietnam
+              14 An Thuong 18, Ngu Hanh Son District, Da Nang City, Vietnam
             </p>
             <p className='about__phone'>Call +84969696969</p>
           </div>
