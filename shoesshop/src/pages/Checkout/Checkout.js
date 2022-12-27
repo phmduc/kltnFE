@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { removeAll } from "../../Redux/slice/cartSlice";
 import PayPal from "../../components/PayPal/PayPal";
+import { validation } from "../../js/validation";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function Checkout() {
   const [districtId, setDistrictId] = useState();
   const [wardId, setWardId] = useState();
   const [payment, setPayment] = useState("");
+  const [isLoad, setLoaded] = useState(false);
   const [pay, setPay] = useState(false);
   const [firstName, setFirstName] = useState();
   const [lastName, setLastName] = useState();
@@ -26,18 +28,14 @@ function Checkout() {
   const [address, setAddress] = useState();
   const total = useRef();
   var currentdate = new Date();
-
   const dispatch = useDispatch();
-
   async function getProvince() {
     try {
       const response = await axios.get(
         "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json"
       );
       setProvince(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   }
 
   let totalValue = listCart.reduce((previousValue, currentValue) => {
@@ -171,6 +169,8 @@ function Checkout() {
                     placeholder="Họ"
                     value={firstName}
                     onChange={(e) => {
+                      setPay(false);
+
                       setFirstName(e.target.value);
                     }}
                   />
@@ -179,6 +179,8 @@ function Checkout() {
                     placeholder="Tên"
                     value={lastName}
                     onChange={(e) => {
+                      setPay(false);
+
                       setLastName(e.target.value);
                     }}
                   />
@@ -188,6 +190,8 @@ function Checkout() {
                     className="form-select form-select-sm"
                     id="city"
                     onChange={(e) => {
+                      setPay(false);
+
                       setCityId(e.target.value);
                     }}
                   >
@@ -202,6 +206,8 @@ function Checkout() {
                     className="form-select form-select-sm"
                     id="district"
                     onChange={(e) => {
+                      setPay(false);
+
                       setDistrictId(e.target.value);
                     }}
                   >
@@ -225,6 +231,8 @@ function Checkout() {
                     id="ward"
                     aria-label=".form-select-sm"
                     onChange={(e) => {
+                      setPay(false);
+
                       setWardId(e.target.value);
                     }}
                   >
@@ -252,6 +260,8 @@ function Checkout() {
                   placeholder="Địa chỉ cụ thể..."
                   value={address}
                   onChange={(e) => {
+                    setPay(false);
+
                     setAddress(e.target.value);
                   }}
                 />
@@ -261,6 +271,8 @@ function Checkout() {
                   placeholder="Số điện thoại"
                   value={number}
                   onChange={(e) => {
+                    setPay(false);
+
                     setNumber(e.target.value);
                   }}
                 />
@@ -296,23 +308,31 @@ function Checkout() {
                         if (
                           firstName &&
                           lastName &&
-                          number &&
                           address &&
                           cityId &&
                           districtId &&
                           wardId &&
                           payment
                         ) {
-                          setPay(true);
-                        } else {
-                          {
-                            toast.error(
-                              "Vui lòng điển đầy đủ thông tin nhận hàng",
-                              {
-                                position: toast.POSITION.TOP_CENTER,
-                              }
-                            );
+                          if (
+                            typeof validation.validatePhone(number) === "string"
+                          ) {
+                            toast.error(validation.validatePhone(number), {
+                              position: toast.POSITION.TOP_CENTER,
+                            });
+                            setPay(false);
+                          } else {
+                            setPay(true);
                           }
+                        } else {
+                          setPay(false);
+
+                          toast.error(
+                            "Vui lòng điển đầy đủ thông tin nhận hàng",
+                            {
+                              position: toast.POSITION.TOP_CENTER,
+                            }
+                          );
                         }
                       }}
                     >
@@ -338,6 +358,7 @@ function Checkout() {
                     onChange={(e) => {
                       if (e.target.checked === true) {
                         setPayment(e.target.value);
+                        setPay(false);
                       }
                       setCheckOut(false);
                     }}

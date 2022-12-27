@@ -65,4 +65,14 @@ export const validation = {
       return true;
     }
   },
+  validatePhone: function (name) {
+    var phoneno = /^\d{10}$/;
+    if (!name || name.length === 0) {
+      return "Không bỏ trống phần này (*)";
+    } else if (!name.match(phoneno)) {
+      return "SĐT không hợp lệ";
+    } else {
+      return true;
+    }
+  },
 };
