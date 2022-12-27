@@ -129,6 +129,19 @@ function CategoryAdmin() {
       setFileInput([]);
     }
   };
+  const convertToBase64 = (url) => {
+    return fetch(url)
+      .then((res) => res.blob())
+      .then((blob) => {
+        return new Promise(function (resolve) {
+          var reader = new FileReader();
+          reader.onloadend = function () {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(blob);
+        });
+      });
+  };
   const previewFile = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -167,6 +180,14 @@ function CategoryAdmin() {
         position: toast.POSITION.TOP_CENTER,
       });
     }
+  };
+  const updatePrepare = async (index) => {
+    setName(currentItems[index].idCate);
+    const promise = currentItems[index].image.map(async (elem, index) => {
+      return await convertToBase64(elem.url).then((response) => response);
+    });
+    let images = await Promise.all(promise);
+    setPreviewSource(images);
   };
   //End CRUD
   const search = async (e) => {
@@ -297,6 +318,9 @@ function CategoryAdmin() {
                             title="Chỉnh Sửa Danh Mục"
                             size="md"
                             reset={resetInput}
+                            prepare={() => {
+                              updatePrepare(index);
+                            }}
                             icon={<i className="bi bi-pencil-square"></i>}
                             handleSubmit={() => {
                               handleSubmitUpdate(index);
@@ -308,9 +332,7 @@ function CategoryAdmin() {
                                   <Form.Label>Tên Danh Mục</Form.Label>
                                   <Form.Control
                                     onChange={(e) => {
-                                      e.target.value != ""
-                                        ? setName(e.target.value)
-                                        : setName(item.nameCate);
+                                      setName(e.target.value);
                                     }}
                                     value={name}
                                     type="text"

@@ -334,7 +334,11 @@ function Header() {
             </div>
             <span className="d-block mb-3">Email: {user.email}</span>
             <span className="d-block mb-3">
-              {user.isAdmin ? "Quyền hạn: Admin" : "Quyền hạn: User"}
+              {user.isAdmin === 1
+                ? "Quyền hạn: Admin"
+                : user.isAdmin === 2
+                ? "Quyền hạn: User"
+                : "Quyền hạn: Sở hữu"}
             </span>
             <span className="d-block mb-3">
               {user.isVerify
